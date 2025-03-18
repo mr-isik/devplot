@@ -1,0 +1,45 @@
+{
+  "RootLayout": {
+    "home_link": "Home",
+    "about_link": "About",
+    "sign_in_link": "Sign in",
+    "sign_up_link": "Sign up"
+  },
+  "BaseTemplate": {
+    "description": "Starter code for your Nextjs Boilerplate with Tailwind CSS",
+    "made_with": "Made with <author></author>."
+  },
+  "Index": {
+    "meta_title": "Next.js Boilerplate Presentation",
+    "meta_description": "Next js Boilerplate is the perfect starter code for your project. Build your React application with the Next.js framework.",
+    "sponsors_title": "Sponsors"
+  },
+  "Dashboard": {
+    "meta_title": "Dashboard | DevPlot",
+    "meta_description": "Manage your websites and access various features.",
+    "welcome_message": "Welcome to your dashboard",
+    "description": "Manage and customize your portfolio websites",
+    "no_portfolio": "You don't have any portfolio sites yet.",
+    "create_portfolio": "Create New Portfolio",
+    "create_portfolio_description": "Start building your online presence with a professional portfolio",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "last_updated": "Last updated",
+    "create_first_portfolio": "Create Your First Portfolio"
+  },
+  "About": {
+    "meta_title": "About",
+    "meta_description": "About page description",
+    "about_paragraph": "Welcome to our About page! We are a team of passionate individuals dedicated to creating amazing software.",
+    "translation_powered_by": "Translation powered by"
+  },
+  "SignIn": {
+    "meta_title": "Sign in",
+    "meta_description": "Seamlessly sign in to your account with our user-friendly login process."
+  },
+  "SignUp": {
+    "meta_title": "Sign up",
+    "meta_description": "Effortlessly create an account through our intuitive sign-up process."
+  }
+}
