@@ -18,7 +18,7 @@
     "meta_title": "Dashboard | DevPlot",
     "meta_description": "Manage your websites and access various features.",
     "welcome_message": "Welcome to your dashboard",
-    "description": "Manage and customize your portfolio websites",
+    "description": "Manage and customize your portfolio",
     "no_portfolio": "You don't have any portfolio sites yet.",
     "create_portfolio": "Create New Portfolio",
     "create_portfolio_description": "Start building your online presence with a professional portfolio",
@@ -26,7 +26,26 @@
     "edit": "Edit",
     "delete": "Delete",
     "last_updated": "Last updated",
-    "create_first_portfolio": "Create Your First Portfolio"
+    "create_first_portfolio": "Create Your First Portfolio",
+    "preview": "Preview",
+    "portfolio": "Your Portfolio"
+  },
+  "UserButton": {
+    "account": "Account",
+    "manage_subscription": "Manage Subscription",
+    "email_settings": "Email Settings",
+    "feedback": "Feedback",
+    "logout": "Logout"
+  },
+  "Portfolio": {
+    "portfolio": "Portfolio",
+    "template": "Template",
+    "view": "View",
+    "visit_site": "Visit Site",
+    "site_information": "Site Information",
+    "about_me": "About Me",
+    "technologies": "Technologies",
+    "last_updated": "Last Updated"
   },
   "About": {
     "meta_title": "About",

@@ -1,5 +1,5 @@
+import Portfolios from '@/features/portfolios/portfolios';
 import { getTranslations } from 'next-intl/server';
-import DashboardClient from './DashboardClient';
 
 export async function generateMetadata(props: {
   params: Promise<{ locale: string }>;
@@ -17,5 +17,5 @@ export async function generateMetadata(props: {
 }
 
 export default function Dashboard() {
-  return <DashboardClient />;
+  return <Portfolios />;
 }

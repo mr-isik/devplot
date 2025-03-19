@@ -19,6 +19,14 @@ export default withSentryConfig(
       poweredByHeader: false,
       reactStrictMode: true,
       serverExternalPackages: ['@electric-sql/pglite'],
+      images: {
+        remotePatterns: [
+          {
+            protocol: 'https',
+            hostname: 'saasinterface.com',
+          },
+        ],
+      },
     }),
   ),
   {

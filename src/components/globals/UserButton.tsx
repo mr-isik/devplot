@@ -14,18 +14,21 @@ import {
   Mail,
   UserCircle,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export function UserButton() {
+  const t = useTranslations('UserButton');
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="ghost" className="relative w-full justify-start rounded-full">
           <UserCircle size={20} />
-          <span>Account</span>
+          <span>{t('account')}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-56" align="end" sideOffset={8}>
-        <div className="flex flex-col space-y-4 p-1">
+        <div className="flex flex-col space-y-4">
           <div className="flex items-center gap-2 px-2 py-1">
             <Avatar className="size-8">
               <AvatarImage src="/avatar.png" alt="Kullanıcı Avatar" />
@@ -40,21 +43,21 @@ export function UserButton() {
           <div className="flex flex-col space-y-1">
             <Button variant="ghost" size="sm" className="justify-start">
               <CreditCard className="mr-2 size-4" />
-              <span>Aboneliği Yönet</span>
+              <span>{t('manage_subscription')}</span>
             </Button>
             <Button variant="ghost" size="sm" className="justify-start">
               <Mail className="mr-2 size-4" />
-              <span>Email Ayarları</span>
+              <span>{t('email_settings')}</span>
             </Button>
             <Button variant="ghost" size="sm" className="justify-start">
               <LifeBuoy className="mr-2 size-4" />
-              <span>Geri Bildirim</span>
+              <span>{t('feedback')}</span>
             </Button>
           </div>
           <div className="border-t border-border" />
           <Button variant="ghost" size="sm" className="justify-start text-destructive hover:bg-destructive/10 hover:text-destructive">
             <LogOut className="mr-2 size-4" />
-            <span>Çıkış Yap</span>
+            <span>{t('logout')}</span>
           </Button>
         </div>
       </PopoverContent>
