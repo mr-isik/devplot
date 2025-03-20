@@ -60,5 +60,39 @@
   "SignUp": {
     "meta_title": "Sign up",
     "meta_description": "Effortlessly create an account through our intuitive sign-up process."
+  },
+  "Auth": {
+    "email": "E-Mail",
+    "email_placeholder": "example@mail.com",
+    "password": "Password",
+    "password_placeholder": "Enter your password",
+    "confirm_password": "Confirm Password",
+    "confirm_password_placeholder": "Confirm your password",
+    "full_name": "Full Name",
+    "full_name_placeholder": "Enter your full name",
+    "remember_me": "Remember Me",
+    "forgot_password": "Forgot Password?",
+    "terms": "I accept the terms and conditions and privacy policy",
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "signing_in": "Signing in...",
+    "signing_up": "Signing up...",
+    "welcome_back": "Welcome Back!",
+    "sign_in_description": "Sign in to your account to continue your journey.",
+    "create_account": "Create Your Account",
+    "sign_up_description": "Join our community and start building your portfolio today.",
+    "already_have_account": "Already have an account?",
+    "dont_have_account": "Don't have an account?",
+    "secure_login": "Secure login with password protection",
+    "data_privacy": "Your data is protected with enterprise-grade security",
+    "terms_link": "Terms & Conditions",
+    "privacy_link": "Privacy Policy",
+    "validation": {
+      "email_required": "Please enter a valid email address",
+      "password_min": "Password must be at least 6 characters",
+      "password_match": "Passwords do not match",
+      "full_name_min": "Full name must be at least 2 characters",
+      "terms_required": "You must accept the terms and conditions"
+    }
   }
 }

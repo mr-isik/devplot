@@ -34,12 +34,14 @@ export async function updateSession(request: NextRequest) {
   if (
     !user
     && !request.nextUrl.pathname.startsWith('/sign-in')
-    && !request.nextUrl.pathname.startsWith('/auth')
+    && !request.nextUrl.pathname.startsWith('/sign-up')
     && request.nextUrl.pathname !== '/'
   ) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/sign-in';
-    return NextResponse.redirect(url);
+    const locale
+          = request.nextUrl.pathname.match(/(\/.*)\/dashboard/)?.at(1) ?? '';
+
+    const signInUrl = new URL(`${locale}/sign-in`, request.url);
+    return NextResponse.redirect(signInUrl);
   }
 
   return supabaseResponse;

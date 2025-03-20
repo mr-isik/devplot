@@ -1,5 +1,6 @@
 'use client';
 
+import { signout } from '@/actions/auth/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -55,7 +56,7 @@ export function UserButton() {
             </Button>
           </div>
           <div className="border-t border-border" />
-          <Button variant="ghost" size="sm" className="justify-start text-destructive hover:bg-destructive/10 hover:text-destructive">
+          <Button onClick={signout} variant="ghost" size="sm" className="justify-start text-destructive hover:bg-destructive/10 hover:text-destructive">
             <LogOut className="mr-2 size-4" />
             <span>{t('logout')}</span>
           </Button>

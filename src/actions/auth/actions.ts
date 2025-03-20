@@ -1,0 +1,90 @@
+'use server';
+
+import type { SignInFormValues, SignUpFormValues } from '@/lib/validations/auth';
+import { AUTH_ERRORS, type AuthResponse } from '@/lib/types/auth';
+import { createClient } from '@/utils/supabase/server';
+import { revalidatePath } from 'next/cache';
+
+export async function signin(formData: SignInFormValues): Promise<AuthResponse> {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (error) {
+      if (error.message.includes('Invalid login credentials')) {
+        return { data: null, error: AUTH_ERRORS.INVALID_CREDENTIALS };
+      }
+      if (error.message.includes('User not found')) {
+        return { data: null, error: AUTH_ERRORS.USER_NOT_FOUND };
+      }
+      return { data: null, error: AUTH_ERRORS.SERVER_ERROR };
+    }
+
+    revalidatePath('/', 'layout');
+    return {
+      data: {
+        message: 'Successfully signed in',
+        user: data.user,
+      },
+      error: null,
+    };
+  } catch (error) {
+    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  }
+}
+
+export async function signup(formData: SignUpFormValues): Promise<AuthResponse> {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (error) {
+      if (error.message.includes('already registered')) {
+        return { data: null, error: AUTH_ERRORS.EMAIL_IN_USE };
+      }
+      if (error.message.includes('weak password')) {
+        return { data: null, error: AUTH_ERRORS.WEAK_PASSWORD };
+      }
+      return { data: null, error: AUTH_ERRORS.SERVER_ERROR };
+    }
+
+    revalidatePath('/', 'layout');
+    return {
+      data: {
+        message: 'Successfully signed up! Please check your email to verify your account.',
+        user: data.user,
+      },
+      error: null,
+    };
+  } catch (error) {
+    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  }
+}
+
+export async function signout(): Promise<AuthResponse> {
+  try {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      return { data: null, error: AUTH_ERRORS.SERVER_ERROR };
+    }
+
+    return {
+      data: {
+        message: 'Successfully signed out',
+      },
+      error: null,
+    };
+  } catch (error) {
+    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  }
+}
