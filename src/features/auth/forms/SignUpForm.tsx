@@ -9,6 +9,7 @@ import { getSignUpSchema, type SignUpFormValues } from '@/lib/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -16,6 +17,7 @@ import { toast } from 'sonner';
 const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations('Auth');
+  const router = useRouter();
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(getSignUpSchema(t)),
@@ -37,6 +39,10 @@ const SignUpForm = () => {
           description: 'Please try again',
           duration: 5000,
         });
+      }
+
+      if (response.data) {
+        router.push('/verify');
       }
     } catch (error) {
       toast.error('An unexpected error occurred', {

@@ -2,6 +2,7 @@
 
 import type { SignInFormValues, SignUpFormValues } from '@/lib/validations/auth';
 import { AUTH_ERRORS, type AuthResponse } from '@/lib/types/auth';
+import { Env } from '@/libs/Env';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 
@@ -32,7 +33,7 @@ export async function signin(formData: SignInFormValues): Promise<AuthResponse> 
       },
       error: null,
     };
-  } catch (error) {
+  } catch {
     return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
   }
 }
@@ -44,6 +45,9 @@ export async function signup(formData: SignUpFormValues): Promise<AuthResponse> 
     const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
+      options: {
+        emailRedirectTo: `${Env.NEXT_PUBLIC_APP_URL}/auth/confirm`,
+      },
     });
 
     if (error) {
@@ -56,7 +60,7 @@ export async function signup(formData: SignUpFormValues): Promise<AuthResponse> 
       return { data: null, error: AUTH_ERRORS.SERVER_ERROR };
     }
 
-    revalidatePath('/', 'layout');
+    revalidatePath('/');
     return {
       data: {
         message: 'Successfully signed up! Please check your email to verify your account.',
@@ -64,7 +68,7 @@ export async function signup(formData: SignUpFormValues): Promise<AuthResponse> 
       },
       error: null,
     };
-  } catch (error) {
+  } catch {
     return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
   }
 }
@@ -84,7 +88,7 @@ export async function signout(): Promise<AuthResponse> {
       },
       error: null,
     };
-  } catch (error) {
+  } catch {
     return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
   }
 }

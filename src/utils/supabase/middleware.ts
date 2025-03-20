@@ -35,6 +35,8 @@ export async function updateSession(request: NextRequest) {
     !user
     && !request.nextUrl.pathname.startsWith('/sign-in')
     && !request.nextUrl.pathname.startsWith('/sign-up')
+    && !request.nextUrl.pathname.startsWith('/auth/confirm')
+    && !request.nextUrl.pathname.startsWith('/verify')
     && request.nextUrl.pathname !== '/'
   ) {
     const locale

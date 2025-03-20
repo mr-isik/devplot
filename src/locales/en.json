@@ -94,5 +94,20 @@
       "full_name_min": "Full name must be at least 2 characters",
       "terms_required": "You must accept the terms and conditions"
     }
+  },
+  "Loading": {
+    "loading": "Loading"
+  },
+  "Verify": {
+    "error_missing_parameters": "Missing parameters",
+    "error_occurred": "An error occurred",
+    "verification_success": "Email address verified successfully",
+    "check_inbox": "Check your inbox",
+    "check_spam": "Check your spam folder if you don't see it in your inbox.",
+    "back_to_signin": "Back to Sign In",
+    "title": "Verify Email",
+    "unexpected_error": "An unexpected error occurred",
+    "meta_title": "Verify Email",
+    "meta_description": "Verify your email address to continue your journey."
   }
 }
