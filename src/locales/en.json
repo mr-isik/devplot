@@ -105,9 +105,13 @@
     "check_inbox": "Check your inbox",
     "check_spam": "Check your spam folder if you don't see it in your inbox.",
     "back_to_signin": "Back to Sign In",
+    "resend_email": "Resend Email",
+    "email_sent": "Email sent successfully",
+    "email_not_sent": "Email not sent",
     "title": "Verify Email",
     "unexpected_error": "An unexpected error occurred",
     "meta_title": "Verify Email",
-    "meta_description": "Verify your email address to continue your journey."
+    "meta_description": "Verify your email address to continue your journey.",
+    "verifying": "Verifying..."
   }
 }

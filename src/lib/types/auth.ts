@@ -1,8 +1,5 @@
 export type AuthResponse = {
-  data: {
-    message: string;
-    user?: any;
-  } | null;
+  data: any;
   error: {
     message: string;
     code?: string;

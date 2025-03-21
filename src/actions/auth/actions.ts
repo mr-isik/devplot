@@ -1,10 +1,12 @@
 'use server';
 
 import type { SignInFormValues, SignUpFormValues } from '@/lib/validations/auth';
+import type { EmailOtpType } from '@supabase/supabase-js';
 import { AUTH_ERRORS, type AuthResponse } from '@/lib/types/auth';
 import { Env } from '@/libs/Env';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 export async function signin(formData: SignInFormValues): Promise<AuthResponse> {
   try {
@@ -76,19 +78,48 @@ export async function signup(formData: SignUpFormValues): Promise<AuthResponse> 
 export async function signout(): Promise<AuthResponse> {
   try {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signOut();
+    await supabase.auth.signOut();
 
-    if (error) {
-      return { data: null, error: AUTH_ERRORS.SERVER_ERROR };
-    }
-
-    return {
-      data: {
-        message: 'Successfully signed out',
-      },
-      error: null,
-    };
+    return redirect('/');
   } catch {
     return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
   }
 }
+
+export const verifyEmail = async (token_hash: string, type: EmailOtpType): Promise<AuthResponse> => {
+  try {
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash,
+      type,
+    });
+
+    if (error) {
+      return { data: null, error: { message: error.message } };
+    }
+
+    return { data: null, error: null };
+  } catch {
+    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  }
+};
+
+export const resendEmail = async (email: string): Promise<AuthResponse> => {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+    });
+
+    if (error) {
+      return { data: null, error: { message: error.message } };
+    }
+
+    return { data, error: null };
+  } catch {
+    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  }
+};

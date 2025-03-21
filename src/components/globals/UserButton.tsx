@@ -16,9 +16,15 @@ import {
   UserCircle,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 
 export function UserButton() {
   const t = useTranslations('UserButton');
+  const router = useRouter();
+  const handleSignout = async () => {
+    await signout();
+    router.push('/');
+  };
 
   return (
     <Popover>
@@ -56,7 +62,7 @@ export function UserButton() {
             </Button>
           </div>
           <div className="border-t border-border" />
-          <Button onClick={signout} variant="ghost" size="sm" className="justify-start text-destructive hover:bg-destructive/10 hover:text-destructive">
+          <Button onClick={handleSignout} variant="ghost" size="sm" className="justify-start text-destructive hover:bg-destructive/10 hover:text-destructive">
             <LogOut className="mr-2 size-4" />
             <span>{t('logout')}</span>
           </Button>

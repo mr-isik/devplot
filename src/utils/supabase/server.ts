@@ -1,3 +1,5 @@
+'use server';
+
 import { Env } from '@/libs/Env';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';

@@ -36,7 +36,7 @@ export default async function SignInPage() {
           <Logo size={44} />
           <span className="text-2xl font-bold">DevPlot</span>
         </div>
-        <div className="relative z-20 mt-auto rounded-lg bg-gradient-to-b from-background/50 to-background/80 p-4">
+        <div className="relative z-20 mt-auto rounded-lg bg-gradient-to-b from-black/50 to-black/80 p-4">
           <blockquote className="space-y-2">
             <p className="text-lg">
               "As a developer, I needed a simple way to showcase my work. DevPlot made it incredibly easy to build a professional portfolio in minutes."

@@ -36,7 +36,7 @@ export default async function SignUpPage() {
           <Logo size={44} />
           <span className="text-2xl font-bold">DevPlot</span>
         </div>
-        <div className="relative z-20 mt-auto rounded-lg bg-gradient-to-b from-background/50 to-background/80 p-4">
+        <div className="relative z-20 mt-auto rounded-lg bg-gradient-to-b from-black/50 to-black/80 p-4">
           <blockquote className="space-y-2">
             <p className="text-lg">
               "DevPlot has completely transformed how I showcase my development work. It's intuitive, beautiful, and exactly what I needed for my portfolio."
