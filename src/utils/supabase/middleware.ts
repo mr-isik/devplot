@@ -1,6 +1,13 @@
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
+const protectedRoutes = [
+  '/dashboard',
+  '/profile',
+  '/settings',
+  '/logout',
+];
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -33,10 +40,7 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user
-    && !request.nextUrl.pathname.startsWith('/sign-in')
-    && !request.nextUrl.pathname.startsWith('/sign-up')
-    && !request.nextUrl.pathname.startsWith('/auth/confirm')
-    && !request.nextUrl.pathname.startsWith('/verify')
+    && protectedRoutes.includes(request.nextUrl.pathname)
     && request.nextUrl.pathname !== '/'
   ) {
     const locale

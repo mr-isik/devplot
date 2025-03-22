@@ -102,9 +102,11 @@ const SignInForm = () => {
             />
 
             <div className="flex items-center justify-end">
-              <Button variant="link" className="px-0 text-sm font-normal text-primary">
-                {t('forgot_password')}
-              </Button>
+              <Link href="/reset-password">
+                <Button variant="link" className="px-0 text-sm font-normal text-primary">
+                  {t('forgot_password')}
+                </Button>
+              </Link>
             </div>
           </div>
 

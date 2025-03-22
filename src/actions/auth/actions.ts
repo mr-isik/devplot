@@ -1,14 +1,15 @@
 'use server';
 
+import type { AuthResponse } from '@/lib/types/auth';
 import type { SignInFormValues, SignUpFormValues } from '@/lib/validations/auth';
 import type { EmailOtpType } from '@supabase/supabase-js';
-import { AUTH_ERRORS, type AuthResponse } from '@/lib/types/auth';
 import { Env } from '@/libs/Env';
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { createUser } from '../users/actions';
 
-export async function signin(formData: SignInFormValues): Promise<AuthResponse> {
+export const signin = async (formData: SignInFormValues): Promise<AuthResponse> => {
   try {
     const supabase = await createClient();
 
@@ -18,13 +19,7 @@ export async function signin(formData: SignInFormValues): Promise<AuthResponse> 
     });
 
     if (error) {
-      if (error.message.includes('Invalid login credentials')) {
-        return { data: null, error: AUTH_ERRORS.INVALID_CREDENTIALS };
-      }
-      if (error.message.includes('User not found')) {
-        return { data: null, error: AUTH_ERRORS.USER_NOT_FOUND };
-      }
-      return { data: null, error: AUTH_ERRORS.SERVER_ERROR };
+      return { data: null, error };
     }
 
     revalidatePath('/', 'layout');
@@ -35,12 +30,30 @@ export async function signin(formData: SignInFormValues): Promise<AuthResponse> 
       },
       error: null,
     };
-  } catch {
-    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
   }
-}
+};
 
-export async function signup(formData: SignUpFormValues): Promise<AuthResponse> {
+export const signInWithGithub = async (): Promise<AuthResponse> => {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+    });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data, error: null };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
+  }
+};
+
+export const signup = async (formData: SignUpFormValues): Promise<AuthResponse> => {
   try {
     const supabase = await createClient();
 
@@ -53,38 +66,39 @@ export async function signup(formData: SignUpFormValues): Promise<AuthResponse> 
     });
 
     if (error) {
-      if (error.message.includes('already registered')) {
-        return { data: null, error: AUTH_ERRORS.EMAIL_IN_USE };
-      }
-      if (error.message.includes('weak password')) {
-        return { data: null, error: AUTH_ERRORS.WEAK_PASSWORD };
-      }
-      return { data: null, error: AUTH_ERRORS.SERVER_ERROR };
+      return { data: null, error };
     }
 
-    revalidatePath('/');
-    return {
-      data: {
-        message: 'Successfully signed up! Please check your email to verify your account.',
-        user: data.user,
-      },
-      error: null,
-    };
-  } catch {
-    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
-  }
-}
+    const createdUser = await createUser(data.user!.id);
 
-export async function signout(): Promise<AuthResponse> {
+    if (createdUser) {
+      revalidatePath('/');
+
+      return {
+        data: {
+          message: 'Successfully signed up! Please check your email to verify your account.',
+          user: data.user,
+        },
+        error: null,
+      };
+    }
+
+    return { data: null, error };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
+  }
+};
+
+export const signout = async (): Promise<AuthResponse> => {
   try {
     const supabase = await createClient();
     await supabase.auth.signOut();
 
     return redirect('/');
-  } catch {
-    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
   }
-}
+};
 
 export const verifyEmail = async (token_hash: string, type: EmailOtpType): Promise<AuthResponse> => {
   try {
@@ -96,12 +110,12 @@ export const verifyEmail = async (token_hash: string, type: EmailOtpType): Promi
     });
 
     if (error) {
-      return { data: null, error: { message: error.message } };
+      return { data: null, error };
     }
 
     return { data: null, error: null };
-  } catch {
-    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
   }
 };
 
@@ -115,11 +129,47 @@ export const resendEmail = async (email: string): Promise<AuthResponse> => {
     });
 
     if (error) {
-      return { data: null, error: { message: error.message } };
+      return { data: null, error };
     }
 
     return { data, error: null };
-  } catch {
-    return { data: null, error: AUTH_ERRORS.NETWORK_ERROR };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
+  }
+};
+
+export const resetPassword = async (email: string): Promise<AuthResponse> => {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${Env.NEXT_PUBLIC_APP_URL}/change-password`,
+    });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data, error: null };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
+  }
+};
+
+export const updatePassword = async (password: string): Promise<AuthResponse> => {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.updateUser({
+      password,
+    });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data, error: null };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
   }
 };

@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 type VerifyEmailProps = {
   token_hash: string;
   type: EmailOtpType;
+  next: string;
   translations: {
     error_occurred: string;
     unexpected_error: string;
@@ -16,7 +17,7 @@ type VerifyEmailProps = {
   };
 };
 
-export default function VerifyEmail({ token_hash, type, translations }: VerifyEmailProps) {
+export default function VerifyEmail({ token_hash, type, next, translations }: VerifyEmailProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +31,7 @@ export default function VerifyEmail({ token_hash, type, translations }: VerifyEm
         if (error !== null) {
           setError(error.message);
         } else {
-          router.push('/dashboard');
+          router.push(next || '/dashboard');
         }
       } catch {
         setError(translations.unexpected_error);
@@ -40,7 +41,7 @@ export default function VerifyEmail({ token_hash, type, translations }: VerifyEm
     }
 
     verify();
-  }, [token_hash, type, router, translations.unexpected_error]);
+  }, [token_hash, type, router, translations.unexpected_error, next]);
 
   if (isLoading) {
     return (

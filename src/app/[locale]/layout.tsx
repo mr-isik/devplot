@@ -16,12 +16,8 @@ export const metadata: Metadata = {
   icons: [
     {
       rel: 'icon',
-      type: 'image/png',
       url: '/devplot_logo.ico',
-    },
-    {
-      rel: 'icon',
-      url: '/devplot_logo.ico',
+      sizes: '32x32',
     },
   ],
 };

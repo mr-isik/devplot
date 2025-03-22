@@ -36,7 +36,6 @@ const SignUpForm = () => {
 
       if (response.error) {
         toast.error(response.error.message, {
-          description: 'Please try again',
           duration: 5000,
         });
       }

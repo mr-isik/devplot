@@ -5,17 +5,12 @@
     "sign_in_link": "Sign in",
     "sign_up_link": "Sign up"
   },
-  "BaseTemplate": {
-    "description": "Starter code for your Nextjs Boilerplate with Tailwind CSS",
-    "made_with": "Made with <author></author>."
-  },
   "Index": {
-    "meta_title": "Next.js Boilerplate Presentation",
-    "meta_description": "Next js Boilerplate is the perfect starter code for your project. Build your React application with the Next.js framework.",
-    "sponsors_title": "Sponsors"
+    "meta_title": "DevPlot - A super fast developer portfolio builder",
+    "meta_description": "DevPlot is a super fast developer portfolio builder. It's a simple and easy to use tool that allows you to create a portfolio in minutes."
   },
   "Dashboard": {
-    "meta_title": "Dashboard | DevPlot",
+    "meta_title": "DevPlot - Dashboard",
     "meta_description": "Manage your websites and access various features.",
     "welcome_message": "Welcome to your dashboard",
     "description": "Manage and customize your portfolio",
@@ -48,22 +43,22 @@
     "last_updated": "Last Updated"
   },
   "About": {
-    "meta_title": "About",
+    "meta_title": "DevPlot - About",
     "meta_description": "About page description",
     "about_paragraph": "Welcome to our About page! We are a team of passionate individuals dedicated to creating amazing software.",
     "translation_powered_by": "Translation powered by"
   },
   "SignIn": {
-    "meta_title": "Sign in",
+    "meta_title": "DevPlot - Sign in",
     "meta_description": "Seamlessly sign in to your account with our user-friendly login process."
   },
   "SignUp": {
-    "meta_title": "Sign up",
+    "meta_title": "DevPlot - Sign up",
     "meta_description": "Effortlessly create an account through our intuitive sign-up process."
   },
   "Auth": {
     "email": "E-Mail",
-    "email_placeholder": "example@mail.com",
+    "email_placeholder": "Email address",
     "password": "Password",
     "password_placeholder": "Enter your password",
     "confirm_password": "Confirm Password",
@@ -101,7 +96,7 @@
   "Verify": {
     "error_missing_parameters": "Missing parameters",
     "error_occurred": "An error occurred",
-    "verification_success": "Email address verified successfully",
+    "verification_success": "Email address verified successfully, you'll be redirected shortly.",
     "check_inbox": "Check your inbox",
     "check_spam": "Check your spam folder if you don't see it in your inbox.",
     "back_to_signin": "Back to Sign In",
@@ -110,8 +105,40 @@
     "email_not_sent": "Email not sent",
     "title": "Verify Email",
     "unexpected_error": "An unexpected error occurred",
-    "meta_title": "Verify Email",
+    "meta_title": "DevPlot - Verify Email",
     "meta_description": "Verify your email address to continue your journey.",
     "verifying": "Verifying..."
+  },
+  "ResetPassword": {
+    "email": "E-Mail",
+    "email_placeholder": "Email address",
+    "reset_password": "Reset Password",
+    "resetting_password": "Resetting password...",
+    "reset_password_description": "Enter your email address to reset your password.",
+    "reset_password_success": "Link Sent",
+    "reset_password_success_description": "We've sent a link to reset your password to your email address.",
+    "validation": {
+      "email_required": "Please enter a valid email address"
+    },
+    "meta_title": "DevPlot - Reset Password",
+    "meta_description": "Enter your email address to reset your password."
+  },
+  "UpdatePassword": {
+    "update_password": "Update Password",
+    "update_password_description": "Update your password to continue your journey.",
+    "password": "Password",
+    "password_placeholder": "Enter your password",
+    "confirm_password": "Confirm Password",
+    "confirm_password_placeholder": "Confirm your password",
+    "updating_password": "Updating password...",
+    "update_password_success": "Password updated successfully",
+    "update_password_success_description": "Your password has been updated successfully.",
+    "return_to_signin": "Return to Sign In",
+    "validation": {
+      "password_min": "Password must be at least 6 characters",
+      "password_match": "Passwords do not match"
+    },
+    "meta_title": "DevPlot - Change Password",
+    "meta_description": "Change your password to continue your journey."
   }
 }
