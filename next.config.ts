@@ -1,7 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  eslint: {
+    dirs: ["."],
+  },
+  reactStrictMode: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "jxxkvmlubqouilyznzvg.supabase.co",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
