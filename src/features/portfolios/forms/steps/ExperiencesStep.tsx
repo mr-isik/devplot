@@ -1,42 +1,51 @@
-'use client';
+"use client";
 
-import type { DropzoneOptions } from 'react-dropzone';
-import type { z } from 'zod';
-import DynamicFormField, { FormFieldType } from '@/components/globals/DynamicFormField';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { FormLabel } from '@/components/ui/form';
-import { SelectItem } from '@/components/ui/select';
-import { experienceSchema } from '@/lib/validations/portfolio';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { BriefcaseIcon, PlusCircleIcon, Trash2Icon } from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
-import { useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import type { DropzoneOptions } from "react-dropzone";
+import type { z } from "zod";
+import DynamicFormField, {
+  FormFieldType,
+} from "@/components/globals/DynamicFormField";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { FormLabel } from "@/components/ui/form";
+import { SelectItem } from "@/components/ui/select";
+import { experienceSchema } from "@/lib/validations/portfolio";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { BriefcaseIcon, PlusCircleIcon, Trash2Icon } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 
 type ExperienceFormValues = z.infer<typeof experienceSchema>;
 
 const logoOptions: DropzoneOptions = {
-  accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.gif'] },
+  accept: { "image/*": [".jpg", ".jpeg", ".png", ".gif"] },
   maxFiles: 1,
   multiple: false,
   maxSize: 1024 * 1024 * 1, // 1MB
 };
 
 const employmentTypeOptions = [
-  { value: 'full-time', label: 'Full-Time' },
-  { value: 'part-time', label: 'Part-Time' },
-  { value: 'contract', label: 'Contract' },
-  { value: 'freelance', label: 'Freelance' },
+  { value: "full-time", label: "Full-Time" },
+  { value: "part-time", label: "Part-Time" },
+  { value: "contract", label: "Contract" },
+  { value: "freelance", label: "Freelance" },
 ];
 
 export default function ExperiencesStep() {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'experiences',
+    name: "experiences",
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -44,12 +53,12 @@ export default function ExperiencesStep() {
   const experienceForm = useForm<ExperienceFormValues>({
     resolver: zodResolver(experienceSchema),
     defaultValues: {
-      role: '',
-      company: '',
+      role: "",
+      company: "",
       employment_type: undefined,
-      start_date: '',
-      end_date: '',
-      description: '',
+      start_date: "",
+      end_date: "",
+      description: "",
     },
   });
 
@@ -57,23 +66,23 @@ export default function ExperiencesStep() {
     if (index !== undefined && index >= 0 && index < fields.length) {
       const experience = fields[index] as unknown as ExperienceFormValues;
       experienceForm.reset({
-        role: experience.role || '',
-        company: experience.company || '',
+        role: experience.role || "",
+        company: experience.company || "",
         employment_type: experience.employment_type || undefined,
-        start_date: experience.start_date || '',
-        end_date: experience.end_date || '',
-        description: experience.description || '',
+        start_date: experience.start_date || "",
+        end_date: experience.end_date || "",
+        description: experience.description || "",
         logo: experience.logo || [],
       });
       setEditingIndex(index);
     } else {
       experienceForm.reset({
-        role: '',
-        company: '',
+        role: "",
+        company: "",
         employment_type: undefined,
-        start_date: '',
-        end_date: '',
-        description: '',
+        start_date: "",
+        end_date: "",
+        description: "",
         logo: [],
       });
       setEditingIndex(null);
@@ -96,148 +105,168 @@ export default function ExperiencesStep() {
     setIsDialogOpen(false);
   };
 
-  const currentlyWorking = experienceForm.watch('end_date') === 'Present';
+  const currentlyWorking = experienceForm.watch("end_date") === "Present";
 
   return (
     <div className="space-y-6">
       <div className="mobile-borderless-card sm:rounded-xl sm:border sm:bg-card sm:p-6">
         {/* Empty state */}
-        {fields.length === 0
-          ? (
-              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-background p-8 text-center">
-                <div className="mb-4 rounded-full bg-primary/10 p-3">
-                  <BriefcaseIcon className="size-8 text-primary" />
-                </div>
-                <h3 className="mb-1 text-lg font-medium">Highlight your professional journey</h3>
-                <p className="mb-4 text-sm text-muted-foreground">
-                  Adding your work experience helps visitors understand your professional background and expertise.
-                </p>
-                <Button onClick={() => resetAndOpenDialog()} className="gap-1.5">
-                  <PlusCircleIcon className="size-4" />
-                  Add Your First Experience
-                </Button>
-              </div>
-            )
-          : (
-              <div className="space-y-4">
-                {/* Mobile header - only visible on mobile */}
-                <div className="mb-4 flex items-center justify-between sm:hidden">
-                  <h2 className="text-lg font-semibold">Work Experience</h2>
-                  <Button size="sm" variant="outline" onClick={() => resetAndOpenDialog()} className="gap-1">
-                    <PlusCircleIcon className="size-4" />
-                    Add
-                  </Button>
-                </div>
+        {fields.length === 0 ? (
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-background p-8 text-center">
+            <div className="mb-4 rounded-full bg-primary/10 p-3">
+              <BriefcaseIcon className="size-8 text-primary" />
+            </div>
+            <h3 className="mb-1 text-lg font-medium">
+              Highlight your professional journey
+            </h3>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Adding your work experience helps visitors understand your
+              professional background and expertise.
+            </p>
+            <Button onClick={() => resetAndOpenDialog()} className="gap-1.5">
+              <PlusCircleIcon className="size-4" />
+              Add Your First Experience
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {/* Mobile header - only visible on mobile */}
+            <div className="mb-4 flex items-center justify-between sm:hidden">
+              <h2 className="text-lg font-semibold">Work Experience</h2>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => resetAndOpenDialog()}
+                className="gap-1"
+              >
+                <PlusCircleIcon className="size-4" />
+                Add
+              </Button>
+            </div>
 
-                {/* Experience cards list */}
-                <div className="space-y-3">
-                  {fields.map((field, index) => {
-                    const experience = field as unknown as ExperienceFormValues;
-                    return (
-                      <div key={field.id} className="mobile-card group relative">
-                        <div className="mobile-card-inner rounded-lg border bg-card p-4 shadow-sm transition-all hover:shadow-md sm:bg-transparent">
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                              <h4 className="text-lg font-medium text-primary">{experience.role}</h4>
-                              <div className="shrink-0">
-                                <div className="hidden items-center gap-1.5 sm:flex">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => resetAndOpenDialog(index)}
-                                    className="h-8 px-2"
-                                  >
-                                    Edit
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => remove(index)}
-                                    className="size-8 text-muted-foreground hover:text-destructive"
-                                  >
-                                    <Trash2Icon className="size-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex flex-col gap-1">
-                              <div className="mb-2 flex items-center gap-2">
-                                {experience.logo && (
-                                  <div className="relative size-10 rounded-md border">
-                                    <Image src={URL.createObjectURL(experience.logo[0]!)} alt={experience.company} fill className="object-cover" />
-                                  </div>
-                                )}
-                                <p className="text-base font-medium text-muted-foreground">{experience.company}</p>
-                              </div>
-                              <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                <BriefcaseIcon className="size-4 text-primary/80" />
-                                {format(experience.start_date, 'MMM yyyy')}
-                                {' '}
-                                -
-                                {' '}
-                                <span className={experience.end_date === 'Present' ? 'font-medium text-primary' : ''}>
-                                  {experience.end_date !== 'Present' && experience.end_date ? format(experience.end_date, 'MMM yyyy') : 'Present'}
-                                </span>
-                              </p>
-                              {experience.employment_type && (
-                                <p className="text-sm text-muted-foreground">
-                                  {employmentTypeOptions.find(option => option.value === experience.employment_type)?.label || experience.employment_type}
-                                </p>
-                              )}
-                            </div>
-
-                            <p className="text-sm text-muted-foreground">
-                              {experience.description}
-                            </p>
-
-                            {/* Mobile actions - Only visible on mobile */}
-                            <div className="mt-3 flex justify-end border-t pt-2 sm:hidden">
+            {/* Experience cards list */}
+            <div className="space-y-3">
+              {fields.map((field, index) => {
+                const experience = field as unknown as ExperienceFormValues;
+                return (
+                  <div key={field.id} className="mobile-card group relative">
+                    <div className="mobile-card-inner rounded-lg border bg-card p-4 shadow-sm transition-all hover:shadow-md sm:bg-transparent">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-lg font-medium text-primary">
+                            {experience.role}
+                          </h4>
+                          <div className="shrink-0">
+                            <div className="hidden items-center gap-1.5 sm:flex">
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => resetAndOpenDialog(index)}
-                                className="h-8 px-3 text-xs"
+                                className="h-8 px-2"
                               >
                                 Edit
                               </Button>
                               <Button
                                 variant="ghost"
-                                size="sm"
+                                size="icon"
                                 onClick={() => remove(index)}
-                                className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
+                                className="size-8 text-muted-foreground hover:text-destructive"
                               >
-                                <Trash2Icon className="mr-1 size-3" />
-                                Remove
+                                <Trash2Icon className="size-4" />
                               </Button>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
 
-                {/* Desktop add button - only visible on desktop */}
-                <div className="mt-6 hidden sm:block">
-                  <Button onClick={() => resetAndOpenDialog()} className="gap-1.5">
-                    <PlusCircleIcon className="size-4" />
-                    Add Experience
-                  </Button>
-                </div>
-              </div>
-            )}
+                        <div className="flex flex-col gap-1">
+                          <div className="mb-2 flex items-center gap-2">
+                            {experience.logo && (
+                              <div className="relative size-10 rounded-md border">
+                                <Image
+                                  src={URL.createObjectURL(experience.logo[0]!)}
+                                  alt={experience.company}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                            )}
+                            <p className="text-base font-medium text-muted-foreground">
+                              {experience.company}
+                            </p>
+                          </div>
+                          <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                            <BriefcaseIcon className="size-4 text-primary/80" />
+                            {format(experience.start_date, "MMM yyyy")} -{" "}
+                            <span
+                              className={
+                                experience.end_date === "Present"
+                                  ? "font-medium text-primary"
+                                  : ""
+                              }
+                            >
+                              {experience.end_date !== "Present" &&
+                              experience.end_date
+                                ? format(experience.end_date, "MMM yyyy")
+                                : "Present"}
+                            </span>
+                          </p>
+                          {experience.employment_type && (
+                            <p className="text-sm text-muted-foreground">
+                              {employmentTypeOptions.find(
+                                (option) =>
+                                  option.value === experience.employment_type
+                              )?.label || experience.employment_type}
+                            </p>
+                          )}
+                        </div>
+
+                        <p className="text-sm text-muted-foreground">
+                          {experience.description}
+                        </p>
+
+                        {/* Mobile actions - Only visible on mobile */}
+                        <div className="mt-3 flex justify-end border-t pt-2 sm:hidden">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => resetAndOpenDialog(index)}
+                            className="h-8 px-3 text-xs"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => remove(index)}
+                            className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2Icon className="mr-1 size-3" />
+                            Remove
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop add button - only visible on desktop */}
+            <div className="mt-6 hidden sm:block">
+              <Button onClick={() => resetAndOpenDialog()} className="gap-1.5">
+                <PlusCircleIcon className="size-4" />
+                Add Experience
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Count indicator for experiences */}
         {fields.length > 0 && (
           <div className="mt-4 hidden border-t pt-4 sm:block">
             <p className="text-sm text-muted-foreground">
-              {fields.length}
-              {' '}
-              experience
-              {fields.length !== 1 ? 's' : ''}
-              {' '}
-              added
+              {fields.length} experience
+              {fields.length !== 1 ? "s" : ""} added
             </p>
           </div>
         )}
@@ -249,7 +278,9 @@ export default function ExperiencesStep() {
           <form onSubmit={experienceForm.handleSubmit(handleAddExperience)}>
             <DialogHeader>
               <DialogTitle>
-                {editingIndex !== null ? 'Edit Experience' : 'Add New Experience'}
+                {editingIndex !== null
+                  ? "Edit Experience"
+                  : "Add New Experience"}
               </DialogTitle>
               <DialogDescription>
                 Enter information about your work experience
@@ -288,7 +319,7 @@ export default function ExperiencesStep() {
                 fieldType={FormFieldType.SELECT}
                 placeholder="Please Select"
               >
-                {employmentTypeOptions.map(option => (
+                {employmentTypeOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
@@ -311,32 +342,33 @@ export default function ExperiencesStep() {
                       checked={currentlyWorking}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          experienceForm.setValue('end_date', 'Present');
+                          experienceForm.setValue("end_date", "Present");
                         } else {
-                          experienceForm.setValue('end_date', '');
+                          experienceForm.setValue("end_date", "");
                         }
-                        experienceForm.trigger('end_date');
+                        experienceForm.trigger("end_date");
                       }}
                     />
-                    <FormLabel htmlFor="currently-working" className="!m-0 text-sm font-normal">
+                    <FormLabel
+                      htmlFor="currently-working"
+                      className="!m-0 text-sm font-normal"
+                    >
                       I currently work here
                     </FormLabel>
                   </div>
                 </div>
 
-                {
-                  !currentlyWorking && (
-                    <div className="space-y-2">
-                      <DynamicFormField
-                        control={experienceForm.control}
-                        name="end_date"
-                        label="End Date *"
-                        fieldType={FormFieldType.DATE}
-                        disabled={currentlyWorking}
-                      />
-                    </div>
-                  )
-                }
+                {!currentlyWorking && (
+                  <div className="space-y-2">
+                    <DynamicFormField
+                      control={experienceForm.control}
+                      name="end_date"
+                      label="End Date *"
+                      fieldType={FormFieldType.DATE}
+                      disabled={currentlyWorking}
+                    />
+                  </div>
+                )}
               </div>
 
               <DynamicFormField
@@ -356,66 +388,48 @@ export default function ExperiencesStep() {
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-              >
-                {editingIndex !== null ? 'Update' : 'Add'}
-                {' '}
-                Experience
+              <Button type="submit">
+                {editingIndex !== null ? "Update" : "Add"} Experience
               </Button>
             </DialogFooter>
 
             {/* Errors */}
             <div>
-              {
-                experienceForm.formState.errors.logo && (
-                  <span className="text-destructive">
-                    {experienceForm.formState.errors.logo.message}
-                  </span>
-                )
-              }
-              {
-                experienceForm.formState.errors.role && (
-                  <span className="text-destructive">
-                    {experienceForm.formState.errors.role?.message}
-                  </span>
-                )
-              }
-              {
-                experienceForm.formState.errors.company && (
-                  <span className="text-destructive">
-                    {experienceForm.formState.errors.company?.message}
-                  </span>
-                )
-              }
-              {
-                experienceForm.formState.errors.employment_type && (
-                  <span className="text-destructive">
-                    {experienceForm.formState.errors.employment_type?.message}
-                  </span>
-                )
-              }
-              {
-                experienceForm.formState.errors.start_date && (
-                  <span className="text-destructive">
-                    {experienceForm.formState.errors.start_date?.message}
-                  </span>
-                )
-              }
-              {
-                experienceForm.formState.errors.end_date && (
-                  <span className="text-destructive">
-                    {experienceForm.formState.errors.end_date?.message}
-                  </span>
-                )
-              }
-              {
-                experienceForm.formState.errors.description && (
-                  <span className="text-destructive">
-                    {experienceForm.formState.errors.description?.message}
-                  </span>
-                )
-              }
+              {experienceForm.formState.errors.logo && (
+                <span className="text-destructive">
+                  {experienceForm.formState.errors.logo.message}
+                </span>
+              )}
+              {experienceForm.formState.errors.role && (
+                <span className="text-destructive">
+                  {experienceForm.formState.errors.role?.message}
+                </span>
+              )}
+              {experienceForm.formState.errors.company && (
+                <span className="text-destructive">
+                  {experienceForm.formState.errors.company?.message}
+                </span>
+              )}
+              {experienceForm.formState.errors.employment_type && (
+                <span className="text-destructive">
+                  {experienceForm.formState.errors.employment_type?.message}
+                </span>
+              )}
+              {experienceForm.formState.errors.start_date && (
+                <span className="text-destructive">
+                  {experienceForm.formState.errors.start_date?.message}
+                </span>
+              )}
+              {experienceForm.formState.errors.end_date && (
+                <span className="text-destructive">
+                  {experienceForm.formState.errors.end_date?.message}
+                </span>
+              )}
+              {experienceForm.formState.errors.description && (
+                <span className="text-destructive">
+                  {experienceForm.formState.errors.description?.message}
+                </span>
+              )}
             </div>
           </form>
         </DialogContent>

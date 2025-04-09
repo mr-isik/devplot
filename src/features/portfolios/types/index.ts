@@ -9,7 +9,7 @@ export type Portfolio = {
   user_id: string;
   created_at: string;
   contents: Content;
-  options: Option;
+  options: Option[];
   socials: Social[];
   experiences: Experience[];
   projects: Project[];

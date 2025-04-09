@@ -277,11 +277,8 @@ export default function AppearanceStep() {
 
     const selectedTheme = colorThemes.find((theme) => theme.id === colorTheme);
 
-    // Renk temasını güncelle
-    // @ts-ignore - Şema güncellemesi henüz tanınmamış olabilir
     form.setValue("options.colorTheme", colorTheme);
 
-    // Renkleri güncelle
     if (selectedTheme) {
       if (colorTheme === "custom") {
         form.setValue("options.colors", customColors);

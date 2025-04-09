@@ -21,22 +21,37 @@ import { useState } from "react";
 
 type ThemeSelectorProps = {
   currentThemeId?: ThemeVariant;
+  currentColorTheme?: string;
   onSelectTheme?: (themeId: ThemeVariant) => void;
+  onSelectColorTheme?: (colorTheme: string) => void;
 };
 
 export default function ThemeSelector({
   currentThemeId,
+  currentColorTheme,
   onSelectTheme,
+  onSelectColorTheme,
 }: ThemeSelectorProps) {
   const themes = getAllThemes();
   const [selectedThemeId, setSelectedThemeId] = useState<
     ThemeVariant | undefined
   >(currentThemeId);
 
+  const [selectedColorTheme, setSelectedColorTheme] = useState<
+    string | undefined
+  >(currentColorTheme || "light");
+
   const handleSelectTheme = (themeId: ThemeVariant) => {
     setSelectedThemeId(themeId);
     if (onSelectTheme) {
       onSelectTheme(themeId);
+    }
+  };
+
+  const handleSelectColorTheme = (colorTheme: string) => {
+    setSelectedColorTheme(colorTheme);
+    if (onSelectColorTheme) {
+      onSelectColorTheme(colorTheme);
     }
   };
 

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import type { ThemeOptions } from '../types/theme-options';
-import { createContext, useContext, useMemo, useState } from 'react';
-import { defaultThemeOptions } from '../types/theme-options';
+import type { ReactNode } from "react";
+import type { ThemeOptions } from "../types/theme-options";
+import { createContext, useContext, useMemo, useState } from "react";
+import { defaultThemeOptions } from "../types/theme-options";
 
 type ThemeContextType = {
   themeOptions: ThemeOptions;
@@ -19,12 +19,15 @@ export const ThemeProvider = ({
   children: ReactNode;
   initialOptions?: ThemeOptions;
 }) => {
-  const [themeOptions, setThemeOptions] = useState<ThemeOptions>(initialOptions);
+  const [themeOptions, setThemeOptions] =
+    useState<ThemeOptions>(initialOptions);
 
   const updateThemeOptions = (options: Partial<ThemeOptions>) => {
-    setThemeOptions(prevOptions => ({
+    setThemeOptions((prevOptions) => ({
       ...prevOptions,
       ...options,
+      theme: options.theme || prevOptions.theme,
+      colorTheme: options.colorTheme || prevOptions.colorTheme,
       colorPalette: {
         ...prevOptions.colorPalette,
         ...(options.colorPalette || {}),
@@ -38,7 +41,7 @@ export const ThemeProvider = ({
 
   const contextValue = useMemo(
     () => ({ themeOptions, updateThemeOptions }),
-    [themeOptions],
+    [themeOptions]
   );
 
   return (
@@ -51,7 +54,7 @@ export const ThemeProvider = ({
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };

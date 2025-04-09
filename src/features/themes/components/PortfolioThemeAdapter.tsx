@@ -18,7 +18,7 @@ export function PortfolioThemeAdapter({
   // Generates dynamic CSS based on theme options
   const dynamicStyles = useMemo(() => {
     // Extract options
-    const { colorPalette, fonts, themeName } = themeOptions;
+    const { colorPalette, fonts, theme: themeName, colorTheme } = themeOptions;
 
     // Generate theme-specific styles
     let themeSpecificStyles = "";
@@ -46,6 +46,9 @@ export function PortfolioThemeAdapter({
       }
     `;
 
+    // Determine color-theme specific classes
+    const colorThemeClass = colorTheme ? `.color-theme-${colorTheme}` : "";
+
     // Combine all styles
     themeSpecificStyles = `
       ${fontStyles}
@@ -60,6 +63,11 @@ export function PortfolioThemeAdapter({
         --theme-border: ${colorPalette.border};
         --theme-card: ${colorPalette.card};
         
+        background-color: var(--theme-background);
+        color: var(--theme-text);
+      }
+      
+      .theme-${themeName} ${colorThemeClass} {
         background-color: var(--theme-background);
         color: var(--theme-text);
       }

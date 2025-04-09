@@ -1,15 +1,20 @@
-'use server';
+"use server";
 
-import type { AuthResponse } from '@/lib/types/auth';
-import type { SignInFormValues, SignUpFormValues } from '@/lib/validations/auth';
-import type { EmailOtpType } from '@supabase/supabase-js';
-import { Env } from '@/libs/Env';
-import { createClient } from '@/utils/supabase/server';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { createUser } from '../users/actions';
+import type { AuthResponse } from "@/lib/types/auth";
+import type {
+  SignInFormValues,
+  SignUpFormValues,
+} from "@/lib/validations/auth";
+import type { EmailOtpType } from "@supabase/supabase-js";
+import { Env } from "@/lib/Env";
+import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { createUser } from "../users/actions";
 
-export const signin = async (formData: SignInFormValues): Promise<AuthResponse> => {
+export const signin = async (
+  formData: SignInFormValues
+): Promise<AuthResponse> => {
   try {
     const supabase = await createClient();
 
@@ -22,10 +27,10 @@ export const signin = async (formData: SignInFormValues): Promise<AuthResponse> 
       return { data: null, error };
     }
 
-    revalidatePath('/', 'layout');
+    revalidatePath("/", "layout");
     return {
       data: {
-        message: 'Successfully signed in',
+        message: "Successfully signed in",
         user: data.user,
       },
       error: null,
@@ -40,7 +45,7 @@ export const signInWithGithub = async (): Promise<AuthResponse> => {
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'github',
+      provider: "github",
     });
 
     if (error) {
@@ -53,18 +58,23 @@ export const signInWithGithub = async (): Promise<AuthResponse> => {
   }
 };
 
-export const signup = async (formData: SignUpFormValues): Promise<AuthResponse> => {
+export const signup = async (
+  formData: SignUpFormValues
+): Promise<AuthResponse> => {
   try {
     const supabase = await createClient();
 
-    const { data: user, error: userError } = await supabase.from('users').select('*').eq('username', formData.username);
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("username", formData.username);
 
     if (userError) {
       return { data: null, error: { message: userError.message } };
     }
 
     if (user && user.length > 0) {
-      return { data: null, error: { message: 'Username is already taken' } };
+      return { data: null, error: { message: "Username is already taken" } };
     }
 
     const { data, error } = await supabase.auth.signUp({
@@ -82,11 +92,12 @@ export const signup = async (formData: SignUpFormValues): Promise<AuthResponse> 
     const createdUser = await createUser(data.user!.id, formData.username);
 
     if (createdUser) {
-      revalidatePath('/');
+      revalidatePath("/");
 
       return {
         data: {
-          message: 'Successfully signed up! Please check your email to verify your account.',
+          message:
+            "Successfully signed up! Please check your email to verify your account.",
           user: data.user,
         },
         error: null,
@@ -104,13 +115,16 @@ export const signout = async (): Promise<AuthResponse> => {
     const supabase = await createClient();
     await supabase.auth.signOut();
 
-    return redirect('/');
+    return redirect("/");
   } catch (error: any) {
     return { data: null, error: { message: error.message } };
   }
 };
 
-export const verifyEmail = async (token_hash: string, type: EmailOtpType): Promise<AuthResponse> => {
+export const verifyEmail = async (
+  token_hash: string,
+  type: EmailOtpType
+): Promise<AuthResponse> => {
   try {
     const supabase = await createClient();
 
@@ -134,7 +148,7 @@ export const resendEmail = async (email: string): Promise<AuthResponse> => {
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.resend({
-      type: 'signup',
+      type: "signup",
       email,
     });
 
@@ -166,7 +180,9 @@ export const resetPassword = async (email: string): Promise<AuthResponse> => {
   }
 };
 
-export const updatePassword = async (password: string): Promise<AuthResponse> => {
+export const updatePassword = async (
+  password: string
+): Promise<AuthResponse> => {
   try {
     const supabase = await createClient();
 

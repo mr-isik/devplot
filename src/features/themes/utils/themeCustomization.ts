@@ -1,7 +1,7 @@
 import { ThemeOptions } from "../types/theme-options";
 
 // Color theme definitions
-const colorThemes = {
+export const colorThemes = {
   light: {
     bg: "#fafafa",
     textPrimary: "#171717",
@@ -69,7 +69,6 @@ const colorThemes = {
     gradient: "linear-gradient(135deg, #EA580C, #C2410C)",
   },
   custom: {
-    // Will be overridden by custom colors
     bg: "#FFFFFF",
     textPrimary: "#000000",
     textSecondary: "#525252",
@@ -82,8 +81,7 @@ const colorThemes = {
   },
 };
 
-// Font family definitions
-const fontFamilies = {
+export const fontFamilies = {
   inter: "'Inter', system-ui, sans-serif",
   roboto: "'Roboto', system-ui, sans-serif",
   poppins: "'Poppins', system-ui, sans-serif",
@@ -109,14 +107,30 @@ export function applyThemeCustomization(
 ): string {
   let customizedStyles = baseStyles;
 
-  // Apply color theme
-  const colorTheme = options.theme || "light";
+  const colorTheme = options.colorTheme || "light";
+  console.log("Applying color theme:", colorTheme);
+
   let themeColors = { ...colorThemes[colorTheme as keyof typeof colorThemes] };
 
-  // Handle custom colors if provided
-  if (colorTheme === "custom" && options.colors) {
-    // Map custom colors to theme properties
-    if (Array.isArray(options.colors) && options.colors.length >= 5) {
+  if (!themeColors && options.theme && typeof options.theme === "string") {
+    if (options.theme in colorThemes) {
+      themeColors = {
+        ...colorThemes[options.theme as keyof typeof colorThemes],
+      };
+    }
+  }
+
+  if (!themeColors) {
+    themeColors = { ...colorThemes["light"] };
+  }
+
+  if (
+    options.colors &&
+    Array.isArray(options.colors) &&
+    options.colors.length >= 5
+  ) {
+    if (colorTheme === "custom" || options.theme === "custom") {
+      // Custom renkleri ayarla
       themeColors = {
         bg: options.colors[0],
         textPrimary: options.colors[3],
@@ -127,6 +141,20 @@ export function applyThemeCustomization(
         cardBg: options.colors[0],
         sectionBg: options.colors[1],
         gradient: `linear-gradient(135deg, ${options.colors[4]}, ${adjustColor(options.colors[4], -20)})`,
+      };
+    }
+
+    // Özel renkleri colorPalette'e de yansıt
+    if (!options.colorPalette) {
+      options.colorPalette = {
+        primary: options.colors[4],
+        secondary: options.colors[4] + "99", // With transparency
+        background: options.colors[0],
+        text: options.colors[3],
+        accent: options.colors[4],
+        muted: options.colors[3] + "88",
+        border: options.colors[2],
+        card: options.colors[0],
       };
     }
   }
@@ -204,7 +232,7 @@ export function applyThemeCustomization(
  * @param percent - The percentage to adjust by (positive for lighter, negative for darker)
  * @returns The adjusted hex color
  */
-function adjustColor(color: string, percent: number): string {
+export function adjustColor(color: string, percent: number): string {
   let R = parseInt(color.substring(1, 3), 16);
   let G = parseInt(color.substring(3, 5), 16);
   let B = parseInt(color.substring(5, 7), 16);

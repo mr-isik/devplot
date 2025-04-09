@@ -17,7 +17,6 @@ export const optionsSchema = z.object({
   font: z.string().default("inter"),
 });
 
-// Schema for SEO and content settings
 export const contentSchema = z.object({
   hero_header: z
     .string()

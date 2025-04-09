@@ -1,23 +1,24 @@
 "use client";
 
 import type { ThemeProps } from "@/features/themes/types";
+import type { ThemeOptions } from "@/features/themes/types/theme-options";
 import { getPlatformIcon } from "@/features/portfolios/forms/steps/SocialsStep";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
-import {
-  CalendarIcon,
-  ExternalLinkIcon,
-  GithubIcon,
-  ChevronRightIcon,
-} from "lucide-react";
+import { CalendarIcon, ExternalLinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Education } from "@/features/educations/types";
 import { Skill } from "@/features/skills/types";
 import { getSkillIcon, getSkillColor } from "@/lib/skillsData";
-import { applyThemeCustomization } from "../utils/themeCustomization";
+import {
+  adjustColor,
+  applyThemeCustomization,
+  colorThemes,
+  fontFamilies,
+} from "../utils/themeCustomization";
+import { FaGithub } from "react-icons/fa";
 
-// Base theme styles
 const baseMinimalThemeStyles = `
   .minimal-theme {
     --minimal-bg: #fafafa;
@@ -285,7 +286,6 @@ const MinimalTheme = ({
   skills,
   educations,
 }: ThemeProps) => {
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -305,41 +305,272 @@ const MinimalTheme = ({
     },
   };
 
-  // Parse theme options from portfolio
-  let themeOptions = { theme: "light", font: "inter" };
+  let themeOptions: ThemeOptions = {
+    theme: "minimal",
+    colorTheme: "light",
+    colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
+    font: "inter",
+    colorPalette: {
+      primary: "#2563eb",
+      secondary: "#60a5fa",
+      background: "#fafafa",
+      text: "#171717",
+      accent: "#3b82f6",
+      muted: "#a3a3a3",
+      border: "#e5e5e5",
+      card: "#ffffff",
+    },
+    fonts: {
+      heading: "Inter, system-ui, sans-serif",
+      body: "Inter, system-ui, sans-serif",
+    },
+  };
 
   try {
-    if (portfolio.options?.options) {
-      // Eğer string ise JSON olarak parse et
-      if (typeof portfolio.options.options === "string") {
-        themeOptions = JSON.parse(portfolio.options.options);
-      }
-      // Eğer zaten bir obje ise doğrudan kullan
-      else if (typeof portfolio.options.options === "object") {
-        themeOptions = portfolio.options.options;
+    if (
+      portfolio.options &&
+      Array.isArray(portfolio.options) &&
+      portfolio.options.length > 0 &&
+      portfolio.options[0].options
+    ) {
+      if (typeof portfolio.options[0].options === "string") {
+        const parsedOptions = JSON.parse(
+          portfolio.options[0].options
+        ) as Partial<ThemeOptions>;
+
+        themeOptions = {
+          ...themeOptions,
+          ...parsedOptions,
+        };
+      } else if (
+        typeof portfolio.options[0].options === "object" &&
+        portfolio.options[0].options !== null
+      ) {
+        const optionsObj = portfolio.options[0]
+          .options as Partial<ThemeOptions>;
+
+        themeOptions = {
+          ...themeOptions,
+          ...optionsObj,
+        };
       }
     }
-
-    console.log("Theme options:", themeOptions);
   } catch (error) {
-    console.error("Error parsing theme options:", error);
+    console.error("Error processing theme options:", error);
   }
 
-  // Apply theme customization to base styles
+  if (
+    themeOptions.colors &&
+    Array.isArray(themeOptions.colors) &&
+    themeOptions.colors.length >= 5
+  ) {
+    themeOptions.colorPalette = {
+      primary: themeOptions.colors[4],
+      secondary: themeOptions.colors[4] + "99",
+      background: themeOptions.colors[0],
+      text: themeOptions.colors[3],
+      accent: themeOptions.colors[4],
+      muted: themeOptions.colors[3] + "99",
+      border: themeOptions.colors[2],
+      card: themeOptions.colors[0],
+    };
+  }
+
+  if (themeOptions.font) {
+    const fontValue = `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, system-ui, sans-serif`;
+    themeOptions.fonts = {
+      heading: fontValue,
+      body: fontValue,
+    };
+  }
+
   const minimalThemeStyles = applyThemeCustomization(
     baseMinimalThemeStyles,
     themeOptions,
     "minimal"
   );
 
-  // Determine theme class based on options
-  const themeClass = `minimal-theme ${themeOptions.theme === "dark" ? "dark" : ""}`;
+  const themeClass = `minimal-theme ${themeOptions.colorTheme === "dark" ? "dark" : ""}`;
+
+  let customCssVars = "";
+
+  if (themeOptions.colorTheme && themeOptions.colorTheme in colorThemes) {
+    const colors =
+      colorThemes[themeOptions.colorTheme as keyof typeof colorThemes];
+
+    customCssVars = `
+      :root {
+        --minimal-bg: ${colors.bg} !important;
+        --minimal-text-primary: ${colors.textPrimary} !important;
+        --minimal-text-secondary: ${colors.textSecondary} !important;
+        --minimal-accent: ${colors.accent} !important;
+        --minimal-accent-light: ${colors.accentLight} !important;
+        --minimal-border: ${colors.border} !important;
+        --minimal-card-bg: ${colors.cardBg} !important;
+        --minimal-section-bg: ${colors.sectionBg} !important;
+        --minimal-gradient: ${colors.gradient} !important;
+      }
+      
+      .minimal-theme {
+        background-color: ${colors.bg} !important;
+        color: ${colors.textPrimary} !important;
+      }
+      
+      .minimal-theme .section {
+        background-color: ${colors.bg} !important;
+      }
+      
+      .minimal-theme .alt-section {
+        background-color: ${colors.sectionBg} !important;
+      }
+      
+      .minimal-theme .card {
+        background-color: ${colors.cardBg} !important;
+        border-color: ${colors.border} !important;
+      }
+      
+      .minimal-theme .btn-primary {
+        background: ${colors.gradient} !important;
+        color: white !important;
+      }
+      
+      .minimal-theme .btn-outline {
+        border-color: ${colors.border} !important;
+        color: ${colors.textPrimary} !important;
+      }
+      
+      .minimal-theme .btn-outline:hover {
+        border-color: ${colors.accent} !important;
+        color: ${colors.accent} !important;
+      }
+      
+      .minimal-theme .badge {
+        background-color: ${colors.sectionBg} !important;
+        color: ${colors.textSecondary} !important;
+      }
+      
+      .minimal-theme h1, .minimal-theme h2, .minimal-theme h3 {
+        color: ${colors.textPrimary} !important;
+      }
+      
+      .minimal-theme p {
+        color: ${colors.textSecondary} !important;
+      }
+      
+      .minimal-theme .section-title::after {
+        background: ${colors.gradient} !important;
+      }
+      
+      .minimal-theme .hero-gradient {
+        background: ${colors.gradient} !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
+    `;
+  }
+
+  if (
+    (themeOptions.colorTheme === "custom" || themeOptions.theme === "custom") &&
+    themeOptions.colors &&
+    themeOptions.colors.length >= 5
+  ) {
+    customCssVars = `
+      :root {
+        --minimal-bg: ${themeOptions.colors[0]} !important;
+        --minimal-text-primary: ${themeOptions.colors[3]} !important;
+        --minimal-text-secondary: ${themeOptions.colors[3]}99 !important;
+        --minimal-accent: ${themeOptions.colors[4]} !important;
+        --minimal-accent-light: ${themeOptions.colors[4]}99 !important;
+        --minimal-border: ${themeOptions.colors[2]} !important;
+        --minimal-card-bg: ${themeOptions.colors[0]} !important;
+        --minimal-section-bg: ${themeOptions.colors[1]} !important;
+        --minimal-gradient: linear-gradient(135deg, ${themeOptions.colors[4]}, ${adjustColor(themeOptions.colors[4], -20)}) !important;
+      }
+      
+      .minimal-theme {
+        background-color: ${themeOptions.colors[0]} !important;
+        color: ${themeOptions.colors[3]} !important;
+      }
+      
+      .minimal-theme .section {
+        background-color: ${themeOptions.colors[0]} !important;
+      }
+      
+      .minimal-theme .alt-section {
+        background-color: ${themeOptions.colors[1]} !important;
+      }
+      
+      .minimal-theme .card {
+        background-color: ${themeOptions.colors[0]} !important;
+        border-color: ${themeOptions.colors[2]} !important;
+      }
+      
+      .minimal-theme .btn-primary {
+        background: linear-gradient(135deg, ${themeOptions.colors[4]}, ${adjustColor(themeOptions.colors[4], -20)}) !important;
+        color: white !important;
+      }
+      
+      .minimal-theme .btn-outline {
+        border-color: ${themeOptions.colors[2]} !important;
+        color: ${themeOptions.colors[3]} !important;
+      }
+      
+      .minimal-theme .btn-outline:hover {
+        border-color: ${themeOptions.colors[4]} !important;
+        color: ${themeOptions.colors[4]} !important;
+      }
+      
+      .minimal-theme .badge {
+        background-color: ${themeOptions.colors[1]} !important;
+        color: ${themeOptions.colors[3]}99 !important;
+      }
+      
+      .minimal-theme h1, .minimal-theme h2, .minimal-theme h3 {
+        color: ${themeOptions.colors[3]} !important;
+      }
+      
+      .minimal-theme p {
+        color: ${themeOptions.colors[3]}99 !important;
+      }
+      
+      .minimal-theme .section-title::after {
+        background: linear-gradient(135deg, ${themeOptions.colors[4]}, ${adjustColor(themeOptions.colors[4], -20)}) !important;
+      }
+      
+      .minimal-theme .hero-gradient {
+        background: linear-gradient(135deg, ${themeOptions.colors[4]}, ${adjustColor(themeOptions.colors[4], -20)}) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
+    `;
+  }
+
+  if (themeOptions.font) {
+    const fontValue =
+      fontFamilies[themeOptions.font as keyof typeof fontFamilies] ||
+      `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, system-ui, sans-serif`;
+
+    customCssVars += `
+      :root {
+        --font-family: ${fontValue} !important;
+      }
+      
+      .minimal-theme, .minimal-theme * {
+        font-family: ${fontValue} !important;
+      }
+    `;
+  }
 
   return (
     <>
       {/* Custom CSS styles */}
       <style jsx global>
         {minimalThemeStyles}
+      </style>
+
+      {/* Direkt CSS değişkenleri */}
+      <style jsx global>
+        {customCssVars}
       </style>
 
       <div className={themeClass + ` font-${themeOptions.font} min-h-screen`}>
@@ -357,7 +588,17 @@ const MinimalTheme = ({
                   {portfolio.contents.hero_header}
                 </span>
               </h1>
-              <p className="max-w-2xl text-xl leading-relaxed text-[#525252]">
+              <p
+                className="max-w-2xl text-xl leading-relaxed"
+                style={{
+                  color:
+                    themeOptions.colorTheme === "dark"
+                      ? "#a3a3a3"
+                      : themeOptions.colors && themeOptions.colors.length > 3
+                        ? themeOptions.colors[3] + "99"
+                        : "#52525299",
+                }}
+              >
                 {portfolio.contents.hero_description}
               </p>
 
@@ -645,7 +886,7 @@ const MinimalTheme = ({
                               rel="noopener noreferrer"
                               className="btn btn-outline"
                             >
-                              <GithubIcon className="mr-2 size-4" />
+                              <FaGithub className="mr-2 size-4" />
                               Source Code
                             </Link>
                           )}

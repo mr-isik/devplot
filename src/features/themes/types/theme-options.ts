@@ -5,10 +5,16 @@ import type { ThemeVariant } from "./index";
  */
 export interface ThemeOptions {
   /**
-   * The selected theme/color scheme
-   * Can be "light", "dark", "blue", "green", "purple", "orange", or "custom"
+   * The selected theme template
+   * Can be "minimal", "modern", etc.
    */
   theme: string;
+
+  /**
+   * The selected color theme
+   * Can be "light", "dark", "blue", "green", "purple", "orange", or "custom"
+   */
+  colorTheme?: string;
 
   /**
    * The selected font family
@@ -75,7 +81,8 @@ export type FontOptions = {
 };
 
 export const defaultThemeOptions: ThemeOptions = {
-  theme: "light",
+  theme: "minimal",
+  colorTheme: "light",
   font: "inter",
   colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
   themeName: "minimal",
