@@ -1,9 +1,4 @@
-type ThemeOptions = {
-  theme: string;
-  font: string;
-  colors?: string[];
-  [key: string]: any;
-};
+import { ThemeOptions } from "../types/theme-options";
 
 // Color theme definitions
 const colorThemes = {

@@ -50,7 +50,7 @@ import {
   XIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 const colorThemes = [
@@ -195,62 +195,100 @@ export default function AppearanceStep() {
   const form = useFormContext<PortfolioFormValues>();
   const themes = getAllThemes();
 
+  const options = form.getValues("options") || {
+    theme: DEFAULT_THEME_ID,
+    colorTheme: "light",
+    colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
+    font: "inter",
+  };
+
+  useEffect(() => {
+    if (!options.theme) {
+      form.setValue("options.theme", DEFAULT_THEME_ID);
+    }
+
+    if (!options.colorTheme) {
+      form.setValue("options.colorTheme", "light");
+    }
+
+    if (!options.colors || options.colors.length === 0) {
+      form.setValue("options.colors", [
+        "#FFFFFF",
+        "#F5F5F5",
+        "#E5E5E5",
+        "#000000",
+        "#3B82F6",
+      ]);
+    }
+
+    if (!options.font) {
+      form.setValue("options.font", "inter");
+    }
+  }, [form]);
+
   const [selectedThemeId, setSelectedThemeId] = useState<string>(
-    form.getValues().options.theme || DEFAULT_THEME_ID
+    options.theme || DEFAULT_THEME_ID
   );
   const [selectedThemeDetails, setSelectedThemeDetails] = useState<
     Theme | undefined
   >(getThemeById(selectedThemeId as any));
-  const [selectedColorTheme, setSelectedColorTheme] = useState(
-    form.getValues().options.theme || "light"
+
+  const [selectedColorTheme, setSelectedColorTheme] = useState<string>(
+    options.colorTheme || "light"
   );
+
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [customColors, setCustomColors] = useState<string[]>([
-    "#FFFFFF",
-    "#F5F5F5",
-    "#E5E5E5",
-    "#000000",
-    "#3B82F6",
-  ]);
+  const [customColors, setCustomColors] = useState<string[]>(
+    options.colors || ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"]
+  );
+
+  useEffect(() => {
+    if (selectedThemeId) {
+      const themeDetails = getThemeById(selectedThemeId as any);
+      setSelectedThemeDetails(themeDetails);
+
+      form.setValue("options.theme", selectedThemeId);
+    }
+  }, [selectedThemeId, form]);
+
+  useEffect(() => {
+    if (selectedColorTheme) {
+      const themeColors = colorThemes.find(
+        (theme) => theme.id === selectedColorTheme
+      )?.colors;
+
+      form.setValue("options.colorTheme", selectedColorTheme);
+
+      if (selectedColorTheme !== "custom" && themeColors) {
+        form.setValue("options.colors", themeColors);
+      }
+    }
+  }, [selectedColorTheme, form]);
 
   const handleThemeSelect = (theme: Theme) => {
     setSelectedThemeId(theme.id);
     setSelectedThemeDetails(theme);
-    form.setValue("theme_id", theme.id);
 
-    const currentOptions = form.getValues("options");
-    const updatedOptions = {
-      ...currentOptions,
-      theme: theme.id === "dark-theme" ? "dark" : "light",
-    };
-
-    form.setValue("options", updatedOptions);
+    form.setValue("options.theme", theme.id);
   };
 
   const handleColorThemeSelect = (colorTheme: string) => {
     setSelectedColorTheme(colorTheme);
 
-    const currentOptions = form.getValues("options");
-    const updatedOptions = {
-      ...currentOptions,
-      theme: colorTheme,
-    };
+    const selectedTheme = colorThemes.find((theme) => theme.id === colorTheme);
 
-    if (colorTheme === "custom") {
-      updatedOptions.colors = customColors;
+    // Renk temasını güncelle
+    // @ts-ignore - Şema güncellemesi henüz tanınmamış olabilir
+    form.setValue("options.colorTheme", colorTheme);
+
+    // Renkleri güncelle
+    if (selectedTheme) {
+      if (colorTheme === "custom") {
+        form.setValue("options.colors", customColors);
+      } else {
+        form.setValue("options.colors", selectedTheme.colors);
+      }
     }
-
-    form.setValue("options", updatedOptions);
-  };
-
-  const handleFontChange = (font: string) => {
-    const currentOptions = form.getValues("options");
-    const updatedOptions = {
-      ...currentOptions,
-      font: font,
-    };
-
-    form.setValue("options", updatedOptions);
   };
 
   const handleCustomColorChange = (index: number, color: string) => {
@@ -259,13 +297,7 @@ export default function AppearanceStep() {
     setCustomColors(newColors);
 
     if (selectedColorTheme === "custom") {
-      const currentOptions = form.getValues("options");
-      const updatedOptions = {
-        ...currentOptions,
-        colors: newColors,
-      };
-
-      form.setValue("options", updatedOptions);
+      form.setValue("options.colors", newColors);
     }
   };
 
@@ -381,7 +413,7 @@ export default function AppearanceStep() {
                   >
                     <div className="flex flex-col items-center">
                       <div className="mb-3 flex space-x-1">
-                        {theme.colors.map((color, index) => (
+                        {theme.colors.map((color: string, index: number) => (
                           <div
                             key={index}
                             className="size-6 rounded"
@@ -571,12 +603,16 @@ export default function AppearanceStep() {
                 <FormField
                   control={form.control}
                   name="options.font"
+                  defaultValue={options.font}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Main Font</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          form.setValue("options.font", value);
+                        }}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>

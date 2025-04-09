@@ -10,19 +10,7 @@ const minimalTheme: Theme = {
   component: MinimalTheme,
 };
 
-const themeRegistry: Theme[] = [
-  minimalTheme,
-  {
-    id: "gradient",
-    name: "Gradient",
-    description:
-      "Create an eye-catching portfolio with vibrant gradient colors.",
-    thumbnail: "/themes/gradient-theme-thumbnail.jpg",
-    component: dynamic(
-      () => import("@/features/themes/components/MinimalTheme")
-    ),
-  },
-];
+const themeRegistry: Theme[] = [minimalTheme];
 
 // Function to find a theme by its id
 export const getThemeById = (themeId: ThemeVariant): Theme | undefined => {

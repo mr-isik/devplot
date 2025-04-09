@@ -3,8 +3,6 @@
 import type { Option } from "@/features/portfolios/types";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
-import { db } from "@/db/db";
 
 export const createOption = async (
   option: Partial<Option>,
@@ -51,48 +49,14 @@ export const updateOption = async (
   return { data, error };
 };
 
-export async function createOption(data: any) {
-  try {
-    // Tema seçeneklerini JSON formatına dönüştür
-    let optionsData = data;
+export const deleteOption = async (portfolioId: string) => {
+  const supabase = await createClient();
 
-    // Eğer options bir obje ise, JSON string'e dönüştür
-    if (typeof data.options === "object") {
-      optionsData = {
-        ...data,
-        options: JSON.stringify(data.options),
-      };
-    }
+  const { data, error } = await supabase
+    .from("options")
+    .delete()
+    .eq("portfolio_id", portfolioId);
 
-    const option = await db.insert(options).values(optionsData).returning();
-    return option[0];
-  } catch (error) {
-    console.error("Error creating option:", error);
-    throw error;
-  }
-}
-
-export async function updateOption(id: string, data: any) {
-  try {
-    // Tema seçeneklerini JSON formatına dönüştür
-    let optionsData = data;
-
-    // Eğer options bir obje ise, JSON string'e dönüştür
-    if (typeof data.options === "object") {
-      optionsData = {
-        ...data,
-        options: JSON.stringify(data.options),
-      };
-    }
-
-    const option = await db
-      .update(options)
-      .set(optionsData)
-      .where(eq(options.id, id))
-      .returning();
-    return option[0];
-  } catch (error) {
-    console.error("Error updating option:", error);
-    throw error;
-  }
-}
+  revalidatePath("/");
+  return { data, error };
+};

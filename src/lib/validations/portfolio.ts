@@ -9,7 +9,11 @@ export const portfolioSchema = z.object({
 
 // Schema for theme and appearance settings
 export const optionsSchema = z.object({
-  theme: z.string().default("light"),
+  theme: z.string().default("minimal"),
+  colorTheme: z.string().default("light"),
+  colors: z
+    .array(z.string())
+    .default(["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"]),
   font: z.string().default("inter"),
 });
 

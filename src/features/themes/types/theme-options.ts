@@ -1,5 +1,63 @@
 import type { ThemeVariant } from "./index";
 
+/**
+ * Theme options interface for portfolio customization
+ */
+export interface ThemeOptions {
+  /**
+   * The selected theme/color scheme
+   * Can be "light", "dark", "blue", "green", "purple", "orange", or "custom"
+   */
+  theme: string;
+
+  /**
+   * The selected font family
+   * Can be "inter", "roboto", "poppins", "montserrat", "lato", "playfair", "raleway", "oswald", "merriweather"
+   */
+  font: string;
+
+  /**
+   * Custom colors array for "custom" theme
+   * [0]: Background color
+   * [1]: Secondary background color
+   * [2]: Border color
+   * [3]: Text color
+   * [4]: Accent color
+   */
+  colors?: string[];
+
+  /**
+   * Any additional theme-specific options
+   */
+  [key: string]: any;
+}
+
+/**
+ * Available color themes
+ */
+export type ColorTheme =
+  | "light"
+  | "dark"
+  | "blue"
+  | "green"
+  | "purple"
+  | "orange"
+  | "custom";
+
+/**
+ * Available font families
+ */
+export type FontFamily =
+  | "inter"
+  | "roboto"
+  | "poppins"
+  | "montserrat"
+  | "lato"
+  | "playfair"
+  | "raleway"
+  | "oswald"
+  | "merriweather";
+
 export type ColorPalette = {
   primary: string;
   secondary: string;
@@ -16,13 +74,10 @@ export type FontOptions = {
   body: string;
 };
 
-export type ThemeOptions = {
-  themeName: ThemeVariant;
-  colorPalette: ColorPalette;
-  fonts: FontOptions;
-};
-
 export const defaultThemeOptions: ThemeOptions = {
+  theme: "light",
+  font: "inter",
+  colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
   themeName: "minimal",
   colorPalette: {
     primary: "#2563eb",
