@@ -49,9 +49,22 @@ export const experienceSchema = z.object({
     .min(10, { message: "Description must be at least 10 characters" }),
   logo: z
     .array(
-      z.instanceof(File).refine((file) => file.size <= 1024 * 1024, {
-        message: "Logo must be less than 1MB",
-      })
+      z
+        .any()
+        .refine(
+          (file) =>
+            file instanceof File ||
+            (typeof file === "object" && file !== null && "size" in file),
+          { message: "Expected a valid file" }
+        )
+        .refine(
+          (file) => {
+            const fileSize =
+              file instanceof File ? file.size : (file as any).size;
+            return fileSize <= 1024 * 1024;
+          },
+          { message: "Logo must be less than 1MB" }
+        )
     )
     .nullable(),
 });
@@ -100,9 +113,22 @@ export const projectSchema = z.object({
     .or(z.literal("")),
   image: z
     .array(
-      z.instanceof(File).refine((file) => file.size <= 1024 * 1024 * 4, {
-        message: "Image must be less than 4MB",
-      })
+      z
+        .any()
+        .refine(
+          (file) =>
+            file instanceof File ||
+            (typeof file === "object" && file !== null && "size" in file),
+          { message: "Expected a valid file" }
+        )
+        .refine(
+          (file) => {
+            const fileSize =
+              file instanceof File ? file.size : (file as any).size;
+            return fileSize <= 1024 * 1024 * 4;
+          },
+          { message: "Image must be less than 4MB" }
+        )
     )
     .nullable(),
 });
