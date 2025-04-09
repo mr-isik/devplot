@@ -8,7 +8,6 @@ import { ThemeStyleProvider } from "@/features/themes/components/ThemeStyleProvi
 import { ThemeProvider } from "@/features/themes/context/ThemeContext";
 import { defaultThemeOptions } from "@/features/themes/types/theme-options";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 // Generate metadata
 export async function generateMetadata({
@@ -118,9 +117,7 @@ const PortfolioPage = async ({ params }: { params: { username: string } }) => {
   return (
     <ThemeProvider initialOptions={themeOptions}>
       <ThemeStyleProvider>
-        <Suspense fallback={<PortfolioLoading />}>
-          <MinimalTheme {...themeProps} />
-        </Suspense>
+        <MinimalTheme {...themeProps} />
       </ThemeStyleProvider>
     </ThemeProvider>
   );
