@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getAllThemes } from "@/features/themes/registry";
+import { getAllThemes } from "@/features/themes/registry/themeRegistry";
 import { motion } from "framer-motion";
 import { CheckIcon, EyeIcon, Paintbrush2Icon } from "lucide-react";
 import Image from "next/image";
@@ -79,7 +79,7 @@ export default function ThemeSelector({
                 key={theme.id}
                 theme={theme}
                 isSelected={selectedThemeId === theme.id}
-                onSelect={() => handleSelectTheme(theme.id)}
+                onSelect={() => handleSelectTheme(theme.id as ThemeVariant)}
               />
             ))}
           </div>
@@ -95,7 +95,7 @@ export default function ThemeSelector({
                   key={theme.id}
                   theme={theme}
                   isSelected={selectedThemeId === theme.id}
-                  onSelect={() => handleSelectTheme(theme.id)}
+                  onSelect={() => handleSelectTheme(theme.id as ThemeVariant)}
                 />
               ))}
           </div>

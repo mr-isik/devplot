@@ -1,23 +1,14 @@
 import { getUser } from "@/actions/users/actions";
 import PortfolioForm from "@/features/portfolios/forms/PortfolioForm";
 
-type Props = {
-  params: {
-    locale: string;
-  };
-};
-
-export async function generateMetadata(props: Props) {
-  const { locale } = await props.params;
-
+export async function generateMetadata() {
   return {
     title: `Create Portfolio - DevPlot`,
     description: "Create your portfolio with DevPlot",
   };
 }
 
-export default async function CreatePortfolioPage({ params }: Props) {
-  const { locale } = await params;
+export default async function CreatePortfolioPage() {
   const { userData } = await getUser();
 
   /*  // Kullanıcının portfolyosu var mı kontrol ediyoruz
@@ -25,7 +16,7 @@ export default async function CreatePortfolioPage({ params }: Props) {
 
   // Eğer kullanıcının portfolyosu varsa edit sayfasına yönlendiriyoruz
   if (portfolios && portfolios.length > 0) {
-    redirect(`/${locale}/dashboard/edit`);
+    redirect(`/dashboard/edit`);
   } */
   return (
     <div className="container space-y-6 py-12">
@@ -37,7 +28,7 @@ export default async function CreatePortfolioPage({ params }: Props) {
       </div>
 
       <div className="h-[calc(100vh-250px)]">
-        <PortfolioForm userId={userData[0].id} />
+        {/* <PortfolioForm userId={userData[0].id} /> */}
       </div>
     </div>
   );

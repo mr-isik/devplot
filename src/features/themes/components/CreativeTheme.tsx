@@ -19,266 +19,295 @@ import {
 } from "../utils/themeCustomization";
 import { FaGithub } from "react-icons/fa";
 
-const baseMinimalThemeStyles = `
-  .minimal-theme {
-    --minimal-bg: #fafafa;
-    --minimal-text-primary: #171717;
-    --minimal-text-secondary: #525252;
-    --minimal-accent: #2563eb;
-    --minimal-accent-light: #60a5fa;
-    --minimal-border: #e5e5e5;
-    --minimal-card-bg: #ffffff;
-    --minimal-section-bg: #f5f5f5;
-    --minimal-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+const baseCreativeThemeStyles = `
+  .creative-theme {
+    --creative-bg: #fdfbff;
+    --creative-text-primary: #1a1a2e;
+    --creative-text-secondary: #4a4a6a;
+    --creative-accent: #7209b7;
+    --creative-accent-light: #b5179e;
+    --creative-border: #f0e6ff;
+    --creative-card-bg: #ffffff;
+    --creative-section-bg: #f8f0ff;
+    --creative-gradient: linear-gradient(135deg, #7209b7, #b5179e);
     
-    color: var(--minimal-text-primary);
-    background-color: var(--minimal-bg);
-    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--creative-text-primary);
+    background-color: var(--creative-bg);
+    font-family: 'Poppins', system-ui, sans-serif;
   }
 
-  .minimal-theme.dark {
-    --minimal-bg: #121212;
-    --minimal-text-primary: #f5f5f5;
-    --minimal-text-secondary: #a3a3a3;
-    --minimal-accent: #3b82f6;
-    --minimal-accent-light: #93c5fd;
-    --minimal-border: #262626;
-    --minimal-card-bg: #1e1e1e;
-    --minimal-section-bg: #171717;
-    --minimal-gradient: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  .creative-theme.dark {
+    --creative-bg: #0f0f1b;
+    --creative-text-primary: #f0e6ff;
+    --creative-text-secondary: #c8b6e2;
+    --creative-accent: #b5179e;
+    --creative-accent-light: #d33fd3;
+    --creative-border: #241c30;
+    --creative-card-bg: #16141f;
+    --creative-section-bg: #1a1a2e;
+    --creative-gradient: linear-gradient(135deg, #b5179e, #7209b7);
   }
   
-  .minimal-theme .section {
-    padding: 5rem 0;
-  }
-  
-  .minimal-theme .alt-section {
-    background-color: var(--minimal-section-bg);
-  }
-  
-  .minimal-theme .card {
-    background-color: var(--minimal-card-bg);
-    border: 1px solid var(--minimal-border);
-    border-radius: 0.75rem;
-    padding: 1.75rem;
-    transition: all 0.3s ease;
+  .creative-theme .section {
+    padding: 6rem 0;
     position: relative;
     overflow: hidden;
   }
   
-  .minimal-theme .card:hover {
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
-    transform: translateY(-3px);
+  .creative-theme .section::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: var(--creative-gradient);
+    opacity: 0.05;
+    top: -150px;
+    right: -150px;
+    z-index: 0;
   }
   
-  .minimal-theme .card::before {
+  .creative-theme .section::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: var(--creative-gradient);
+    opacity: 0.03;
+    bottom: -100px;
+    left: -100px;
+    z-index: 0;
+  }
+  
+  .creative-theme .alt-section {
+    background-color: var(--creative-section-bg);
+  }
+  
+  .creative-theme .card {
+    background-color: var(--creative-card-bg);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(114, 9, 183, 0.06);
+    padding: 2rem;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    z-index: 1;
+  }
+  
+  .creative-theme .card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 100%;
     height: 100%;
-    background: var(--minimal-gradient);
+    background: var(--creative-gradient);
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: -1;
   }
   
-  .minimal-theme .card:hover::before {
-    opacity: 1;
+  .creative-theme .card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(114, 9, 183, 0.15);
   }
   
-  .minimal-theme .btn {
+  .creative-theme .card:hover::before {
+    opacity: 0.02;
+  }
+  
+  .creative-theme .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
+    border-radius: 9999px;
+    padding: 0.75rem 1.75rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     z-index: 1;
   }
   
-  .minimal-theme .btn-primary {
-    background: var(--minimal-gradient);
+  .creative-theme .btn-primary {
+    background: var(--creative-gradient);
     color: white;
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 5px 15px rgba(114, 9, 183, 0.3);
   }
   
-  .minimal-theme .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+  .creative-theme .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(114, 9, 183, 0.4);
   }
   
-  .minimal-theme .btn-outline {
+  .creative-theme .btn-outline {
     background-color: transparent;
-    border: 1px solid var(--minimal-border);
-    color: var(--minimal-text-primary);
+    border: 2px solid var(--creative-accent);
+    color: var(--creative-accent);
   }
   
-  .minimal-theme .btn-outline:hover {
-    border-color: var(--minimal-accent);
-    color: var(--minimal-accent);
-    transform: translateY(-2px);
+  .creative-theme .btn-outline:hover {
+    background-color: var(--creative-accent);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(114, 9, 183, 0.25);
   }
   
-  .minimal-theme .btn-icon {
-    padding: 0.625rem;
+  .creative-theme .btn-icon {
+    padding: 1rem;
     border-radius: 9999px;
+    background-color: transparent;
+    color: var(--creative-accent);
+    border: 2px solid var(--creative-border);
     transition: all 0.3s ease;
   }
   
-  .minimal-theme .btn-icon:hover {
-    background-color: var(--minimal-accent);
+  .creative-theme .btn-icon:hover {
+    background-color: var(--creative-accent);
     color: white;
-    transform: translateY(-2px);
+    border-color: var(--creative-accent);
+    transform: translateY(-3px) rotate(10deg);
+    box-shadow: 0 8px 25px rgba(114, 9, 183, 0.25);
   }
   
-  .minimal-theme .badge {
+  .creative-theme .badge {
     display: inline-flex;
     align-items: center;
     border-radius: 9999px;
-    padding: 0.375rem 0.875rem;
-    font-size: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
     font-weight: 500;
-    background-color: var(--minimal-section-bg);
-    color: var(--minimal-text-secondary);
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
+    background-color: var(--creative-section-bg);
+    color: var(--creative-accent);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
   }
   
-  .minimal-theme .badge:hover {
-    border-color: var(--minimal-accent);
-    color: var(--minimal-accent);
-    transform: translateY(-1px);
+  .creative-theme .badge:hover {
+    background-color: var(--creative-accent);
+    color: white;
+    transform: translateY(-3px) scale(1.05);
   }
   
-  .minimal-theme .skill-badge {
+  .creative-theme .skill-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
+    gap: 0.5rem;
     border-radius: 9999px;
-    padding: 0.375rem 0.875rem;
-    font-size: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
     font-weight: 500;
-    background-color: var(--minimal-section-bg);
-    color: var(--minimal-text-secondary);
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    border: none;
   }
   
-  .minimal-theme .skill-badge:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  .creative-theme .skill-badge:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
   
-  .minimal-theme h1, .minimal-theme h2, .minimal-theme h3 {
+  .creative-theme h1, .creative-theme h2, .creative-theme h3 {
     font-weight: 700;
     line-height: 1.2;
   }
   
-  .minimal-theme p {
-    line-height: 1.6;
+  .creative-theme h1 {
+    font-size: 3.5rem;
   }
   
-  .minimal-theme .section-title {
+  .creative-theme p {
+    line-height: 1.8;
+  }
+  
+  .creative-theme .section-title {
     position: relative;
     display: inline-block;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
     text-align: center;
     width: 100%;
+    font-size: 2.5rem;
   }
   
-  .minimal-theme .section-title::after {
+  .creative-theme .section-title::after {
     content: '';
     position: absolute;
-    bottom: -0.75rem;
+    bottom: -1rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 3rem;
-    height: 0.25rem;
-    background: var(--minimal-gradient);
+    width: 80px;
+    height: 5px;
+    background: var(--creative-gradient);
     border-radius: 9999px;
   }
   
-  .minimal-theme .section-header {
+  .creative-theme .section-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
   }
   
-  .minimal-theme .section-header p {
-    max-width: 600px;
-    margin: 0.5rem auto 0;
-    color: var(--minimal-text-secondary);
+  .creative-theme .section-header p {
+    max-width: 700px;
+    margin: 1rem auto 0;
+    color: var(--creative-text-secondary);
+    font-size: 1.125rem;
   }
   
-  .minimal-theme .hero-gradient {
-    background: var(--minimal-gradient);
+  .creative-theme .hero-gradient-text {
+    background: var(--creative-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
   }
   
-  .minimal-theme .project-card {
+  .creative-theme .project-card {
     position: relative;
     overflow: hidden;
-    border-radius: 0.75rem;
-    transition: all 0.3s ease;
+    border-radius: 1.5rem;
+    transition: all 0.4s ease;
   }
   
-  .minimal-theme .project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  .creative-theme .project-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(114, 9, 183, 0.15);
   }
   
-  .minimal-theme .project-image {
-    transition: all 0.5s ease;
+  .creative-theme .project-image {
+    transition: all 0.6s ease;
   }
   
-  .minimal-theme .project-card:hover .project-image {
-    transform: scale(1.05);
+  .creative-theme .project-card:hover .project-image {
+    transform: scale(1.08);
   }
   
-  .minimal-theme .education-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.75rem;
-    transition: all 0.3s ease;
-  }
-  
-  .minimal-theme .education-date {
+  .creative-theme .education-date {
     display: inline-flex;
     align-items: center;
-    padding: 0.375rem 0.75rem;
+    padding: 0.5rem 1.25rem;
     border-radius: 9999px;
     font-size: 0.875rem;
-    background: var(--minimal-section-bg);
-    color: var(--minimal-text-secondary);
+    background: var(--creative-section-bg);
+    color: var(--creative-accent);
+    font-weight: 500;
   }
   
-  .minimal-theme .experience-logo {
-    border: 2px solid var(--minimal-border);
+  .creative-theme .experience-logo {
+    border: none;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
   }
   
-  .minimal-theme .card:hover .experience-logo {
-    border-color: var(--minimal-accent);
-  }
-  
-  .minimal-theme .skill-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
-  }
-  
-  @media (max-width: 640px) {
-    .minimal-theme .skill-grid {
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
+  .creative-theme .card:hover .experience-logo {
+    box-shadow: 0 8px 25px rgba(114, 9, 183, 0.15);
+    transform: scale(1.05);
   }
 `;
 
-const MinimalTheme = ({
+const CreativeTheme = ({
   portfolio,
   experiences,
   projects,
@@ -306,23 +335,23 @@ const MinimalTheme = ({
   };
 
   let themeOptions: ThemeOptions = {
-    theme: "minimal",
+    theme: "creative",
     colorTheme: "light",
-    colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
-    font: "inter",
+    colors: ["#fdfbff", "#f8f0ff", "#f0e6ff", "#1a1a2e", "#7209b7"],
+    font: "poppins",
     colorPalette: {
-      primary: "#2563eb",
-      secondary: "#60a5fa",
-      background: "#fafafa",
-      text: "#171717",
-      accent: "#3b82f6",
-      muted: "#a3a3a3",
-      border: "#e5e5e5",
+      primary: "#7209b7",
+      secondary: "#b5179e",
+      background: "#fdfbff",
+      text: "#1a1a2e",
+      accent: "#7209b7",
+      muted: "#4a4a6a",
+      border: "#f0e6ff",
       card: "#ffffff",
     },
     fonts: {
-      heading: "Inter, system-ui, sans-serif",
-      body: "Inter, system-ui, sans-serif",
+      heading: "Poppins, system-ui, sans-serif",
+      body: "Poppins, system-ui, sans-serif",
     },
   };
 
@@ -366,7 +395,7 @@ const MinimalTheme = ({
   ) {
     themeOptions.colorPalette = {
       primary: themeOptions.colors[4],
-      secondary: themeOptions.colors[4] + "99",
+      secondary: themeOptions.colors[4] + "cc",
       background: themeOptions.colors[0],
       text: themeOptions.colors[3],
       accent: themeOptions.colors[4],
@@ -384,17 +413,17 @@ const MinimalTheme = ({
     };
   }
 
-  const minimalThemeStyles = applyThemeCustomization(
-    baseMinimalThemeStyles,
+  const creativeThemeStyles = applyThemeCustomization(
+    baseCreativeThemeStyles,
     themeOptions,
-    "minimal"
+    "creative"
   );
 
-  const themeClass = `minimal-theme ${themeOptions.colorTheme === "dark" ? "dark" : ""}`;
+  const themeClass = `creative-theme ${themeOptions.colorTheme === "dark" ? "dark" : ""}`;
 
-  // Font değişkenlerini ve tema stillerini tek bir string'de birleştir
+  // Font variables and theme styles combined
   const combinedStyles = `
-    ${minimalThemeStyles}
+    ${creativeThemeStyles}
     
     ${
       themeOptions.font
@@ -406,7 +435,7 @@ const MinimalTheme = ({
         } !important;
       }
       
-      .minimal-theme, .minimal-theme * {
+      .creative-theme, .creative-theme * {
         font-family: ${
           fontFamilies[themeOptions.font as keyof typeof fontFamilies] ||
           `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, system-ui, sans-serif`
@@ -419,7 +448,6 @@ const MinimalTheme = ({
 
   return (
     <>
-      {/* Tüm stilleri tek bir style etiketinde birleştir */}
       <style jsx global>
         {combinedStyles}
       </style>
@@ -434,27 +462,17 @@ const MinimalTheme = ({
               transition={{ duration: 0.7 }}
               className="flex flex-col items-center text-center"
             >
-              <h1 className="mb-6 text-5xl font-bold leading-tight">
-                <span className="hero-gradient">
+              <h1 className="mb-8 text-6xl font-bold leading-tight">
+                <span className="hero-gradient-text">
                   {portfolio.contents.hero_header}
                 </span>
               </h1>
-              <p
-                className="max-w-2xl text-xl leading-relaxed"
-                style={{
-                  color:
-                    themeOptions.colorTheme === "dark"
-                      ? "#a3a3a3"
-                      : themeOptions.colors && themeOptions.colors.length > 3
-                        ? themeOptions.colors[3] + "99"
-                        : "#52525299",
-                }}
-              >
+              <p className="max-w-2xl text-xl leading-relaxed text-[var(--creative-text-secondary)]">
                 {portfolio.contents.hero_description}
               </p>
 
               <motion.div
-                className="mt-10 flex gap-4"
+                className="mt-12 flex gap-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
@@ -471,10 +489,7 @@ const MinimalTheme = ({
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <button
-                        type="button"
-                        className="btn btn-outline btn-icon"
-                      >
+                      <button type="button" className="btn btn-icon">
                         <span className="sr-only">{social.platform}</span>
                         {getPlatformIcon(social.platform)}
                       </button>
@@ -491,7 +506,7 @@ const MinimalTheme = ({
           <section className="alt-section section">
             <div className="container mx-auto px-4">
               <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">About Me</h2>
+                <h2 className="section-title text-4xl font-bold">About Me</h2>
                 <p>Get to know me better</p>
               </div>
               <motion.div
@@ -499,9 +514,9 @@ const MinimalTheme = ({
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.7 }}
                 viewport={{ once: true }}
-                className="text-center"
+                className="mx-auto max-w-3xl rounded-[2rem] bg-[var(--creative-card-bg)] p-8 shadow-lg"
               >
-                <p className="mx-auto max-w-3xl text-lg leading-relaxed text-[#525252]">
+                <p className="text-lg leading-relaxed text-[var(--creative-text-secondary)]">
                   {portfolio.contents.about_text}
                 </p>
               </motion.div>
@@ -514,7 +529,7 @@ const MinimalTheme = ({
           <section className="section">
             <div className="container mx-auto px-4">
               <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Skills</h2>
+                <h2 className="section-title text-4xl font-bold">Skills</h2>
                 <p>Technologies and tools I work with</p>
               </div>
               <div className="mx-auto max-w-4xl">
@@ -524,7 +539,7 @@ const MinimalTheme = ({
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
-                    className="flex flex-wrap justify-center gap-3"
+                    className="flex flex-wrap justify-center gap-4"
                   >
                     {skills.map((skill: Skill, index) => {
                       const SkillIcon = getSkillIcon(skill.name);
@@ -538,17 +553,17 @@ const MinimalTheme = ({
                           style={{
                             borderColor: `${skillColor}20`,
                             color: skillColor,
-                            background: `${skillColor}10`,
+                            background: `${skillColor}15`,
                           }}
                         >
-                          <SkillIcon size={14} />
+                          <SkillIcon size={18} />
                           {skill.name}
                         </motion.span>
                       );
                     })}
                   </motion.div>
                 ) : (
-                  <p className="text-center text-[#525252]">
+                  <p className="text-center text-[var(--creative-text-secondary)]">
                     No skills information yet.
                   </p>
                 )}
@@ -562,10 +577,10 @@ const MinimalTheme = ({
           <section className="alt-section section">
             <div className="container mx-auto px-4">
               <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Education</h2>
+                <h2 className="section-title text-4xl font-bold">Education</h2>
                 <p>My academic background and qualifications</p>
               </div>
-              <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6">
+              <div className="mx-auto grid max-w-3xl grid-cols-1 gap-8">
                 {educations && educations.length > 0 ? (
                   educations.map((education: Education, index) => (
                     <motion.div
@@ -578,10 +593,10 @@ const MinimalTheme = ({
                       <div className="card">
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                           <div>
-                            <h3 className="text-xl font-semibold">
+                            <h3 className="text-2xl font-semibold">
                               {education.degree} in {education.field}
                             </h3>
-                            <p className="text-[#525252] mt-1">
+                            <p className="mt-2 text-[var(--creative-text-secondary)]">
                               {education.school}
                             </p>
                           </div>
@@ -606,7 +621,7 @@ const MinimalTheme = ({
                     </motion.div>
                   ))
                 ) : (
-                  <p className="text-center text-[#525252]">
+                  <p className="text-center text-[var(--creative-text-secondary)]">
                     No education information yet.
                   </p>
                 )}
@@ -620,10 +635,10 @@ const MinimalTheme = ({
           <section className="section">
             <div className="container mx-auto px-4">
               <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Experience</h2>
+                <h2 className="section-title text-4xl font-bold">Experience</h2>
                 <p>My professional journey and work history</p>
               </div>
-              <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6">
+              <div className="mx-auto grid max-w-3xl grid-cols-1 gap-8">
                 {experiences && experiences.length > 0 ? (
                   experiences.map((experience, index) => (
                     <motion.div
@@ -636,26 +651,26 @@ const MinimalTheme = ({
                       <div className="card">
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                           <div>
-                            <h3 className="text-xl font-semibold">
+                            <h3 className="text-2xl font-semibold">
                               {experience.role}
                             </h3>
-                            <div className="mt-2 flex items-center gap-3">
+                            <div className="mt-3 flex items-center gap-3">
                               {experience.logo && (
-                                <div className="overflow-hidden rounded-full experience-logo">
+                                <div className="overflow-hidden experience-logo">
                                   <Image
                                     src={experience.logo}
                                     alt={experience.company}
-                                    width={40}
-                                    height={40}
+                                    width={50}
+                                    height={50}
                                     className="object-cover"
                                   />
                                 </div>
                               )}
-                              <p className="font-medium text-[#525252]">
+                              <p className="font-medium text-[var(--creative-text-secondary)]">
                                 {experience.company}
                               </p>
                             </div>
-                            <p className="mt-1 text-sm text-[#525252]">
+                            <p className="mt-2 text-sm text-[var(--creative-text-secondary)]">
                               {experience.employment_type}
                             </p>
                           </div>
@@ -669,14 +684,14 @@ const MinimalTheme = ({
                             </span>
                           </div>
                         </div>
-                        <p className="mt-4 text-[#525252]">
+                        <p className="mt-5 text-[var(--creative-text-secondary)]">
                           {experience.description}
                         </p>
                       </div>
                     </motion.div>
                   ))
                 ) : (
-                  <p className="text-center text-[#525252]">
+                  <p className="text-center text-[var(--creative-text-secondary)]">
                     No experience information yet.
                   </p>
                 )}
@@ -690,10 +705,10 @@ const MinimalTheme = ({
           <section className="alt-section section">
             <div className="container mx-auto px-4">
               <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Projects</h2>
+                <h2 className="section-title text-4xl font-bold">Projects</h2>
                 <p>Showcasing my work and creative solutions</p>
               </div>
-              <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
+              <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 md:grid-cols-2">
                 {projects && projects.length > 0 ? (
                   projects.map((project, index) => (
                     <motion.div
@@ -705,7 +720,7 @@ const MinimalTheme = ({
                       className="project-card"
                     >
                       <div className="card flex h-full flex-col">
-                        <div className="relative mb-5 aspect-video overflow-hidden rounded-lg">
+                        <div className="relative mb-6 aspect-video overflow-hidden rounded-xl">
                           {project.image ? (
                             <Image
                               src={project.image}
@@ -714,22 +729,22 @@ const MinimalTheme = ({
                               fill
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600">
-                              <span className="text-xl font-bold text-white">
+                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-[var(--creative-accent)] to-[var(--creative-accent-light)]">
+                              <span className="text-2xl font-bold text-white">
                                 {project.title.substring(0, 2).toUpperCase()}
                               </span>
                             </div>
                           )}
                         </div>
                         <div>
-                          <h3 className="mb-2 text-2xl font-semibold">
+                          <h3 className="mb-3 text-2xl font-bold">
                             {project.title}
                           </h3>
-                          <p className="text-[#525252]">
+                          <p className="text-[var(--creative-text-secondary)]">
                             {project.description}
                           </p>
                         </div>
-                        <div className="mt-auto pt-6 grid grid-cols-2 gap-3">
+                        <div className="mt-auto pt-6 grid grid-cols-2 gap-4">
                           {project.repo_url && (
                             <Link
                               href={project.repo_url}
@@ -757,7 +772,7 @@ const MinimalTheme = ({
                     </motion.div>
                   ))
                 ) : (
-                  <p className="col-span-2 text-center text-[#525252]">
+                  <p className="col-span-2 text-center text-[var(--creative-text-secondary)]">
                     No project information yet.
                   </p>
                 )}
@@ -767,7 +782,7 @@ const MinimalTheme = ({
         )}
 
         {/* Footer */}
-        <footer className="py-12 text-center text-[#525252]">
+        <footer className="py-16 text-center text-[var(--creative-text-secondary)]">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -775,17 +790,17 @@ const MinimalTheme = ({
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
             >
-              <p className="mb-2 text-sm">
+              <p className="mb-3 text-sm">
                 ©{new Date().getFullYear()} {portfolio.contents.meta_title}
               </p>
-              <div className="mx-auto mt-4 flex justify-center gap-4">
+              <div className="mx-auto mt-6 flex justify-center gap-5">
                 {socials.map((social) => (
                   <Link
                     key={social.id}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#525252] transition-colors hover:text-[var(--minimal-accent)]"
+                    className="text-[var(--creative-text-secondary)] transition-colors hover:text-[var(--creative-accent)]"
                   >
                     {getPlatformIcon(social.platform)}
                   </Link>
@@ -799,4 +814,4 @@ const MinimalTheme = ({
   );
 };
 
-export default MinimalTheme;
+export default CreativeTheme;

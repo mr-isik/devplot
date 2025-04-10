@@ -1,5 +1,7 @@
-import type { ThemeProps, ThemeVariant } from '../types';
-import MinimalTheme from '../components/MinimalTheme';
+import type { ThemeProps, ThemeVariant } from "../types";
+import MinimalTheme from "../components/MinimalTheme";
+import ModernTheme from "../components/ModernTheme";
+import CreativeTheme from "../components/CreativeTheme";
 
 export type ThemeDefinition = {
   id: ThemeVariant;
@@ -8,14 +10,26 @@ export type ThemeDefinition = {
   component: React.ComponentType<ThemeProps>;
 };
 
-export const DEFAULT_THEME_ID = 'minimal' as const;
+export const DEFAULT_THEME_ID = "minimal" as const;
 
 const THEMES: Record<ThemeVariant, ThemeDefinition> = {
   minimal: {
-    id: 'minimal',
-    name: 'Minimal',
-    description: 'Clean and minimalist design with focus on content',
+    id: "minimal",
+    name: "Minimal",
+    description: "Clean and minimalist design with focus on content",
     component: MinimalTheme,
+  },
+  modern: {
+    id: "modern",
+    name: "Modern",
+    description: "Modern and sleek design with focus on content",
+    component: ModernTheme,
+  },
+  creative: {
+    id: "creative",
+    name: "Creative",
+    description: "Creative and unique design with focus on content",
+    component: CreativeTheme,
   },
 };
 

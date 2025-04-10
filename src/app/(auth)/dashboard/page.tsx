@@ -1,5 +1,4 @@
 import { AppNavigation } from "@/components/layout/AppNavigation";
-import Portfolios from "@/features/portfolios/portfolios";
 
 export async function generateMetadata() {
   return {
@@ -10,9 +9,8 @@ export async function generateMetadata() {
 
 export default function Dashboard() {
   return (
-    <div>
+    <>
       <AppNavigation />
-      <Portfolios />
-    </div>
+    </>
   );
 }

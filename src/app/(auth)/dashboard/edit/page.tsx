@@ -2,12 +2,6 @@ import { getPortfolioByUserId } from "@/actions/portfolios/actions";
 import { getUser } from "@/actions/users/actions";
 import { redirect } from "next/navigation";
 
-type Props = {
-  params: {
-    locale: string;
-  };
-};
-
 export async function generateMetadata() {
   return {
     title: "DevPlot | Edit Portfolio",
@@ -15,14 +9,13 @@ export async function generateMetadata() {
   };
 }
 
-export default async function EditPortfolioPage({ params }: Props) {
-  const { locale } = params;
+export default async function EditPortfolioPage() {
   const { userData } = await getUser();
 
   const { data: portfolios } = await getPortfolioByUserId(userData[0].id);
 
   if (!portfolios || portfolios.length === 0) {
-    redirect(`/${locale}/dashboard/create`);
+    redirect(`/dashboard/create`);
   }
 
   return (

@@ -19,266 +19,262 @@ import {
 } from "../utils/themeCustomization";
 import { FaGithub } from "react-icons/fa";
 
-const baseMinimalThemeStyles = `
-  .minimal-theme {
-    --minimal-bg: #fafafa;
-    --minimal-text-primary: #171717;
-    --minimal-text-secondary: #525252;
-    --minimal-accent: #2563eb;
-    --minimal-accent-light: #60a5fa;
-    --minimal-border: #e5e5e5;
-    --minimal-card-bg: #ffffff;
-    --minimal-section-bg: #f5f5f5;
-    --minimal-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+const baseModernThemeStyles = `
+  .modern-theme {
+    --modern-bg: #ffffff;
+    --modern-text-primary: #121212;
+    --modern-text-secondary: #5f6c7b;
+    --modern-accent: #0066ff;
+    --modern-accent-light: #3b82f6;
+    --modern-border: #e2e8f0;
+    --modern-card-bg: #ffffff;
+    --modern-section-bg: #f8fafc;
+    --modern-gradient: linear-gradient(135deg, #0066ff, #3b82f6);
     
-    color: var(--minimal-text-primary);
-    background-color: var(--minimal-bg);
+    color: var(--modern-text-primary);
+    background-color: var(--modern-bg);
     font-family: 'Inter', system-ui, sans-serif;
   }
 
-  .minimal-theme.dark {
-    --minimal-bg: #121212;
-    --minimal-text-primary: #f5f5f5;
-    --minimal-text-secondary: #a3a3a3;
-    --minimal-accent: #3b82f6;
-    --minimal-accent-light: #93c5fd;
-    --minimal-border: #262626;
-    --minimal-card-bg: #1e1e1e;
-    --minimal-section-bg: #171717;
-    --minimal-gradient: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  .modern-theme.dark {
+    --modern-bg: #0f172a;
+    --modern-text-primary: #f8fafc;
+    --modern-text-secondary: #94a3b8;
+    --modern-accent: #3b82f6;
+    --modern-accent-light: #60a5fa;
+    --modern-border: #1e293b;
+    --modern-card-bg: #1e293b;
+    --modern-section-bg: #0f172a;
+    --modern-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
   }
   
-  .minimal-theme .section {
-    padding: 5rem 0;
+  .modern-theme .section {
+    padding: 6rem 0;
   }
   
-  .minimal-theme .alt-section {
-    background-color: var(--minimal-section-bg);
+  .modern-theme .alt-section {
+    background-color: var(--modern-section-bg);
   }
   
-  .minimal-theme .card {
-    background-color: var(--minimal-card-bg);
-    border: 1px solid var(--minimal-border);
-    border-radius: 0.75rem;
-    padding: 1.75rem;
+  .modern-theme .card {
+    background-color: var(--modern-card-bg);
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
     transition: all 0.3s ease;
+    border: none;
     position: relative;
     overflow: hidden;
   }
   
-  .minimal-theme .card:hover {
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
-    transform: translateY(-3px);
+  .modern-theme .card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
   }
   
-  .minimal-theme .card::before {
-    content: '';
+  .modern-theme .card-highlight {
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--minimal-gradient);
+    height: 4px;
+    width: 100%;
+    background: var(--modern-gradient);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
   
-  .minimal-theme .card:hover::before {
+  .modern-theme .card:hover .card-highlight {
     opacity: 1;
   }
   
-  .minimal-theme .btn {
+  .modern-theme .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    font-weight: 500;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
     transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
     z-index: 1;
   }
   
-  .minimal-theme .btn-primary {
-    background: var(--minimal-gradient);
+  .modern-theme .btn-primary {
+    background: var(--modern-gradient);
     color: white;
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 14px rgba(0, 102, 255, 0.2);
   }
   
-  .minimal-theme .btn-primary:hover {
+  .modern-theme .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 6px 20px rgba(0, 102, 255, 0.25);
   }
   
-  .minimal-theme .btn-outline {
+  .modern-theme .btn-outline {
     background-color: transparent;
-    border: 1px solid var(--minimal-border);
-    color: var(--minimal-text-primary);
+    border: 2px solid var(--modern-border);
+    color: var(--modern-text-primary);
   }
   
-  .minimal-theme .btn-outline:hover {
-    border-color: var(--minimal-accent);
-    color: var(--minimal-accent);
+  .modern-theme .btn-outline:hover {
+    border-color: var(--modern-accent);
+    color: var(--modern-accent);
     transform: translateY(-2px);
   }
   
-  .minimal-theme .btn-icon {
-    padding: 0.625rem;
-    border-radius: 9999px;
+  .modern-theme .btn-icon {
+    padding: 0.75rem;
+    border-radius: 0.75rem;
     transition: all 0.3s ease;
+    border: 2px solid var(--modern-border);
   }
   
-  .minimal-theme .btn-icon:hover {
-    background-color: var(--minimal-accent);
+  .modern-theme .btn-icon:hover {
+    background-color: var(--modern-accent);
+    color: white;
+    transform: translateY(-2px);
+    border-color: var(--modern-accent);
+  }
+  
+  .modern-theme .badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background-color: var(--modern-section-bg);
+    color: var(--modern-text-secondary);
+    transition: all 0.2s ease;
+    border: none;
+  }
+  
+  .modern-theme .badge:hover {
+    background-color: var(--modern-accent-light);
     color: white;
     transform: translateY(-2px);
   }
   
-  .minimal-theme .badge {
+  .modern-theme .skill-badge {
     display: inline-flex;
     align-items: center;
-    border-radius: 9999px;
-    padding: 0.375rem 0.875rem;
-    font-size: 0.75rem;
+    gap: 0.5rem;
+    border-radius: 0.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
     font-weight: 500;
-    background-color: var(--minimal-section-bg);
-    color: var(--minimal-text-secondary);
+    background-color: var(--modern-section-bg);
+    color: var(--modern-text-secondary);
     transition: all 0.2s ease;
-    border: 1px solid transparent;
+    border: none;
   }
   
-  .minimal-theme .badge:hover {
-    border-color: var(--minimal-accent);
-    color: var(--minimal-accent);
-    transform: translateY(-1px);
+  .modern-theme .skill-badge:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   
-  .minimal-theme .skill-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    border-radius: 9999px;
-    padding: 0.375rem 0.875rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    background-color: var(--minimal-section-bg);
-    color: var(--minimal-text-secondary);
-    transition: all 0.2s ease;
-    border: 1px solid transparent;
-  }
-  
-  .minimal-theme .skill-badge:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  }
-  
-  .minimal-theme h1, .minimal-theme h2, .minimal-theme h3 {
+  .modern-theme h1, .modern-theme h2, .modern-theme h3 {
     font-weight: 700;
     line-height: 1.2;
   }
   
-  .minimal-theme p {
-    line-height: 1.6;
+  .modern-theme p {
+    line-height: 1.7;
   }
   
-  .minimal-theme .section-title {
+  .modern-theme .section-title {
     position: relative;
     display: inline-block;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
     text-align: center;
     width: 100%;
+    font-size: 2.5rem;
   }
   
-  .minimal-theme .section-title::after {
+  .modern-theme .section-title::after {
     content: '';
     position: absolute;
-    bottom: -0.75rem;
+    bottom: -1rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 3rem;
+    width: 4rem;
     height: 0.25rem;
-    background: var(--minimal-gradient);
+    background: var(--modern-gradient);
     border-radius: 9999px;
   }
   
-  .minimal-theme .section-header {
+  .modern-theme .section-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
   }
   
-  .minimal-theme .section-header p {
-    max-width: 600px;
-    margin: 0.5rem auto 0;
-    color: var(--minimal-text-secondary);
+  .modern-theme .section-header p {
+    max-width: 700px;
+    margin: 0.75rem auto 0;
+    color: var(--modern-text-secondary);
+    font-size: 1.125rem;
   }
   
-  .minimal-theme .hero-gradient {
-    background: var(--minimal-gradient);
+  .modern-theme .hero-text {
+    background: var(--modern-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
   }
   
-  .minimal-theme .project-card {
+  .modern-theme .project-card {
     position: relative;
     overflow: hidden;
-    border-radius: 0.75rem;
+    border-radius: 1rem;
     transition: all 0.3s ease;
   }
   
-  .minimal-theme .project-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  .modern-theme .project-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   }
   
-  .minimal-theme .project-image {
+  .modern-theme .project-image {
     transition: all 0.5s ease;
   }
   
-  .minimal-theme .project-card:hover .project-image {
+  .modern-theme .project-card:hover .project-image {
     transform: scale(1.05);
   }
   
-  .minimal-theme .education-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.75rem;
+  .modern-theme .education-card {
+    border-radius: 1rem;
     transition: all 0.3s ease;
   }
   
-  .minimal-theme .education-date {
+  .modern-theme .education-date {
     display: inline-flex;
     align-items: center;
-    padding: 0.375rem 0.75rem;
+    padding: 0.5rem 1rem;
     border-radius: 9999px;
     font-size: 0.875rem;
-    background: var(--minimal-section-bg);
-    color: var(--minimal-text-secondary);
+    background: var(--modern-section-bg);
+    color: var(--modern-text-secondary);
+    font-weight: 500;
   }
   
-  .minimal-theme .experience-logo {
-    border: 2px solid var(--minimal-border);
+  .modern-theme .experience-logo {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
   }
   
-  .minimal-theme .card:hover .experience-logo {
-    border-color: var(--minimal-accent);
-  }
-  
-  .minimal-theme .skill-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem;
-  }
-  
-  @media (max-width: 640px) {
-    .minimal-theme .skill-grid {
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
+  .modern-theme .card:hover .experience-logo {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   }
 `;
 
-const MinimalTheme = ({
+const ModernTheme = ({
   portfolio,
   experiences,
   projects,
@@ -306,18 +302,18 @@ const MinimalTheme = ({
   };
 
   let themeOptions: ThemeOptions = {
-    theme: "minimal",
+    theme: "modern",
     colorTheme: "light",
-    colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
+    colors: ["#FFFFFF", "#f8fafc", "#e2e8f0", "#121212", "#0066ff"],
     font: "inter",
     colorPalette: {
-      primary: "#2563eb",
+      primary: "#0066ff",
       secondary: "#60a5fa",
-      background: "#fafafa",
-      text: "#171717",
-      accent: "#3b82f6",
-      muted: "#a3a3a3",
-      border: "#e5e5e5",
+      background: "#ffffff",
+      text: "#121212",
+      accent: "#0066ff",
+      muted: "#5f6c7b",
+      border: "#e2e8f0",
       card: "#ffffff",
     },
     fonts: {
@@ -384,17 +380,17 @@ const MinimalTheme = ({
     };
   }
 
-  const minimalThemeStyles = applyThemeCustomization(
-    baseMinimalThemeStyles,
+  const modernThemeStyles = applyThemeCustomization(
+    baseModernThemeStyles,
     themeOptions,
-    "minimal"
+    "modern"
   );
 
-  const themeClass = `minimal-theme ${themeOptions.colorTheme === "dark" ? "dark" : ""}`;
+  const themeClass = `modern-theme ${themeOptions.colorTheme === "dark" ? "dark" : ""}`;
 
-  // Font değişkenlerini ve tema stillerini tek bir string'de birleştir
+  // Font variables and theme styles combined
   const combinedStyles = `
-    ${minimalThemeStyles}
+    ${modernThemeStyles}
     
     ${
       themeOptions.font
@@ -406,7 +402,7 @@ const MinimalTheme = ({
         } !important;
       }
       
-      .minimal-theme, .minimal-theme * {
+      .modern-theme, .modern-theme * {
         font-family: ${
           fontFamilies[themeOptions.font as keyof typeof fontFamilies] ||
           `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, system-ui, sans-serif`
@@ -419,7 +415,6 @@ const MinimalTheme = ({
 
   return (
     <>
-      {/* Tüm stilleri tek bir style etiketinde birleştir */}
       <style jsx global>
         {combinedStyles}
       </style>
@@ -435,21 +430,11 @@ const MinimalTheme = ({
               className="flex flex-col items-center text-center"
             >
               <h1 className="mb-6 text-5xl font-bold leading-tight">
-                <span className="hero-gradient">
+                <span className="hero-text">
                   {portfolio.contents.hero_header}
                 </span>
               </h1>
-              <p
-                className="max-w-2xl text-xl leading-relaxed"
-                style={{
-                  color:
-                    themeOptions.colorTheme === "dark"
-                      ? "#a3a3a3"
-                      : themeOptions.colors && themeOptions.colors.length > 3
-                        ? themeOptions.colors[3] + "99"
-                        : "#52525299",
-                }}
-              >
+              <p className="max-w-2xl text-xl leading-relaxed text-[var(--modern-text-secondary)]">
                 {portfolio.contents.hero_description}
               </p>
 
@@ -499,9 +484,9 @@ const MinimalTheme = ({
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.7 }}
                 viewport={{ once: true }}
-                className="text-center"
+                className="mx-auto max-w-3xl rounded-2xl bg-[var(--modern-card-bg)] p-8 shadow-lg"
               >
-                <p className="mx-auto max-w-3xl text-lg leading-relaxed text-[#525252]">
+                <p className="text-lg leading-relaxed text-[var(--modern-text-secondary)]">
                   {portfolio.contents.about_text}
                 </p>
               </motion.div>
@@ -541,14 +526,14 @@ const MinimalTheme = ({
                             background: `${skillColor}10`,
                           }}
                         >
-                          <SkillIcon size={14} />
+                          <SkillIcon size={16} />
                           {skill.name}
                         </motion.span>
                       );
                     })}
                   </motion.div>
                 ) : (
-                  <p className="text-center text-[#525252]">
+                  <p className="text-center text-[var(--modern-text-secondary)]">
                     No skills information yet.
                   </p>
                 )}
@@ -576,12 +561,13 @@ const MinimalTheme = ({
                       viewport={{ once: true }}
                     >
                       <div className="card">
+                        <div className="card-highlight"></div>
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                           <div>
                             <h3 className="text-xl font-semibold">
                               {education.degree} in {education.field}
                             </h3>
-                            <p className="text-[#525252] mt-1">
+                            <p className="mt-1 text-[var(--modern-text-secondary)]">
                               {education.school}
                             </p>
                           </div>
@@ -606,7 +592,7 @@ const MinimalTheme = ({
                     </motion.div>
                   ))
                 ) : (
-                  <p className="text-center text-[#525252]">
+                  <p className="text-center text-[var(--modern-text-secondary)]">
                     No education information yet.
                   </p>
                 )}
@@ -634,6 +620,7 @@ const MinimalTheme = ({
                       viewport={{ once: true }}
                     >
                       <div className="card">
+                        <div className="card-highlight"></div>
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                           <div>
                             <h3 className="text-xl font-semibold">
@@ -641,21 +628,21 @@ const MinimalTheme = ({
                             </h3>
                             <div className="mt-2 flex items-center gap-3">
                               {experience.logo && (
-                                <div className="overflow-hidden rounded-full experience-logo">
+                                <div className="overflow-hidden experience-logo">
                                   <Image
                                     src={experience.logo}
                                     alt={experience.company}
-                                    width={40}
-                                    height={40}
+                                    width={50}
+                                    height={50}
                                     className="object-cover"
                                   />
                                 </div>
                               )}
-                              <p className="font-medium text-[#525252]">
+                              <p className="font-medium text-[var(--modern-text-secondary)]">
                                 {experience.company}
                               </p>
                             </div>
-                            <p className="mt-1 text-sm text-[#525252]">
+                            <p className="mt-1 text-sm text-[var(--modern-text-secondary)]">
                               {experience.employment_type}
                             </p>
                           </div>
@@ -669,14 +656,14 @@ const MinimalTheme = ({
                             </span>
                           </div>
                         </div>
-                        <p className="mt-4 text-[#525252]">
+                        <p className="mt-4 text-[var(--modern-text-secondary)]">
                           {experience.description}
                         </p>
                       </div>
                     </motion.div>
                   ))
                 ) : (
-                  <p className="text-center text-[#525252]">
+                  <p className="text-center text-[var(--modern-text-secondary)]">
                     No experience information yet.
                   </p>
                 )}
@@ -705,6 +692,7 @@ const MinimalTheme = ({
                       className="project-card"
                     >
                       <div className="card flex h-full flex-col">
+                        <div className="card-highlight"></div>
                         <div className="relative mb-5 aspect-video overflow-hidden rounded-lg">
                           {project.image ? (
                             <Image
@@ -714,7 +702,7 @@ const MinimalTheme = ({
                               fill
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600">
+                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-[var(--modern-accent)] to-[var(--modern-accent-light)]">
                               <span className="text-xl font-bold text-white">
                                 {project.title.substring(0, 2).toUpperCase()}
                               </span>
@@ -725,7 +713,7 @@ const MinimalTheme = ({
                           <h3 className="mb-2 text-2xl font-semibold">
                             {project.title}
                           </h3>
-                          <p className="text-[#525252]">
+                          <p className="text-[var(--modern-text-secondary)]">
                             {project.description}
                           </p>
                         </div>
@@ -757,7 +745,7 @@ const MinimalTheme = ({
                     </motion.div>
                   ))
                 ) : (
-                  <p className="col-span-2 text-center text-[#525252]">
+                  <p className="col-span-2 text-center text-[var(--modern-text-secondary)]">
                     No project information yet.
                   </p>
                 )}
@@ -767,7 +755,7 @@ const MinimalTheme = ({
         )}
 
         {/* Footer */}
-        <footer className="py-12 text-center text-[#525252]">
+        <footer className="py-12 text-center text-[var(--modern-text-secondary)]">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -785,7 +773,7 @@ const MinimalTheme = ({
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#525252] transition-colors hover:text-[var(--minimal-accent)]"
+                    className="text-[var(--modern-text-secondary)] transition-colors hover:text-[var(--modern-accent)]"
                   >
                     {getPlatformIcon(social.platform)}
                   </Link>
@@ -799,4 +787,4 @@ const MinimalTheme = ({
   );
 };
 
-export default MinimalTheme;
+export default ModernTheme;

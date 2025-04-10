@@ -6,7 +6,7 @@ import { Education } from "@/features/educations/types";
 import { Skill } from "@/features/skills/types";
 
 // Tema seçenekleri - sadece minimal tema şu an için
-export type ThemeVariant = "minimal";
+export type ThemeVariant = "minimal" | "modern" | "creative";
 
 // ThemeProps, PortfolioThemeAdapter tarafından gönderilen tüm veriyi içerir
 export type ThemeProps = {

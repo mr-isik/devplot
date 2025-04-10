@@ -108,7 +108,6 @@ export function applyThemeCustomization(
   let customizedStyles = baseStyles;
 
   const colorTheme = options.colorTheme || "light";
-  console.log("Applying color theme:", colorTheme);
 
   let themeColors = { ...colorThemes[colorTheme as keyof typeof colorThemes] };
 
