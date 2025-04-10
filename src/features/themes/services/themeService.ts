@@ -1,11 +1,19 @@
 import type { ThemeOptions } from "../types/theme-options";
-import type { ThemeProps, ThemeVariant } from "../types";
-import {
-  getThemeById,
-  DEFAULT_THEME_ID,
-  getDefaultTheme,
-} from "../registry/themeRegistry";
+import type { ThemeVariant } from "../types";
 import { defaultThemeOptions } from "../types/theme-options";
+import MinimalTheme from "@/features/themes/components/MinimalTheme";
+import { getThemeById } from "../registry/themeRegistry";
+
+// Default theme ID
+export const DEFAULT_THEME_ID: ThemeVariant = "modern";
+
+/**
+ * Returns the default theme variant
+ * @returns The default theme ID (ThemeVariant)
+ */
+export function getDefaultTheme(): ThemeVariant {
+  return DEFAULT_THEME_ID;
+}
 
 /**
  * Resolves the theme component based on the theme id
@@ -14,13 +22,7 @@ import { defaultThemeOptions } from "../types/theme-options";
  */
 export function resolveThemeComponent(themeId: ThemeVariant) {
   const theme = getThemeById(themeId);
-
-  if (!theme) {
-    const defaultTheme = getDefaultTheme();
-    return defaultTheme?.component;
-  }
-
-  return theme.component;
+  return theme?.component || MinimalTheme;
 }
 
 /**

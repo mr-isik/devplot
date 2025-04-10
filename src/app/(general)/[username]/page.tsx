@@ -12,7 +12,7 @@ export async function generateMetadata({
 }: {
   params: { username: string };
 }): Promise<Metadata> {
-  const { username } = params;
+  const { username } = await params;
 
   const { metadata, error } = await fetchPortfolioMetadata(username);
 
@@ -38,7 +38,7 @@ export async function generateMetadata({
 // 1. Data fetching is handled by the portfolioDataService
 // 2. Theme selection and rendering is handled by the PortfolioRenderer
 const PortfolioPage = async ({ params }: { params: { username: string } }) => {
-  const { username } = params;
+  const { username } = await params;
 
   // Fetch portfolio data using our data service
   const { portfolio, error } = await fetchPortfolioByUsername(username);
