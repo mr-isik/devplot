@@ -2,120 +2,90 @@ import type { Theme, ThemeVariant } from "@/features/themes/types";
 import MinimalTheme from "@/features/themes/components/MinimalTheme";
 import ModernTheme from "@/features/themes/components/ModernTheme";
 import CreativeTheme from "@/features/themes/components/CreativeTheme";
+import FuturisticTheme from "@/features/themes/components/FuturisticTheme";
+import ElegantTheme from "@/features/themes/components/ElegantTheme";
+import DynamicTheme from "@/features/themes/components/DynamicTheme";
 
+// The default theme ID constant
 export const DEFAULT_THEME_ID: ThemeVariant = "minimal";
 
-interface ThemeRegistration {
-  id: ThemeVariant;
-  name: string;
-  description: string;
-  thumbnail: string;
-  component: React.ComponentType<any>;
+// Records of all available themes
+const THEMES: Record<ThemeVariant, Theme> = {
+  minimal: {
+    id: "minimal",
+    name: "Minimal",
+    description: "Clean and minimalist design with focus on content",
+    thumbnail: "/themes/minimal-theme-thumbnail.jpg",
+    component: MinimalTheme,
+  },
+  modern: {
+    id: "modern",
+    name: "Modern",
+    description: "Modern and sleek design with focus on content",
+    thumbnail: "/themes/modern-theme-thumbnail.jpg",
+    component: ModernTheme,
+  },
+  creative: {
+    id: "creative",
+    name: "Creative",
+    description: "Creative and unique design with focus on content",
+    thumbnail: "/themes/creative-theme-thumbnail.jpg",
+    component: CreativeTheme,
+  },
+  futuristic: {
+    id: "futuristic",
+    name: "Futuristic",
+    description:
+      "Ultra modern design with neon accents and glass morphism effects",
+    thumbnail: "/themes/futuristic-theme-thumbnail.jpg",
+    component: FuturisticTheme,
+    isPremium: true,
+  },
+  elegant: {
+    id: "elegant",
+    name: "Elegant",
+    description: "Sophisticated and luxurious theme with premium aesthetics",
+    thumbnail: "/themes/elegant-theme-thumbnail.jpg",
+    component: ElegantTheme,
+    isPremium: true,
+  },
+  dynamic: {
+    id: "dynamic",
+    name: "Dynamic",
+    description: "Vibrant and interactive theme with animated elements",
+    thumbnail: "/themes/dynamic-theme-thumbnail.jpg",
+    component: DynamicTheme,
+    isPremium: true,
+  },
+};
+
+// Functions for theme selection
+export function getThemeById(id: ThemeVariant): Theme | undefined {
+  return THEMES[id];
 }
 
-/**
- * ThemeRegistry class - uses adapter pattern to provide a clean interface for theme registration
- * and management. This makes it easy to add, remove, or modify themes.
- */
-class ThemeRegistry {
-  private themes: Map<ThemeVariant, Theme>;
-  private defaultThemeId: ThemeVariant;
+// Function to get all available themes
+export function getAllThemes(): Theme[] {
+  return Object.values(THEMES);
+}
 
-  constructor(defaultThemeId: ThemeVariant = DEFAULT_THEME_ID) {
-    this.themes = new Map();
-    this.defaultThemeId = defaultThemeId;
-    this.initializeThemes();
-  }
+// Function to get the default theme
+export function getDefaultTheme(): Theme {
+  const defaultTheme = THEMES[DEFAULT_THEME_ID];
 
-  /**
-   * Initialize the registry with built-in themes
-   */
-  private initializeThemes(): void {
-    // Register built-in themes
-    this.register({
-      id: "minimal",
-      name: "Minimal",
-      description: "Clean and minimalist design with focus on content",
-      thumbnail: "/themes/minimal-theme-thumbnail.jpg",
-      component: MinimalTheme,
-    });
+  if (!defaultTheme) {
+    // Fallback to the first available theme if default is not found
+    const firstTheme = getAllThemes()[0];
 
-    this.register({
-      id: "modern",
-      name: "Modern",
-      description: "Modern and sleek design with focus on content",
-      thumbnail: "/themes/modern-theme-thumbnail.jpg",
-      component: ModernTheme,
-    });
-
-    this.register({
-      id: "creative",
-      name: "Creative",
-      description: "Creative and unique design with focus on content",
-      thumbnail: "/themes/creative-theme-thumbnail.jpg",
-      component: CreativeTheme,
-    });
-  }
-
-  /**
-   * Register a new theme
-   * @param theme - The theme to register
-   */
-  register(theme: ThemeRegistration): void {
-    this.themes.set(theme.id, theme as Theme);
-  }
-
-  /**
-   * Find a theme by ID
-   * @param id - The theme ID
-   * @returns The theme or undefined if not found
-   */
-  getTheme(id: ThemeVariant): Theme | undefined {
-    return this.themes.get(id);
-  }
-
-  /**
-   * Get all registered themes
-   * @returns Array of all themes
-   */
-  getAllThemes(): Theme[] {
-    return Array.from(this.themes.values());
-  }
-
-  /**
-   * Get the default theme
-   * @returns The default theme
-   */
-  getDefaultTheme(): Theme {
-    const defaultTheme = this.themes.get(this.defaultThemeId);
-
-    if (!defaultTheme) {
-      // Fallback to the first available theme if default is not found
-      const firstTheme = this.getAllThemes()[0];
-
-      if (!firstTheme) {
-        throw new Error("No themes are registered");
-      }
-
-      return firstTheme;
+    if (!firstTheme) {
+      throw new Error("No themes are registered");
     }
 
-    return defaultTheme;
+    return firstTheme;
   }
+
+  return defaultTheme;
 }
 
-// Create and export a singleton instance of the theme registry
-export const themeRegistry = new ThemeRegistry();
-
-// Convenience functions that use the registry
-export function getThemeById(themeId: ThemeVariant): Theme | undefined {
-  return themeRegistry.getTheme(themeId);
-}
-
-export function getAllThemes(): Theme[] {
-  return themeRegistry.getAllThemes();
-}
-
-export function getDefaultTheme(): Theme {
-  return themeRegistry.getDefaultTheme();
-}
+// Export themes object for direct access
+export default THEMES;

@@ -5,7 +5,7 @@ import MinimalTheme from "@/features/themes/components/MinimalTheme";
 import { getThemeById } from "../registry/themeRegistry";
 
 // Default theme ID
-export const DEFAULT_THEME_ID: ThemeVariant = "modern";
+export const DEFAULT_THEME_ID: ThemeVariant = "minimal";
 
 /**
  * Returns the default theme variant
@@ -22,7 +22,14 @@ export function getDefaultTheme(): ThemeVariant {
  */
 export function resolveThemeComponent(themeId: ThemeVariant) {
   const theme = getThemeById(themeId);
-  return theme?.component || MinimalTheme;
+
+  // Safety check - if the theme isn't found, return MinimalTheme
+  if (!theme || !theme.component) {
+    console.warn(`Theme "${themeId}" not found, using default theme instead.`);
+    return MinimalTheme;
+  }
+
+  return theme.component;
 }
 
 /**

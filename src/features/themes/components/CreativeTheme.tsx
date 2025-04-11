@@ -34,6 +34,7 @@ const baseCreativeThemeStyles = `
     color: var(--creative-text-primary);
     background-color: var(--creative-bg);
     font-family: 'Poppins', system-ui, sans-serif;
+    overflow-x: hidden;
   }
 
   .creative-theme.dark {
@@ -52,32 +53,45 @@ const baseCreativeThemeStyles = `
     padding: 6rem 0;
     position: relative;
     overflow: hidden;
+    scroll-margin-top: 2rem;
   }
   
   .creative-theme .section::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: var(--creative-gradient);
+    opacity: 0.05;
+    top: -200px;
+    right: -200px;
+    z-index: 0;
+    filter: blur(50px);
+    transition: all 1.5s ease;
+  }
+  
+  .creative-theme .section::after {
     content: '';
     position: absolute;
     width: 300px;
     height: 300px;
     border-radius: 50%;
     background: var(--creative-gradient);
-    opacity: 0.05;
-    top: -150px;
-    right: -150px;
+    opacity: 0.03;
+    bottom: -150px;
+    left: -150px;
     z-index: 0;
+    filter: blur(40px);
+    transition: all 1.5s ease;
   }
   
-  .creative-theme .section::after {
-    content: '';
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: var(--creative-gradient);
-    opacity: 0.03;
-    bottom: -100px;
-    left: -100px;
-    z-index: 0;
+  .creative-theme .section:hover::before {
+    transform: translateY(30px) scale(1.1);
+  }
+  
+  .creative-theme .section:hover::after {
+    transform: translateY(-20px) scale(1.1);
   }
   
   .creative-theme .alt-section {
@@ -86,14 +100,15 @@ const baseCreativeThemeStyles = `
   
   .creative-theme .card {
     background-color: var(--creative-card-bg);
-    border-radius: 1.5rem;
-    box-shadow: 0 10px 30px rgba(114, 9, 183, 0.06);
-    padding: 2rem;
-    transition: all 0.4s ease;
+    border-radius: 1.75rem;
+    box-shadow: 0 15px 35px rgba(114, 9, 183, 0.07), 0 5px 15px rgba(0, 0, 0, 0.04);
+    padding: 2.25rem;
+    transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     position: relative;
     overflow: hidden;
     border: none;
     z-index: 1;
+    backdrop-filter: blur(10px);
   }
   
   .creative-theme .card::before {
@@ -105,17 +120,17 @@ const baseCreativeThemeStyles = `
     height: 100%;
     background: var(--creative-gradient);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.5s ease;
     z-index: -1;
   }
   
   .creative-theme .card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(114, 9, 183, 0.15);
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(114, 9, 183, 0.18), 0 8px 20px rgba(0, 0, 0, 0.06);
   }
   
   .creative-theme .card:hover::before {
-    opacity: 0.02;
+    opacity: 0.03;
   }
   
   .creative-theme .btn {
@@ -123,72 +138,93 @@ const baseCreativeThemeStyles = `
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
-    padding: 0.75rem 1.75rem;
+    padding: 0.875rem 2rem;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
     position: relative;
     overflow: hidden;
     z-index: 1;
+    letter-spacing: 0.02em;
+  }
+  
+  .creative-theme .btn::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.12);
+    transition: width 0.3s ease;
+    z-index: -1;
+    border-radius: 9999px;
+  }
+  
+  .creative-theme .btn:hover::after {
+    width: 100%;
   }
   
   .creative-theme .btn-primary {
     background: var(--creative-gradient);
     color: white;
-    box-shadow: 0 5px 15px rgba(114, 9, 183, 0.3);
+    box-shadow: 0 8px 20px rgba(114, 9, 183, 0.3);
   }
   
   .creative-theme .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(114, 9, 183, 0.4);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(114, 9, 183, 0.45);
   }
   
   .creative-theme .btn-outline {
     background-color: transparent;
     border: 2px solid var(--creative-accent);
     color: var(--creative-accent);
+    box-shadow: 0 5px 15px rgba(114, 9, 183, 0.08);
   }
   
   .creative-theme .btn-outline:hover {
     background-color: var(--creative-accent);
     color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(114, 9, 183, 0.25);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(114, 9, 183, 0.3);
   }
   
   .creative-theme .btn-icon {
-    padding: 1rem;
+    padding: 1.125rem;
     border-radius: 9999px;
     background-color: transparent;
     color: var(--creative-accent);
     border: 2px solid var(--creative-border);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
   
   .creative-theme .btn-icon:hover {
     background-color: var(--creative-accent);
     color: white;
     border-color: var(--creative-accent);
-    transform: translateY(-3px) rotate(10deg);
-    box-shadow: 0 8px 25px rgba(114, 9, 183, 0.25);
+    transform: translateY(-5px) scale(1.1) rotate(8deg);
+    box-shadow: 0 12px 30px rgba(114, 9, 183, 0.3);
   }
   
   .creative-theme .badge {
     display: inline-flex;
     align-items: center;
     border-radius: 9999px;
-    padding: 0.5rem 1.25rem;
+    padding: 0.625rem 1.5rem;
     font-size: 0.875rem;
     font-weight: 500;
     background-color: var(--creative-section-bg);
     color: var(--creative-accent);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
     border: 2px solid transparent;
+    box-shadow: 0 4px 12px rgba(114, 9, 183, 0.15);
   }
   
   .creative-theme .badge:hover {
     background-color: var(--creative-accent);
     color: white;
-    transform: translateY(-3px) scale(1.05);
+    transform: translateY(-5px) scale(1.07);
+    box-shadow: 0 8px 20px rgba(114, 9, 183, 0.25);
   }
   
   .creative-theme .skill-badge {
@@ -196,16 +232,17 @@ const baseCreativeThemeStyles = `
     align-items: center;
     gap: 0.5rem;
     border-radius: 9999px;
-    padding: 0.5rem 1.25rem;
+    padding: 0.625rem 1.5rem;
     font-size: 0.875rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
     border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
   
   .creative-theme .skill-badge:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-7px) scale(1.08);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   }
   
   .creative-theme h1, .creative-theme h2, .creative-theme h3 {
@@ -214,7 +251,8 @@ const baseCreativeThemeStyles = `
   }
   
   .creative-theme h1 {
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 8vw, 3.75rem);
+    letter-spacing: -0.02em;
   }
   
   .creative-theme p {
@@ -224,34 +262,40 @@ const baseCreativeThemeStyles = `
   .creative-theme .section-title {
     position: relative;
     display: inline-block;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     text-align: center;
     width: 100%;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: -0.01em;
   }
   
   .creative-theme .section-title::after {
     content: '';
     position: absolute;
-    bottom: -1rem;
+    bottom: -1.25rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 5px;
+    width: 90px;
+    height: 6px;
     background: var(--creative-gradient);
     border-radius: 9999px;
+    transition: width 0.4s ease;
+  }
+  
+  .creative-theme .section-title:hover::after {
+    width: 120px;
   }
   
   .creative-theme .section-header {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 4.5rem;
   }
   
   .creative-theme .section-header p {
     max-width: 700px;
-    margin: 1rem auto 0;
+    margin: 1.25rem auto 0;
     color: var(--creative-text-secondary);
-    font-size: 1.125rem;
+    font-size: 1.25rem;
   }
   
   .creative-theme .hero-gradient-text {
@@ -260,50 +304,111 @@ const baseCreativeThemeStyles = `
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .creative-theme .hero-gradient-text::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: var(--creative-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    filter: blur(12px);
+    opacity: 0.6;
   }
   
   .creative-theme .project-card {
     position: relative;
     overflow: hidden;
-    border-radius: 1.5rem;
-    transition: all 0.4s ease;
+    border-radius: 1.75rem;
+    transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
   
   .creative-theme .project-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(114, 9, 183, 0.15);
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(114, 9, 183, 0.18);
   }
   
   .creative-theme .project-image {
-    transition: all 0.6s ease;
+    transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
   
   .creative-theme .project-card:hover .project-image {
-    transform: scale(1.08);
+    transform: scale(1.1);
   }
   
   .creative-theme .education-date {
     display: inline-flex;
     align-items: center;
-    padding: 0.5rem 1.25rem;
+    padding: 0.625rem 1.5rem;
     border-radius: 9999px;
     font-size: 0.875rem;
     background: var(--creative-section-bg);
     color: var(--creative-accent);
     font-weight: 500;
+    box-shadow: 0 4px 12px rgba(114, 9, 183, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .creative-theme .education-date:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(114, 9, 183, 0.15);
   }
   
   .creative-theme .experience-logo {
     border: none;
-    border-radius: 1rem;
+    border-radius: 1.25rem;
     overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
   }
   
   .creative-theme .card:hover .experience-logo {
-    box-shadow: 0 8px 25px rgba(114, 9, 183, 0.15);
-    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(114, 9, 183, 0.2);
+    transform: scale(1.08) rotate(3deg);
+  }
+  
+  @media (max-width: 768px) {
+    .creative-theme .section {
+      padding: 4rem 0;
+    }
+    
+    .creative-theme .card {
+      padding: 1.75rem;
+    }
+    
+    .creative-theme .section-header {
+      margin-bottom: 3rem;
+    }
+    
+    .creative-theme .section-title {
+      margin-bottom: 2.5rem;
+    }
+    
+    .creative-theme .section-title::after {
+      width: 70px;
+      height: 5px;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .creative-theme .btn {
+      padding: 0.75rem 1.5rem;
+    }
+    
+    .creative-theme .btn-icon {
+      padding: 0.875rem;
+    }
+    
+    .creative-theme .badge, .creative-theme .skill-badge {
+      padding: 0.5rem 1rem;
+    }
   }
 `;
 
@@ -454,7 +559,7 @@ const CreativeTheme = ({
 
       <div className={themeClass + ` font-${themeOptions.font} min-h-screen`}>
         {/* Hero Section */}
-        <section className="section py-24">
+        <section className="section py-24 md:py-32">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -463,26 +568,37 @@ const CreativeTheme = ({
               className="flex flex-col items-center text-center"
             >
               <h1 className="mb-8 text-6xl font-bold leading-tight">
-                <span className="hero-gradient-text">
+                <motion.span
+                  className="hero-gradient-text"
+                  data-text={portfolio.contents.hero_header}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
                   {portfolio.contents.hero_header}
-                </span>
+                </motion.span>
               </h1>
-              <p className="max-w-2xl text-xl leading-relaxed text-[var(--creative-text-secondary)]">
-                {portfolio.contents.hero_description}
-              </p>
-
-              <motion.div
-                className="mt-12 flex gap-4"
+              <motion.p
+                className="max-w-2xl text-xl leading-relaxed text-[var(--creative-text-secondary)]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                {portfolio.contents.hero_description}
+              </motion.p>
+
+              <motion.div
+                className="mt-12 flex flex-wrap justify-center gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
               >
                 {socials.map((social, index) => (
                   <motion.div
                     key={social.id}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
+                    transition={{ delay: 0.6 + index * 0.1, duration: 0.4 }}
                   >
                     <Link
                       href={social.url}

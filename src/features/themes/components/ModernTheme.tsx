@@ -34,6 +34,7 @@ const baseModernThemeStyles = `
     color: var(--modern-text-primary);
     background-color: var(--modern-bg);
     font-family: 'Inter', system-ui, sans-serif;
+    overflow-x: hidden;
   }
 
   .modern-theme.dark {
@@ -50,129 +51,183 @@ const baseModernThemeStyles = `
   
   .modern-theme .section {
     padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+    scroll-margin-top: 2rem;
   }
   
   .modern-theme .alt-section {
     background-color: var(--modern-section-bg);
+    position: relative;
+  }
+  
+  .modern-theme .alt-section::before,
+  .modern-theme .alt-section::after {
+    content: '';
+    position: absolute;
+    background-color: var(--modern-accent);
+    opacity: 0.03;
+    border-radius: 50%;
+    z-index: 0;
+    filter: blur(50px);
+  }
+  
+  .modern-theme .alt-section::before {
+    width: 500px;
+    height: 500px;
+    top: -250px;
+    right: -250px;
+  }
+  
+  .modern-theme .alt-section::after {
+    width: 300px;
+    height: 300px;
+    bottom: -150px;
+    left: -150px;
   }
   
   .modern-theme .card {
     background-color: var(--modern-card-bg);
-    border-radius: 1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
-    transition: all 0.3s ease;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    padding: 2.25rem;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: none;
     position: relative;
     overflow: hidden;
   }
   
   .modern-theme .card:hover {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
   }
   
   .modern-theme .card-highlight {
     position: absolute;
     top: 0;
     left: 0;
-    height: 4px;
-    width: 100%;
+    height: 5px;
+    width: 0;
     background: var(--modern-gradient);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: width 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 1;
   }
   
   .modern-theme .card:hover .card-highlight {
-    opacity: 1;
+    width: 100%;
   }
   
   .modern-theme .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 0.75rem;
-    padding: 0.75rem 1.5rem;
+    border-radius: 0.875rem;
+    padding: 0.875rem 1.75rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: relative;
     overflow: hidden;
     z-index: 1;
+    letter-spacing: 0.01em;
+  }
+  
+  .modern-theme .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
+    transform: translateX(-100%);
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: -1;
+  }
+  
+  .modern-theme .btn:hover::before {
+    transform: translateX(0);
   }
   
   .modern-theme .btn-primary {
     background: var(--modern-gradient);
     color: white;
-    box-shadow: 0 4px 14px rgba(0, 102, 255, 0.2);
+    box-shadow: 0 6px 16px rgba(0, 102, 255, 0.25);
   }
   
   .modern-theme .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 102, 255, 0.25);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 102, 255, 0.35);
   }
   
   .modern-theme .btn-outline {
     background-color: transparent;
     border: 2px solid var(--modern-border);
     color: var(--modern-text-primary);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
   }
   
   .modern-theme .btn-outline:hover {
     border-color: var(--modern-accent);
     color: var(--modern-accent);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 102, 255, 0.15);
   }
   
   .modern-theme .btn-icon {
-    padding: 0.75rem;
-    border-radius: 0.75rem;
-    transition: all 0.3s ease;
+    padding: 0.875rem;
+    border-radius: 0.875rem;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: 2px solid var(--modern-border);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
   }
   
   .modern-theme .btn-icon:hover {
     background-color: var(--modern-accent);
     color: white;
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.05);
     border-color: var(--modern-accent);
+    box-shadow: 0 8px 20px rgba(0, 102, 255, 0.2);
   }
   
   .modern-theme .badge {
     display: inline-flex;
     align-items: center;
-    border-radius: 0.75rem;
-    padding: 0.5rem 1rem;
+    border-radius: 0.875rem;
+    padding: 0.625rem 1.25rem;
     font-size: 0.875rem;
     font-weight: 600;
     background-color: var(--modern-section-bg);
     color: var(--modern-text-secondary);
-    transition: all 0.2s ease;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
   
   .modern-theme .badge:hover {
     background-color: var(--modern-accent-light);
     color: white;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 102, 255, 0.15);
   }
   
   .modern-theme .skill-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    border-radius: 0.75rem;
-    padding: 0.5rem 1rem;
+    border-radius: 0.875rem;
+    padding: 0.625rem 1.25rem;
     font-size: 0.875rem;
     font-weight: 500;
     background-color: var(--modern-section-bg);
     color: var(--modern-text-secondary);
-    transition: all 0.2s ease;
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
     border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
   
   .modern-theme .skill-badge:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
   }
   
   .modern-theme h1, .modern-theme h2, .modern-theme h3 {
@@ -180,39 +235,54 @@ const baseModernThemeStyles = `
     line-height: 1.2;
   }
   
+  .modern-theme h1 {
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    letter-spacing: -0.02em;
+  }
+  
+  .modern-theme h2 {
+    letter-spacing: -0.01em;
+  }
+  
   .modern-theme p {
-    line-height: 1.7;
+    line-height: 1.8;
   }
   
   .modern-theme .section-title {
     position: relative;
     display: inline-block;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     text-align: center;
     width: 100%;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: -0.01em;
   }
   
   .modern-theme .section-title::after {
     content: '';
     position: absolute;
-    bottom: -1rem;
+    bottom: -1.25rem;
     left: 50%;
     transform: translateX(-50%);
-    width: 4rem;
-    height: 0.25rem;
+    width: 5rem;
+    height: 0.35rem;
     background: var(--modern-gradient);
     border-radius: 9999px;
+    transition: width 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  
+  .modern-theme .section-title:hover::after {
+    width: 7rem;
   }
   
   .modern-theme .section-header {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 4.5rem;
   }
   
   .modern-theme .section-header p {
     max-width: 700px;
-    margin: 0.75rem auto 0;
+    margin: 1rem auto 0;
     color: var(--modern-text-secondary);
     font-size: 1.125rem;
   }
@@ -223,54 +293,117 @@ const baseModernThemeStyles = `
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-fill-color: transparent;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .modern-theme .hero-text::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: var(--modern-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+    filter: blur(8px);
+    opacity: 0.5;
   }
   
   .modern-theme .project-card {
     position: relative;
     overflow: hidden;
-    border-radius: 1rem;
-    transition: all 0.3s ease;
+    border-radius: 1.25rem;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   
   .modern-theme .project-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
   
   .modern-theme .project-image {
-    transition: all 0.5s ease;
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   
   .modern-theme .project-card:hover .project-image {
-    transform: scale(1.05);
+    transform: scale(1.08);
   }
   
   .modern-theme .education-card {
-    border-radius: 1rem;
-    transition: all 0.3s ease;
+    border-radius: 1.25rem;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   
   .modern-theme .education-date {
     display: inline-flex;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding: 0.625rem 1.25rem;
     border-radius: 9999px;
     font-size: 0.875rem;
     background: var(--modern-section-bg);
     color: var(--modern-text-secondary);
     font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+  }
+  
+  .modern-theme .education-date:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    color: var(--modern-accent);
   }
   
   .modern-theme .experience-logo {
     border: none;
-    border-radius: 12px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   
   .modern-theme .card:hover .experience-logo {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+  }
+  
+  @media (max-width: 768px) {
+    .modern-theme .section {
+      padding: 4rem 0;
+    }
+    
+    .modern-theme .card {
+      padding: 1.75rem;
+    }
+    
+    .modern-theme .section-header {
+      margin-bottom: 3rem;
+    }
+    
+    .modern-theme .section-title {
+      margin-bottom: 2.5rem;
+    }
+    
+    .modern-theme .section-title::after {
+      width: 4rem;
+      height: 0.25rem;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .modern-theme .btn {
+      padding: 0.75rem 1.5rem;
+    }
+    
+    .modern-theme .btn-icon {
+      padding: 0.75rem;
+    }
+    
+    .modern-theme .badge, .modern-theme .skill-badge {
+      padding: 0.5rem 1rem;
+    }
   }
 `;
 
@@ -421,7 +554,7 @@ const ModernTheme = ({
 
       <div className={themeClass + ` font-${themeOptions.font} min-h-screen`}>
         {/* Hero Section */}
-        <section className="section py-24">
+        <section className="section py-24 md:py-32">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -429,27 +562,43 @@ const ModernTheme = ({
               transition={{ duration: 0.7 }}
               className="flex flex-col items-center text-center"
             >
-              <h1 className="mb-6 text-5xl font-bold leading-tight">
-                <span className="hero-text">
+              <motion.h1
+                className="mb-6 text-5xl font-bold leading-tight"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <motion.span
+                  className="hero-text"
+                  data-text={portfolio.contents.hero_header}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
                   {portfolio.contents.hero_header}
-                </span>
-              </h1>
-              <p className="max-w-2xl text-xl leading-relaxed text-[var(--modern-text-secondary)]">
-                {portfolio.contents.hero_description}
-              </p>
-
-              <motion.div
-                className="mt-10 flex gap-4"
+                </motion.span>
+              </motion.h1>
+              <motion.p
+                className="max-w-2xl text-xl leading-relaxed text-[var(--modern-text-secondary)]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+                transition={{ duration: 0.7, delay: 0.4 }}
+              >
+                {portfolio.contents.hero_description}
+              </motion.p>
+
+              <motion.div
+                className="mt-10 flex flex-wrap justify-center gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.5 }}
               >
                 {socials.map((social, index) => (
                   <motion.div
                     key={social.id}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
+                    transition={{ delay: 0.6 + index * 0.1, duration: 0.4 }}
                   >
                     <Link
                       href={social.url}

@@ -1,5 +1,3 @@
-import type { ThemeVariant } from "./index";
-
 /**
  * Theme options interface for portfolio customization
  */

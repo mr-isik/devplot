@@ -5,8 +5,14 @@ import type { Social } from "@/features/socials/types";
 import { Education } from "@/features/educations/types";
 import { Skill } from "@/features/skills/types";
 
-// Tema seçenekleri - sadece minimal tema şu an için
-export type ThemeVariant = "minimal" | "modern" | "creative";
+// Tema seçenekleri - şu an için kullanılabilir tüm temalar
+export type ThemeVariant =
+  | "minimal"
+  | "modern"
+  | "creative"
+  | "futuristic"
+  | "elegant"
+  | "dynamic";
 
 // ThemeProps, PortfolioThemeAdapter tarafından gönderilen tüm veriyi içerir
 export type ThemeProps = {
@@ -24,4 +30,5 @@ export type Theme = {
   description: string;
   thumbnail: string;
   component: React.ComponentType<ThemeProps>;
+  isPremium?: boolean;
 };
