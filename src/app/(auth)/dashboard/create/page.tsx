@@ -28,7 +28,7 @@ export default async function CreatePortfolioPage() {
       </div>
 
       <div className="h-[calc(100vh-250px)]">
-        {/* <PortfolioForm userId={userData[0].id} /> */}
+        <PortfolioForm userId={userData[0].id} />
       </div>
     </div>
   );

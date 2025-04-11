@@ -19,8 +19,9 @@ import {
 } from "../utils/themeCustomization";
 import { FaGithub } from "react-icons/fa";
 
-const baseElegantThemeStyles = `
+let baseElegantThemeStyles = `
   .elegant-theme {
+    /* Temel Renk Değişkenleri - Kullanıcı Özelleştirmelerine Göre Ayarlanacak */
     --elegant-gold: #b38600;
     --elegant-gold-light: #d9b036;
     --elegant-cream: #fdf8e9;
@@ -35,34 +36,25 @@ const baseElegantThemeStyles = `
     --elegant-border: #e6d7b3;
     --elegant-card-bg: #ffffff;
     --elegant-section-bg: #fdf8e9;
-    --elegant-gradient: linear-gradient(to right, #b38600, #d9b036);
+    --elegant-gradient: linear-gradient(to right, var(--elegant-accent), var(--elegant-accent-light));
+    --elegant-overlay: rgba(253, 248, 233, 0.8);
+    --elegant-shadow: 0 10px 30px rgba(179, 134, 0, 0.1);
+    --elegant-accent-rgb: 179, 134, 0;
     
     color: var(--elegant-text-primary);
     background-color: var(--elegant-bg);
     font-family: 'Playfair Display', serif;
-    background-image: 
-      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b38600' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    position: relative;
   }
 
   .elegant-theme.dark {
-    --elegant-gold: #dbb74e;
-    --elegant-gold-light: #ecd78e;
-    --elegant-cream: #211d18;
-    --elegant-cream-dark: #171512;
-    --elegant-brown: #f5edd6;
-    --elegant-brown-light: #e6d7b3;
-    --elegant-bg: #0f0d0a;
+    /* Dark Teması Değerleri */
+    --elegant-bg: #1a1500;
     --elegant-text-primary: #f5edd6;
     --elegant-text-secondary: #e6d7b3;
-    --elegant-accent: #dbb74e;
-    --elegant-accent-light: #ecd78e;
-    --elegant-border: #3a342a;
-    --elegant-card-bg: #1a1712;
-    --elegant-section-bg: #171512;
-    --elegant-gradient: linear-gradient(to right, #dbb74e, #ecd78e);
-    
-    background-image: 
-      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23dbb74e' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    --elegant-card-bg: #221c0a;
+    --elegant-section-bg: #221c0a;
+    --elegant-border: #594b21;
   }
   
   .elegant-theme .section {
@@ -137,14 +129,15 @@ const baseElegantThemeStyles = `
   }
   
   .elegant-theme .btn-primary {
-    background-color: var(--elegant-accent);
+    background: var(--elegant-gradient);
     color: white;
-    border: 1px solid var(--elegant-accent);
+    border: none;
+    box-shadow: 0 8px 20px rgba(var(--elegant-accent-rgb), 0.2);
   }
   
   .elegant-theme .btn-primary:hover {
-    background-color: transparent;
-    color: var(--elegant-accent);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(var(--elegant-accent-rgb), 0.3);
   }
   
   .elegant-theme .btn-outline {
@@ -359,6 +352,304 @@ const baseElegantThemeStyles = `
       padding: 0.375rem 0.75rem;
     }
   }
+
+  /* Elegant Background Patterns */
+  .elegant-theme::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 50% 50%, rgba(var(--elegant-accent-rgb), 0.03) 0%, transparent 60%),
+                      radial-gradient(circle at 85% 15%, rgba(var(--elegant-accent-rgb), 0.03) 0%, transparent 40%),
+                      radial-gradient(circle at 15% 85%, rgba(var(--elegant-accent-rgb), 0.03) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  /* Decorative Elements */
+  .elegant-decoration {
+    position: relative;
+  }
+  
+  .elegant-decoration::before,
+  .elegant-decoration::after {
+    content: '';
+    position: absolute;
+    background-color: var(--elegant-accent);
+    opacity: 0.15;
+    transition: all 0.6s ease;
+  }
+  
+  .section-title.elegant-decoration::before {
+    width: 40px;
+    height: 1px;
+    left: -60px;
+    top: 50%;
+  }
+  
+  .section-title.elegant-decoration::after {
+    width: 40px;
+    height: 1px;
+    right: -60px;
+    top: 50%;
+  }
+  
+  .elegant-theme .card:hover .shimmer-effect {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(var(--elegant-accent-rgb), 0.2) 50%,
+      transparent 100%
+    );
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .elegant-theme .gold-text {
+    background: var(--elegant-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+  }
+
+  /* Premium Decorative Elements */
+  .elegant-theme .decorative-divider {
+    position: relative;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--elegant-gold), transparent);
+    margin: 2rem 0;
+    opacity: 0.7;
+  }
+  
+  .elegant-theme .decorative-divider::before,
+  .elegant-theme .decorative-divider::after {
+    content: '❦';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    color: var(--elegant-gold);
+    background: var(--elegant-bg);
+    padding: 0 1rem;
+  }
+  
+  .elegant-theme .decorative-corners {
+    position: relative;
+  }
+  
+  .elegant-theme .decorative-corners::before,
+  .elegant-theme .decorative-corners::after,
+  .elegant-theme .decorative-corners .corner-top-left,
+  .elegant-theme .decorative-corners .corner-bottom-right {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+    opacity: 0.8;
+    transition: all 0.4s ease;
+  }
+  
+  .elegant-theme .decorative-corners::before {
+    top: 0;
+    left: 0;
+    border-top: 2px solid var(--elegant-gold);
+    border-left: 2px solid var(--elegant-gold);
+  }
+  
+  .elegant-theme .decorative-corners::after {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid var(--elegant-gold);
+    border-right: 2px solid var(--elegant-gold);
+  }
+  
+  .elegant-theme .decorative-corners .corner-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-top: 2px solid var(--elegant-gold);
+    border-right: 2px solid var(--elegant-gold);
+    opacity: 0.8;
+    transition: all 0.4s ease;
+  }
+  
+  .elegant-theme .decorative-corners .corner-bottom-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border-bottom: 2px solid var(--elegant-gold);
+    border-left: 2px solid var(--elegant-gold);
+    opacity: 0.8;
+    transition: all 0.4s ease;
+  }
+  
+  .elegant-theme .decorative-corners:hover::before,
+  .elegant-theme .decorative-corners:hover::after,
+  .elegant-theme .decorative-corners:hover .corner-top-right,
+  .elegant-theme .decorative-corners:hover .corner-bottom-left {
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+  }
+
+  /* Elegant Timeline Design */
+  .elegant-theme .timeline-container {
+    position: relative;
+    padding: 4rem 0 2rem;
+  }
+
+  .elegant-theme .timeline-header {
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .elegant-theme .timeline-main {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 4rem;
+  }
+
+  .elegant-theme .timeline-main::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, 
+      rgba(var(--elegant-accent-rgb), 0),
+      rgba(var(--elegant-accent-rgb), 0.7),
+      rgba(var(--elegant-accent-rgb), 0.7),
+      rgba(var(--elegant-accent-rgb), 0));
+    z-index: 1;
+  }
+
+  .elegant-theme .timeline-items {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    position: relative;
+    padding: 3rem 0 1rem;
+    gap: 2rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--elegant-accent) transparent;
+  }
+
+  .elegant-theme .timeline-items::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .elegant-theme .timeline-items::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  .elegant-theme .timeline-items::-webkit-scrollbar-thumb {
+    background-color: var(--elegant-accent);
+    border-radius: 10px;
+  }
+
+  .elegant-theme .timeline-item {
+    position: relative;
+    min-width: 350px;
+    flex: 0 0 auto;
+    opacity: 0.8;
+    transition: all 0.4s ease;
+  }
+
+  .elegant-theme .timeline-item::before {
+    content: '';
+    position: absolute;
+    top: -3rem;
+    left: 50%;
+    width: 1px;
+    height: 3rem;
+    background: linear-gradient(to top, var(--elegant-accent), transparent);
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+
+  .elegant-theme .timeline-item::after {
+    content: '';
+    position: absolute;
+    top: -3.25rem;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--elegant-accent);
+    border-radius: 50%;
+    background: var(--elegant-bg);
+    transform: translateX(-50%);
+    z-index: 3;
+    transition: all 0.4s ease;
+  }
+
+  .elegant-theme .timeline-item:hover {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+
+  .elegant-theme .timeline-item:hover::after {
+    background: var(--elegant-accent);
+    box-shadow: 0 0 15px rgba(var(--elegant-accent-rgb), 0.5);
+    transform: translateX(-50%) scale(1.2);
+  }
+
+  .elegant-theme .timeline-date {
+    position: absolute;
+    top: -6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    text-align: center;
+    font-family: "Playfair Display", serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    color: var(--elegant-accent);
+    white-space: nowrap;
+    background: var(--elegant-bg);
+    padding: 0.4rem 1.2rem;
+    border-bottom: 1px solid var(--elegant-accent);
+  }
+
+  .elegant-theme .timeline-content {
+    width: 100%;
+    position: relative;
+    transition: all 0.4s ease;
+  }
+
+  @media (max-width: 768px) {
+    .elegant-theme .timeline-main {
+      padding: 0 1rem;
+    }
+    
+    .elegant-theme .timeline-items {
+      gap: 1.5rem;
+    }
+    
+    .elegant-theme .timeline-item {
+      min-width: 300px;
+    }
+  }
 `;
 
 const ElegantTheme = ({
@@ -388,6 +679,22 @@ const ElegantTheme = ({
     },
   };
 
+  // RGB renk dönüşümleri için yardımcı fonksiyon
+  const hexToRgb = (hex: string) => {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    const formattedHex = hex.replace(
+      shorthandRegex,
+      (_, r, g, b) => r + r + g + g + b + b
+    );
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
+      formattedHex
+    );
+
+    return result
+      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+      : "0, 0, 0"; // Siyah varsayılan değer
+  };
+
   let themeOptions: ThemeOptions = {
     theme: "elegant",
     colorTheme: "light",
@@ -405,7 +712,7 @@ const ElegantTheme = ({
     },
     fonts: {
       heading: "Playfair Display, serif",
-      body: "Montserrat, sans-serif",
+      body: "Playfair Display, serif",
     },
   };
 
@@ -447,20 +754,63 @@ const ElegantTheme = ({
     Array.isArray(themeOptions.colors) &&
     themeOptions.colors.length >= 5
   ) {
+    // Ana renk ve RGB değerini hesaplama
+    const accentColor = themeOptions.colors[4];
+    const accentRgb = hexToRgb(accentColor);
+
+    // Açık altın rengi hesaplama (mevcut renkten %20 daha açık)
+    const accentLight = adjustColor(accentColor, 20);
+
+    // Açık krem rengi hesaplama - arka plan tonu
+    const creamColor = adjustColor(themeOptions.colors[0], 2);
+    const creamColorDark = adjustColor(creamColor, -5);
+
+    // Koyu kahverengi ton - ana metin rengi
+    const brownColor = themeOptions.colors[3];
+    const brownColorLight = adjustColor(brownColor, 25);
+
+    // Özelleştirilmiş renk paleti
     themeOptions.colorPalette = {
-      primary: themeOptions.colors[4],
-      secondary: themeOptions.colors[4] + "99",
+      primary: accentColor,
+      secondary: accentLight,
       background: themeOptions.colors[0],
-      text: themeOptions.colors[3],
-      accent: themeOptions.colors[4],
-      muted: themeOptions.colors[3] + "99",
-      border: themeOptions.colors[2],
+      text: brownColor,
+      accent: accentColor,
+      muted: brownColorLight,
+      border: creamColorDark,
       card: themeOptions.colors[0],
     };
+
+    // CSS değişkenleri için özel stil eklemesi
+    const customStyles = `
+      .elegant-theme {
+        --elegant-gold: ${accentColor};
+        --elegant-gold-light: ${accentLight};
+        --elegant-cream: ${creamColor};
+        --elegant-cream-dark: ${creamColorDark};
+        --elegant-brown: ${brownColor};
+        --elegant-brown-light: ${brownColorLight};
+        --elegant-bg: ${themeOptions.colors[0]};
+        --elegant-text-primary: ${brownColor};
+        --elegant-text-secondary: ${brownColorLight};
+        --elegant-accent: ${accentColor};
+        --elegant-accent-light: ${accentLight};
+        --elegant-border: ${creamColorDark};
+        --elegant-card-bg: ${themeOptions.colors[0]};
+        --elegant-section-bg: ${creamColor};
+        --elegant-gradient: linear-gradient(to right, ${accentColor}, ${accentLight});
+        --elegant-overlay: ${creamColor}cc;
+        --elegant-shadow: 0 10px 30px rgba(${accentRgb}, 0.1);
+        --elegant-accent-rgb: ${accentRgb};
+      }
+    `;
+
+    // Ana stile ekle
+    baseElegantThemeStyles = baseElegantThemeStyles + customStyles;
   }
 
   if (themeOptions.font) {
-    const fontValue = `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, sans-serif`;
+    const fontValue = `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, serif`;
     themeOptions.fonts = {
       heading: fontValue,
       body: fontValue,
@@ -475,6 +825,7 @@ const ElegantTheme = ({
 
   const themeClass = `elegant-theme ${themeOptions.colorTheme === "dark" ? "dark" : ""}`;
 
+  // Font variables and theme styles combined
   const combinedStyles = `
     ${elegantThemeStyles}
     
@@ -484,7 +835,14 @@ const ElegantTheme = ({
       :root {
         --font-family: ${
           fontFamilies[themeOptions.font as keyof typeof fontFamilies] ||
-          `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, sans-serif`
+          `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, serif`
+        } !important;
+      }
+      
+      .elegant-theme, .elegant-theme * {
+        font-family: ${
+          fontFamilies[themeOptions.font as keyof typeof fontFamilies] ||
+          `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, serif`
         } !important;
       }
     `
@@ -499,7 +857,7 @@ const ElegantTheme = ({
       </style>
 
       <div className={themeClass}>
-        {/* Hero Section */}
+        {/* Hero Section with Premium Touch */}
         <section className="section py-24">
           <div className="container mx-auto px-4">
             <motion.div
@@ -508,77 +866,151 @@ const ElegantTheme = ({
               transition={{ duration: 0.7 }}
               className="flex flex-col items-center text-center"
             >
-              <h1 className="accent-text mb-6 text-5xl font-bold leading-tight">
-                {portfolio.contents.hero_header}
-              </h1>
-              <p className="max-w-2xl text-xl leading-relaxed text-[var(--elegant-text-secondary)]">
-                {portfolio.contents.hero_description}
-              </p>
-
-              <div className="mt-10 flex flex-wrap justify-center gap-4">
-                {socials.map((social) => (
-                  <Link
-                    key={social.id}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <button type="button" className="btn btn-icon">
-                      <span className="sr-only">{social.platform}</span>
-                      {getPlatformIcon(social.platform)}
-                    </button>
-                  </Link>
-                ))}
+              <div className="decorative-corners relative mb-8 inline-block px-10 py-2">
+                <div className="corner-top-right"></div>
+                <div className="corner-bottom-left"></div>
+                <motion.h1
+                  className="accent-text mb-6 text-5xl font-bold leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.2 }}
+                >
+                  {portfolio.contents.hero_header}
+                </motion.h1>
               </div>
+
+              <motion.p
+                className="max-w-2xl text-xl leading-relaxed text-[var(--elegant-text-secondary)]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                {portfolio.contents.hero_description}
+              </motion.p>
+
+              <div className="decorative-divider my-8"></div>
+
+              <motion.div
+                className="mt-10 flex flex-wrap justify-center gap-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                {socials.map((social, index) => (
+                  <motion.div
+                    key={social.id}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
+                    whileHover={{ scale: 1.1 }}
+                  >
+                    <Link
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button
+                        type="button"
+                        className="btn btn-icon premium-hover"
+                      >
+                        <span className="sr-only">{social.platform}</span>
+                        {getPlatformIcon(social.platform)}
+                      </button>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
           </div>
         </section>
 
-        {/* About Section */}
+        {/* About Section with Elegant Design */}
         {portfolio.contents.about_text && (
           <section className="alt-section section">
             <div className="container mx-auto px-4">
-              <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">About Me</h2>
+              <motion.div
+                className="section-header"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title golden-text text-3xl font-bold">
+                  About Me
+                </h2>
                 <p>Get to know me better</p>
-              </div>
-              <div className="text-center">
-                <p className="mx-auto max-w-3xl text-lg leading-relaxed text-[var(--elegant-text-secondary)]">
-                  {portfolio.contents.about_text}
-                </p>
-              </div>
+              </motion.div>
+
+              <motion.div
+                className="text-center"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <div className="decorative-corners mx-auto max-w-3xl px-8 py-6">
+                  <div className="corner-top-right"></div>
+                  <div className="corner-bottom-left"></div>
+                  <p className="text-lg leading-relaxed text-[var(--elegant-text-secondary)]">
+                    {portfolio.contents.about_text}
+                  </p>
+                </div>
+              </motion.div>
             </div>
           </section>
         )}
 
-        {/* Skills Section */}
+        {/* Skills Section with Animated Badges */}
         {skills && skills.length > 0 && (
           <section className="section">
             <div className="container mx-auto px-4">
-              <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Skills</h2>
+              <motion.div
+                className="section-header"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title golden-text text-3xl font-bold">
+                  Skills
+                </h2>
                 <p>Technologies and tools I work with</p>
-              </div>
-              <div className="mx-auto max-w-4xl">
+              </motion.div>
+
+              <motion.div
+                className="mx-auto max-w-4xl"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
                 {skills && skills.length > 0 ? (
                   <div className="flex flex-wrap justify-center gap-3">
-                    {skills.map((skill: Skill) => {
+                    {skills.map((skill: Skill, index: number) => {
                       const SkillIcon = getSkillIcon(skill.name);
                       const skillColor = getSkillColor(skill.name);
 
                       return (
-                        <span
+                        <motion.span
                           key={skill.id}
-                          className="skill-badge"
+                          className="skill-badge premium-hover"
                           style={{
                             borderColor: `${skillColor}20`,
                             color: skillColor,
                             background: `${skillColor}10`,
                           }}
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: 0.05 * index }}
+                          whileHover={{
+                            y: -5,
+                            boxShadow: `0 10px 20px rgba(0,0,0,0.1), 0 0 10px ${skillColor}30`,
+                          }}
                         >
                           <SkillIcon size={14} />
                           {skill.name}
-                        </span>
+                        </motion.span>
                       );
                     })}
                   </div>
@@ -587,33 +1019,51 @@ const ElegantTheme = ({
                     No skills information yet.
                   </p>
                 )}
-              </div>
+              </motion.div>
             </div>
           </section>
         )}
 
-        {/* Education Section */}
+        {/* Education Section with Elegant Cards */}
         {educations && educations.length > 0 && (
           <section className="alt-section section">
             <div className="container mx-auto px-4">
-              <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Education</h2>
+              <motion.div
+                className="section-header"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title golden-text text-3xl font-bold">
+                  Education
+                </h2>
                 <p>My academic background and qualifications</p>
-              </div>
+              </motion.div>
+
               <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6">
                 {educations && educations.length > 0 ? (
                   educations.map((education: Education, index) => (
-                    <div key={education.id} className="card">
+                    <motion.div
+                      key={education.id}
+                      className="card decorative-corners"
+                      initial={{ opacity: 0, x: -30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <div className="corner-top-right"></div>
+                      <div className="corner-bottom-left"></div>
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div>
-                          <h3 className="text-xl font-semibold">
+                          <h3 className="text-xl font-semibold accent-text underlined">
                             {education.degree} in {education.field}
                           </h3>
                           <p className="text-[var(--elegant-text-secondary)] mt-1">
                             {education.school}
                           </p>
                         </div>
-                        <div className="education-date">
+                        <div className="education-date premium-hover">
                           <CalendarIcon className="mr-1 size-4" />
                           <span>
                             {format(new Date(education.start_date), "MMM yyyy")}{" "}
@@ -624,7 +1074,7 @@ const ElegantTheme = ({
                           </span>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))
                 ) : (
                   <p className="text-center text-[var(--elegant-text-secondary)]">
@@ -636,63 +1086,91 @@ const ElegantTheme = ({
           </section>
         )}
 
-        {/* Experience Section */}
+        {/* Experience Section with Elegant Timeline */}
         {experiences && experiences.length > 0 && (
           <section className="section">
             <div className="container mx-auto px-4">
-              <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Experience</h2>
-                <p>My professional journey and work history</p>
-              </div>
-              <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6">
-                {experiences && experiences.length > 0 ? (
-                  experiences.map((experience, index) => (
-                    <div key={experience.id} className="card">
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <div>
-                          <h3 className="text-xl font-semibold">
-                            {experience.role}
-                          </h3>
-                          <div className="mt-2 flex items-center gap-3">
-                            {experience.logo && (
-                              <div className="overflow-hidden experience-logo">
-                                <Image
-                                  src={experience.logo}
-                                  alt={experience.company}
-                                  width={40}
-                                  height={40}
-                                  className="object-cover"
-                                />
-                              </div>
-                            )}
-                            <p className="font-medium text-[var(--elegant-text-secondary)]">
-                              {experience.company}
-                            </p>
-                          </div>
-                          <p className="mt-1 text-sm text-[var(--elegant-text-secondary)]">
-                            {experience.employment_type}
-                          </p>
-                        </div>
-                        <div className="education-date">
-                          <CalendarIcon className="mr-1 size-4" />
-                          <span>
+              <motion.div
+                className="section-header"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title golden-text text-3xl font-bold">
+                  Experience
+                </h2>
+                <p>My professional journey and accomplishments</p>
+              </motion.div>
+
+              <div className="timeline-container">
+                <div className="timeline-main">
+                  <div className="timeline-main::before"></div>
+
+                  <motion.div
+                    className="timeline-items"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7 }}
+                  >
+                    {experiences && experiences.length > 0 ? (
+                      experiences.map((experience, index) => (
+                        <motion.div
+                          key={experience.id}
+                          className="timeline-item"
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: index * 0.1 }}
+                        >
+                          <div className="timeline-date">
+                            <CalendarIcon className="mr-1 size-3 inline" />
                             {format(experience.start_date, "MMM yyyy")} -{" "}
                             {experience.end_date
                               ? format(experience.end_date, "MMM yyyy")
                               : "Present"}
-                          </span>
-                        </div>
-                      </div>
-                      <p className="mt-4 text-[var(--elegant-text-secondary)]">
-                        {experience.description}
+                          </div>
+                          <div className="timeline-content card decorative-corners">
+                            <div className="corner-top-right"></div>
+                            <div className="corner-bottom-left"></div>
+                            <div className="shimmer-effect absolute inset-0"></div>
+
+                            <h3 className="text-xl font-semibold gold-text">
+                              {experience.role}
+                            </h3>
+                            <div className="mt-3 flex items-center gap-3">
+                              {experience.logo && (
+                                <div className="overflow-hidden experience-logo">
+                                  <Image
+                                    src={experience.logo}
+                                    alt={experience.company}
+                                    width={50}
+                                    height={50}
+                                    className="object-cover"
+                                  />
+                                </div>
+                              )}
+                              <p className="font-medium accent-text">
+                                {experience.company}
+                              </p>
+                            </div>
+                            <p className="mt-1 text-sm text-[var(--elegant-text-secondary)]">
+                              {experience.employment_type}
+                            </p>
+                            <p className="mt-4 text-[var(--elegant-text-secondary)]">
+                              {experience.description}
+                            </p>
+                          </div>
+                        </motion.div>
+                      ))
+                    ) : (
+                      <p className="text-center text-[var(--elegant-text-secondary)]">
+                        No experience information yet.
                       </p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-[var(--elegant-text-secondary)]">
-                    No experience information yet.
-                  </p>
-                )}
+                    )}
+                  </motion.div>
+                </div>
               </div>
             </div>
           </section>
@@ -772,9 +1250,10 @@ const ElegantTheme = ({
           </section>
         )}
 
-        {/* Footer */}
+        {/* Footer with Elegant Design */}
         <footer className="py-12 text-center text-[var(--elegant-text-secondary)]">
           <div className="container mx-auto px-4">
+            <div className="decorative-divider mb-8 mt-4"></div>
             <div>
               <p className="mb-2 text-sm">
                 ©{new Date().getFullYear()} {portfolio.contents.meta_title}

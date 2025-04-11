@@ -410,6 +410,240 @@ const baseCreativeThemeStyles = `
       padding: 0.5rem 1rem;
     }
   }
+
+  /* Creative Timeline Design */
+  .creative-theme .timeline-flow {
+    position: relative;
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 2rem 0;
+  }
+
+  .creative-theme .timeline-path {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 5px;
+    background: linear-gradient(to bottom,
+      rgba(114, 9, 183, 0.1),
+      rgba(181, 23, 158, 0.8),
+      rgba(114, 9, 183, 0.1));
+    border-radius: 10px;
+    transform: translateX(-50%);
+  }
+
+  .creative-theme .timeline-path::before,
+  .creative-theme .timeline-path::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: var(--creative-section-bg);
+    z-index: 2;
+  }
+
+  .creative-theme .timeline-path::before {
+    top: -2px;
+    background: linear-gradient(to bottom, var(--creative-section-bg), transparent);
+  }
+
+  .creative-theme .timeline-path::after {
+    bottom: -2px;
+    background: linear-gradient(to top, var(--creative-section-bg), transparent);
+  }
+
+  .creative-theme .timeline-items {
+    position: relative;
+    z-index: 3;
+  }
+
+  .creative-theme .timeline-item {
+    display: flex;
+    position: relative;
+    margin-bottom: 7rem;
+  }
+
+  .creative-theme .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .creative-theme .timeline-item:nth-child(odd) {
+    justify-content: flex-start;
+  }
+
+  .creative-theme .timeline-item:nth-child(even) {
+    justify-content: flex-end;
+  }
+
+  .creative-theme .timeline-item:nth-child(odd) .timeline-content {
+    margin-right: 110px;
+  }
+
+  .creative-theme .timeline-item:nth-child(even) .timeline-content {
+    margin-left: 110px;
+  }
+
+  .creative-theme .timeline-point {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    transform: translate(-50%, -50%);
+    background: var(--creative-section-bg);
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(114, 9, 183, 0.2);
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .creative-theme .timeline-point::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    background: var(--creative-gradient);
+    border-radius: 50%;
+    opacity: 0.1;
+    transition: all 0.5s ease;
+  }
+
+  .creative-theme .timeline-point::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: var(--creative-gradient);
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(15px);
+    opacity: 0.3;
+    transition: all 0.5s ease;
+  }
+
+  .creative-theme .timeline-item:hover .timeline-point {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 10px 25px rgba(114, 9, 183, 0.35);
+  }
+
+  .creative-theme .timeline-item:hover .timeline-point::before {
+    opacity: 0.3;
+  }
+
+  .creative-theme .timeline-item:hover .timeline-point::after {
+    opacity: 0.6;
+    filter: blur(20px);
+    width: 40px;
+    height: 40px;
+  }
+
+  .creative-theme .timeline-date {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 75px;
+    padding: 0.4rem 1.2rem;
+    border-radius: 30px;
+    background: var(--creative-gradient);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(114, 9, 183, 0.25);
+    white-space: nowrap;
+    z-index: 5;
+  }
+
+  .creative-theme .timeline-content {
+    width: calc(50% - 70px);
+    position: relative;
+    z-index: 3;
+  }
+
+  .creative-theme .timeline-content .card {
+    overflow: visible;
+  }
+
+  .creative-theme .timeline-content .card::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    width: 30px;
+    height: 3px;
+    background: linear-gradient(to right, rgba(114, 9, 183, 0.5), rgba(114, 9, 183, 0.1));
+    z-index: 3;
+  }
+
+  .creative-theme .timeline-item:nth-child(odd) .timeline-content .card::after {
+    right: -30px;
+  }
+
+  .creative-theme .timeline-item:nth-child(even) .timeline-content .card::after {
+    left: -30px;
+    background: linear-gradient(to left, rgba(114, 9, 183, 0.5), rgba(114, 9, 183, 0.1));
+  }
+
+  .creative-theme .timeline-deco {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--creative-accent) 0%, var(--creative-accent-light) 100%);
+    border-radius: 50%;
+    opacity: 0.03;
+    z-index: 0;
+  }
+
+  .creative-theme .timeline-item:nth-child(odd) .timeline-deco {
+    top: -20px;
+    right: -20px;
+  }
+
+  .creative-theme .timeline-item:nth-child(even) .timeline-deco {
+    bottom: -20px;
+    left: -20px;
+  }
+
+  @media (max-width: 768px) {
+    .creative-theme .timeline-path {
+      left: 25px;
+    }
+    
+    .creative-theme .timeline-item,
+    .creative-theme .timeline-item:nth-child(odd),
+    .creative-theme .timeline-item:nth-child(even) {
+      justify-content: flex-end;
+    }
+    
+    .creative-theme .timeline-point,
+    .creative-theme .timeline-item:nth-child(odd) .timeline-point,
+    .creative-theme .timeline-item:nth-child(even) .timeline-point {
+      left: 25px;
+    }
+    
+    .creative-theme .timeline-date,
+    .creative-theme .timeline-item:nth-child(odd) .timeline-date,
+    .creative-theme .timeline-item:nth-child(even) .timeline-date {
+      left: 25px;
+    }
+    
+    .creative-theme .timeline-content,
+    .creative-theme .timeline-item:nth-child(odd) .timeline-content,
+    .creative-theme .timeline-item:nth-child(even) .timeline-content {
+      width: calc(100% - 80px);
+      margin-left: 80px;
+      margin-right: 0;
+    }
+    
+    .creative-theme .timeline-item:nth-child(odd) .timeline-content .card::after,
+    .creative-theme .timeline-item:nth-child(even) .timeline-content .card::after {
+      left: -30px;
+      right: auto;
+      background: linear-gradient(to left, rgba(114, 9, 183, 0.5), rgba(114, 9, 183, 0.1));
+    }
+  }
 `;
 
 const CreativeTheme = ({
@@ -746,27 +980,57 @@ const CreativeTheme = ({
           </section>
         )}
 
-        {/* Experience Section */}
+        {/* Experience Section with Creative Timeline */}
         {experiences && experiences.length > 0 && (
-          <section className="section">
+          <section className="alt-section section">
             <div className="container mx-auto px-4">
               <div className="section-header">
                 <h2 className="section-title text-4xl font-bold">Experience</h2>
-                <p>My professional journey and work history</p>
+                <p>My creative journey and professional adventures</p>
               </div>
-              <div className="mx-auto grid max-w-3xl grid-cols-1 gap-8">
-                {experiences && experiences.length > 0 ? (
-                  experiences.map((experience, index) => (
-                    <motion.div
-                      key={experience.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                    >
-                      <div className="card">
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                          <div>
+
+              <div className="timeline-flow">
+                <div className="timeline-path"></div>
+
+                <div className="timeline-items">
+                  {experiences && experiences.length > 0 ? (
+                    experiences.map((experience, index) => (
+                      <motion.div
+                        key={experience.id}
+                        className="timeline-item"
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{
+                          duration: 0.6,
+                          delay: index * 0.15,
+                          type: "spring",
+                          stiffness: 100,
+                        }}
+                      >
+                        <div className="timeline-point">
+                          <CalendarIcon className="size-5 text-[var(--creative-accent)]" />
+                        </div>
+
+                        <div className="timeline-date">
+                          {format(experience.start_date, "MMM yyyy")} -{" "}
+                          {experience.end_date
+                            ? format(experience.end_date, "MMM yyyy")
+                            : "Present"}
+                        </div>
+
+                        <motion.div
+                          className="timeline-content"
+                          whileHover={{ y: -8 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 15,
+                          }}
+                        >
+                          <div className="card">
+                            <div className="timeline-deco"></div>
+
                             <h3 className="text-2xl font-semibold">
                               {experience.role}
                             </h3>
@@ -782,35 +1046,26 @@ const CreativeTheme = ({
                                   />
                                 </div>
                               )}
-                              <p className="font-medium text-[var(--creative-text-secondary)]">
+                              <p className="font-medium text-[var(--creative-accent)]">
                                 {experience.company}
                               </p>
                             </div>
                             <p className="mt-2 text-sm text-[var(--creative-text-secondary)]">
                               {experience.employment_type}
                             </p>
+                            <p className="mt-5 text-[var(--creative-text-secondary)]">
+                              {experience.description}
+                            </p>
                           </div>
-                          <div className="education-date">
-                            <CalendarIcon className="mr-1 size-4" />
-                            <span>
-                              {format(experience.start_date, "MMM yyyy")} -{" "}
-                              {experience.end_date
-                                ? format(experience.end_date, "MMM yyyy")
-                                : "Present"}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="mt-5 text-[var(--creative-text-secondary)]">
-                          {experience.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <p className="text-center text-[var(--creative-text-secondary)]">
-                    No experience information yet.
-                  </p>
-                )}
+                        </motion.div>
+                      </motion.div>
+                    ))
+                  ) : (
+                    <p className="text-center text-[var(--creative-text-secondary)]">
+                      No experience information yet.
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </section>

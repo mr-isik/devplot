@@ -36,11 +36,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  DEFAULT_THEME_ID,
-  getAllThemes,
-  getThemeById,
-} from "@/features/themes/registry";
 import { motion } from "framer-motion";
 import {
   CheckIcon,
@@ -52,6 +47,11 @@ import {
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import {
+  getAllThemes,
+  getThemeById,
+} from "@/features/themes/registry/themeRegistry";
+import { DEFAULT_THEME_ID } from "@/features/themes/registry/themeRegistry";
 
 const colorThemes = [
   {

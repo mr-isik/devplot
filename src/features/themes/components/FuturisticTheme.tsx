@@ -19,8 +19,9 @@ import {
 } from "../utils/themeCustomization";
 import { FaGithub } from "react-icons/fa";
 
-const baseFuturisticThemeStyles = `
+let baseFuturisticThemeStyles = `
   .futuristic-theme {
+    /* Temel Renk Değişkenleri - Kullanıcı Özelleştirmelerine Göre Ayarlanacak */
     --futuristic-accent-rgb: 0, 247, 255;
     --futuristic-accent-secondary-rgb: 123, 44, 249;
     --futuristic-bg: #0a0b18;
@@ -31,60 +32,38 @@ const baseFuturisticThemeStyles = `
     --futuristic-accent-secondary: #7b2cf9;
     --futuristic-border: #283498;
     --futuristic-card-bg: rgba(20, 21, 46, 0.7);
-    --futuristic-card-glow: 0 0 20px rgba(0, 247, 255, 0.2);
+    --futuristic-card-glow: 0 0 20px rgba(var(--futuristic-accent-rgb), 0.2);
     --futuristic-section-bg: rgba(17, 19, 43, 0.7);
-    --futuristic-neon-glow: 0 0 10px rgba(0, 247, 255, 0.5), 0 0 20px rgba(0, 247, 255, 0.2);
-    --futuristic-gradient: linear-gradient(135deg, #00f7ff, #7b2cf9);
-    --futuristic-grid-color: rgba(123, 44, 249, 0.1);
-    --futuristic-glass: rgba(20, 21, 46, 0.7);
+    --futuristic-neon-glow: 0 0 10px rgba(var(--futuristic-accent-rgb), 0.5), 0 0 20px rgba(var(--futuristic-accent-rgb), 0.2);
+    --futuristic-neon-text-shadow: 0 0 5px rgba(var(--futuristic-accent-rgb), 0.7);
+    --futuristic-grid-color: rgba(var(--futuristic-accent-rgb), 0.1);
+    --futuristic-gradient: linear-gradient(135deg, var(--futuristic-accent), var(--futuristic-accent-secondary));
     
     color: var(--futuristic-text-primary);
     background-color: var(--futuristic-bg);
-    font-family: 'Space Grotesk', 'Poppins', system-ui, sans-serif;
-    background-image: 
-      radial-gradient(circle at 15% 50%, rgba(123, 44, 249, 0.15), transparent 25%),
-      radial-gradient(circle at 85% 30%, rgba(0, 247, 255, 0.1), transparent 25%);
-    background-attachment: fixed;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     position: relative;
     overflow-x: hidden;
   }
-  
+
   .futuristic-theme.dark {
-    --futuristic-accent-rgb: 0, 247, 255;
-    --futuristic-accent-secondary-rgb: 123, 44, 249;
+    /* Dark Teması Değerleri - Yine Kullanıcı Özelleştirmelerine Göre Değişecek */
     --futuristic-bg: #0a0b18;
     --futuristic-bg-secondary: #11132b;
     --futuristic-text-primary: #ffffff;
     --futuristic-text-secondary: #c3c4d8;
-    --futuristic-accent: #00f7ff;
-    --futuristic-accent-secondary: #7b2cf9;
-    --futuristic-border: #283498;
     --futuristic-card-bg: rgba(20, 21, 46, 0.7);
-    --futuristic-card-glow: 0 0 20px rgba(0, 247, 255, 0.2);
     --futuristic-section-bg: rgba(17, 19, 43, 0.7);
-    --futuristic-neon-glow: 0 0 10px rgba(0, 247, 255, 0.5), 0 0 20px rgba(0, 247, 255, 0.2);
-    --futuristic-gradient: linear-gradient(135deg, #00f7ff, #7b2cf9);
-    --futuristic-grid-color: rgba(123, 44, 249, 0.1);
-    --futuristic-glass: rgba(20, 21, 46, 0.7);
   }
   
   .futuristic-theme.light {
-    --futuristic-accent-rgb: 0, 102, 255;
-    --futuristic-accent-secondary-rgb: 123, 44, 249;
-    --futuristic-bg: #f0f7ff;
-    --futuristic-bg-secondary: #e4edff;
-    --futuristic-text-primary: #11132b;
-    --futuristic-text-secondary: #3f4079;
-    --futuristic-accent: #0066ff;
-    --futuristic-accent-secondary: #7b2cf9;
-    --futuristic-border: #c3d1ff;
-    --futuristic-card-bg: rgba(255, 255, 255, 0.7);
-    --futuristic-card-glow: 0 0 20px rgba(0, 102, 255, 0.2);
-    --futuristic-section-bg: rgba(228, 237, 255, 0.7);
-    --futuristic-neon-glow: 0 0 10px rgba(0, 102, 255, 0.3), 0 0 20px rgba(0, 102, 255, 0.1);
-    --futuristic-gradient: linear-gradient(135deg, #0066ff, #7b2cf9);
-    --futuristic-grid-color: rgba(123, 44, 249, 0.05);
-    --futuristic-glass: rgba(255, 255, 255, 0.7);
+    /* Light Teması Değerleri - Yine Kullanıcı Özelleştirmelerine Göre Değişecek */
+    --futuristic-bg: #f0f2ff;
+    --futuristic-bg-secondary: #e0e4ff;
+    --futuristic-text-primary: #11142b;
+    --futuristic-text-secondary: #414366;
+    --futuristic-card-bg: rgba(240, 242, 255, 0.7);
+    --futuristic-section-bg: rgba(224, 228, 255, 0.7);
   }
   
   /* Grid Background Effect */
@@ -102,6 +81,66 @@ const baseFuturisticThemeStyles = `
     z-index: -1;
     opacity: 0.5;
     pointer-events: none;
+    animation: gridPulse 10s ease-in-out infinite alternate;
+  }
+  
+  @keyframes gridPulse {
+    0% {
+      background-size: 30px 30px;
+      opacity: 0.5;
+    }
+    50% {
+      background-size: 35px 35px;
+      opacity: 0.3;
+    }
+    100% {
+      background-size: 30px 30px;
+      opacity: 0.5;
+    }
+  }
+  
+  /* Floating particles */
+  .particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--futuristic-accent);
+    border-radius: 50%;
+    z-index: 0;
+    opacity: 0.4;
+    filter: blur(3px);
+    pointer-events: none;
+    box-shadow: 0 0 6px var(--futuristic-accent);
+  }
+  
+  .particle-1 {
+    top: 15%;
+    left: 10%;
+    animation: float 20s ease-in-out infinite alternate;
+  }
+  
+  .particle-2 {
+    top: 45%;
+    right: 15%;
+    animation: float 25s ease-in-out infinite alternate-reverse;
+  }
+  
+  .particle-3 {
+    bottom: 20%;
+    left: 20%;
+    animation: float 18s ease-in-out infinite alternate;
+  }
+  
+  .particle-4 {
+    top: 35%;
+    left: 50%;
+    animation: float 15s ease-in-out infinite alternate-reverse;
+  }
+  
+  .particle-5 {
+    bottom: 30%;
+    right: 25%;
+    animation: float 22s ease-in-out infinite alternate;
   }
   
   .futuristic-theme .section {
@@ -173,9 +212,11 @@ const baseFuturisticThemeStyles = `
     padding: 2.5rem;
     transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
-    border: 1px solid rgba(var(--futuristic-accent-rgb), 0.1);
     overflow: hidden;
+    border: 1px solid rgba(var(--futuristic-accent-rgb), 0.1);
     z-index: 1;
+    transform-style: preserve-3d;
+    perspective: 1000px;
   }
   
   .futuristic-theme .card::before {
@@ -205,7 +246,7 @@ const baseFuturisticThemeStyles = `
   }
   
   .futuristic-theme .card:hover {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-10px) scale(1.02) rotateX(3deg) rotateY(3deg);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 
       0 0 20px rgba(var(--futuristic-accent-rgb), 0.3),
       0 0 0 1px rgba(var(--futuristic-accent-rgb), 0.1);
@@ -234,6 +275,8 @@ const baseFuturisticThemeStyles = `
     border: 1px solid transparent;
     overflow: hidden;
     z-index: 1;
+    transform-style: preserve-3d;
+    perspective: 1000px;
   }
   
   .futuristic-theme .btn::before {
@@ -384,10 +427,12 @@ const baseFuturisticThemeStyles = `
     backdrop-filter: blur(10px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-style: preserve-3d;
+    perspective: 500px;
   }
   
   .futuristic-theme .skill-badge:hover {
-    transform: translateY(-5px) scale(1.05);
+    transform: translateY(-5px) scale(1.05) rotateX(10deg);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1),
       0 0 10px rgba(var(--futuristic-accent-rgb), 0.2);
     border: 1px solid rgba(var(--futuristic-accent-rgb), 0.3);
@@ -466,7 +511,7 @@ const baseFuturisticThemeStyles = `
     font-size: 1.125rem;
   }
   
-  .futuristic-theme .hero-text {
+  .futuristic-theme .hero-gradient-text {
     background: var(--futuristic-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -474,24 +519,17 @@ const baseFuturisticThemeStyles = `
     text-fill-color: transparent;
     position: relative;
     display: inline-block;
-    text-shadow: var(--futuristic-neon-glow);
+    text-shadow: var(--futuristic-neon-text-shadow);
+    animation: glowPulse 2s infinite alternate;
   }
   
-  .futuristic-theme .hero-text::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: var(--futuristic-gradient);
-    width: 100%;
-    height: 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent;
-    filter: blur(12px);
-    opacity: 0.7;
+  @keyframes glowPulse {
+    0% {
+      text-shadow: 0 0 10px rgba(var(--futuristic-accent-rgb), 0.5), 0 0 20px rgba(var(--futuristic-accent-rgb), 0.2);
+    }
+    100% {
+      text-shadow: 0 0 15px rgba(var(--futuristic-accent-rgb), 0.7), 0 0 30px rgba(var(--futuristic-accent-rgb), 0.4);
+    }
   }
   
   .futuristic-theme .project-card {
@@ -502,10 +540,12 @@ const baseFuturisticThemeStyles = `
     backdrop-filter: blur(10px);
     border: 1px solid rgba(var(--futuristic-accent-rgb), 0.1);
     transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
   }
   
   .futuristic-theme .project-card:hover {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-10px) scale(1.02) rotateY(5deg);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2),
       0 0 20px rgba(var(--futuristic-accent-rgb), 0.3);
     border: 1px solid rgba(var(--futuristic-accent-rgb), 0.3);
@@ -628,6 +668,348 @@ const baseFuturisticThemeStyles = `
       padding: 0.5rem 1rem;
     }
   }
+
+  /* Hologram Effect */
+  .hologram {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hologram::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to bottom right,
+      transparent,
+      rgba(var(--futuristic-accent-rgb), 0.2),
+      transparent,
+      transparent
+    );
+    transform: rotate(30deg);
+    animation: hologramScan 4s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @keyframes hologramScan {
+    0% {
+      transform: rotate(30deg) translateY(-100%);
+    }
+    100% {
+      transform: rotate(30deg) translateY(100%);
+    }
+  }
+
+  /* Timeline Design */
+  .futuristic-theme .timeline-container {
+    position: relative;
+    margin: 2rem auto;
+    max-width: 1000px;
+  }
+
+  .futuristic-theme .timeline-track {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: linear-gradient(to bottom, 
+      rgba(var(--futuristic-accent-rgb), 0), 
+      rgba(var(--futuristic-accent-rgb), 0.8),
+      rgba(var(--futuristic-accent-rgb), 0));
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .futuristic-theme .timeline-track::before,
+  .futuristic-theme .timeline-track::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background: rgba(var(--futuristic-accent-rgb), 0.3);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    backdrop-filter: blur(5px);
+    animation: pulse 2s infinite alternate;
+  }
+
+  .futuristic-theme .timeline-track::before {
+    top: 0;
+  }
+
+  .futuristic-theme .timeline-track::after {
+    bottom: 0;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 10px rgba(var(--futuristic-accent-rgb), 0.5), 
+                  0 0 20px rgba(var(--futuristic-accent-rgb), 0.3);
+      transform: translateX(-50%) scale(1);
+    }
+    100% {
+      box-shadow: 0 0 15px rgba(var(--futuristic-accent-rgb), 0.7), 
+                  0 0 30px rgba(var(--futuristic-accent-rgb), 0.5);
+      transform: translateX(-50%) scale(1.2);
+    }
+  }
+
+  .futuristic-theme .timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+    width: 100%;
+    display: flex;
+    z-index: 2;
+  }
+
+  .futuristic-theme .timeline-item:nth-child(odd) {
+    justify-content: flex-start;
+  }
+
+  .futuristic-theme .timeline-item:nth-child(even) {
+    justify-content: flex-end;
+  }
+
+  .futuristic-theme .timeline-item:nth-child(odd) .timeline-content {
+    margin-right: 2rem;
+    transform-origin: right center;
+  }
+
+  .futuristic-theme .timeline-item:nth-child(even) .timeline-content {
+    margin-left: 2rem;
+    transform-origin: left center;
+  }
+
+  .futuristic-theme .timeline-dot {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background: var(--futuristic-accent);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 15px rgba(var(--futuristic-accent-rgb), 0.8);
+    z-index: 3;
+  }
+
+  .futuristic-theme .timeline-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 2px;
+    background: linear-gradient(
+      to var(--direction, right), 
+      var(--futuristic-accent), 
+      rgba(var(--futuristic-accent-rgb), 0)
+    );
+    z-index: 2;
+  }
+
+  .futuristic-theme .timeline-item:nth-child(odd) .timeline-dot::before {
+    --direction: left;
+    right: 15px;
+    transform: translateY(-50%);
+  }
+
+  .futuristic-theme .timeline-item:nth-child(even) .timeline-dot::before {
+    --direction: right;
+    left: 15px;
+    transform: translateY(-50%);
+  }
+
+  .futuristic-theme .timeline-content {
+    width: calc(50% - 3rem);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.2, 0.85, 0.4, 1.275);
+  }
+
+  .futuristic-theme .timeline-content:hover {
+    transform: scale(1.03);
+  }
+
+  .futuristic-theme .timeline-date {
+    font-family: "Space Mono", monospace;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(var(--futuristic-accent-rgb), 0.1);
+    border-radius: 20px;
+    color: var(--futuristic-accent);
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(var(--futuristic-accent-rgb), 0.3);
+    box-shadow: 0 0 10px rgba(var(--futuristic-accent-rgb), 0.2);
+    backdrop-filter: blur(5px);
+  }
+
+  @media (max-width: 768px) {
+    .futuristic-theme .timeline-track {
+      left: 30px;
+    }
+    
+    .futuristic-theme .timeline-item,
+    .futuristic-theme .timeline-item:nth-child(odd),
+    .futuristic-theme .timeline-item:nth-child(even) {
+      justify-content: flex-end;
+    }
+    
+    .futuristic-theme .timeline-dot {
+      left: 30px;
+    }
+    
+    .futuristic-theme .timeline-content,
+    .futuristic-theme .timeline-item:nth-child(odd) .timeline-content,
+    .futuristic-theme .timeline-item:nth-child(even) .timeline-content {
+      width: calc(100% - 80px);
+      margin-left: 50px;
+      margin-right: 0;
+      transform-origin: left center;
+    }
+    
+    .futuristic-theme .timeline-item:nth-child(odd) .timeline-dot::before,
+    .futuristic-theme .timeline-item:nth-child(even) .timeline-dot::before {
+      --direction: right;
+      left: 15px;
+      right: auto;
+    }
+  }
+
+  /* Futuristic Skills Grid */
+  .futuristic-theme .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+    perspective: 1000px;
+  }
+
+  .futuristic-theme .skill-card {
+    position: relative;
+    height: 130px;
+    background: rgba(var(--futuristic-bg-secondary-rgb), 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(var(--futuristic-accent-rgb), 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .futuristic-theme .skill-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+      rgba(var(--futuristic-accent-rgb), 0), 
+      rgba(var(--futuristic-accent-rgb), 0.05));
+    z-index: 0;
+  }
+
+  .futuristic-theme .skill-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      transparent, 
+      rgba(var(--futuristic-accent-rgb), 0.1), 
+      transparent
+    );
+    animation: rotate 10s linear infinite;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .futuristic-theme .skill-card:hover::after {
+    opacity: 1;
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .futuristic-theme .skill-card:hover {
+    transform: translateY(-15px) rotateX(10deg) rotateY(10deg);
+    box-shadow: 0 20px 40px rgba(var(--futuristic-accent-rgb), 0.2);
+    border-color: rgba(var(--futuristic-accent-rgb), 0.5);
+  }
+
+  .futuristic-theme .skill-icon {
+    position: relative;
+    z-index: 2;
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.4s ease;
+  }
+
+  .futuristic-theme .skill-card:hover .skill-icon {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 10px rgba(var(--futuristic-accent-rgb), 0.7));
+  }
+
+  .futuristic-theme .skill-name {
+    position: relative;
+    z-index: 2;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.4s ease;
+  }
+
+  .futuristic-theme .skill-glow {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: var(--futuristic-accent);
+    filter: blur(20px);
+    opacity: 0.3;
+    border-radius: 50%;
+    transition: all 0.4s ease;
+  }
+
+  .futuristic-theme .skill-card:hover .skill-glow {
+    opacity: 0.7;
+    width: 50px;
+    height: 50px;
+    filter: blur(25px);
+  }
+
+  @media (max-width: 768px) {
+    .futuristic-theme .skills-grid {
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 1rem;
+    }
+    
+    .futuristic-theme .skill-card {
+      height: 110px;
+      padding: 1rem;
+    }
+  }
 `;
 
 const FuturisticTheme = ({
@@ -657,6 +1039,23 @@ const FuturisticTheme = ({
     },
   };
 
+  // Renk RGB değerlerini hesaplama fonksiyonu
+  const hexToRgb = (hex: string) => {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    const formattedHex = hex.replace(
+      shorthandRegex,
+      (_, r, g, b) => r + r + g + g + b + b
+    );
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
+      formattedHex
+    );
+
+    return result
+      ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+      : "0, 0, 0"; // Siyah varsayılan değer
+  };
+
+  // Tema konfigürasyonu
   let themeOptions: ThemeOptions = {
     theme: "futuristic",
     colorTheme: "dark",
@@ -716,16 +1115,55 @@ const FuturisticTheme = ({
     Array.isArray(themeOptions.colors) &&
     themeOptions.colors.length >= 5
   ) {
+    // Ana renk ve RGB değerini hesaplama
+    const accentColor = themeOptions.colors[4];
+    const accentRgb = hexToRgb(accentColor);
+
+    // İkincil rengi hesaplama - kullanıcının seçimine göre ayarlama
+    // Ana renkten %20 daha koyu bir ton oluşturuyoruz
+    const accentSecondaryColor = adjustColor(accentColor, -20);
+    const accentSecondaryRgb = hexToRgb(accentSecondaryColor);
+
+    // Metin rengini arka plan rengine göre kontrastlı olacak şekilde ayarlama
+    // const contrastText = isLightColor(themeOptions.colors[0]) ? "#11142b" : "#ffffff";
+    // const contrastTextSecondary = isLightColor(themeOptions.colors[0]) ? "#414366" : "#c3c4d8";
+
+    // Özelleştirilmiş renk paleti
     themeOptions.colorPalette = {
-      primary: themeOptions.colors[4],
-      secondary: "#7b2cf9",
+      primary: accentColor,
+      secondary: accentSecondaryColor,
       background: themeOptions.colors[0],
       text: themeOptions.colors[3],
-      accent: themeOptions.colors[4],
-      muted: themeOptions.colors[3] + "99",
+      accent: accentColor,
+      muted: themeOptions.colors[3] + "99", // Ana metin %60 opaklık
       border: themeOptions.colors[2],
-      card: "rgba(20, 21, 46, 0.7)",
+      card: `rgba(${hexToRgb(themeOptions.colors[1])}, 0.7)`,
     };
+
+    // CSS değişkenleri için özel stil eklemesi - tüm renkleri kullanıcının seçtiği renklerle değiştir
+    const customStyles = `
+      .futuristic-theme {
+        --futuristic-accent-rgb: ${accentRgb};
+        --futuristic-accent-secondary-rgb: ${accentSecondaryRgb};
+        --futuristic-bg: ${themeOptions.colors[0]};
+        --futuristic-bg-secondary: ${themeOptions.colors[1]};
+        --futuristic-text-primary: ${themeOptions.colors[3]};
+        --futuristic-text-secondary: ${themeOptions.colors[3] + "99"};
+        --futuristic-accent: ${accentColor};
+        --futuristic-accent-secondary: ${accentSecondaryColor};
+        --futuristic-border: ${themeOptions.colors[2]};
+        --futuristic-card-bg: rgba(${hexToRgb(themeOptions.colors[1])}, 0.7);
+        --futuristic-card-glow: 0 0 20px rgba(${accentRgb}, 0.2);
+        --futuristic-section-bg: rgba(${hexToRgb(themeOptions.colors[1])}, 0.7);
+        --futuristic-neon-glow: 0 0 10px rgba(${accentRgb}, 0.5), 0 0 20px rgba(${accentRgb}, 0.2);
+        --futuristic-neon-text-shadow: 0 0 5px rgba(${accentRgb}, 0.7);
+        --futuristic-grid-color: rgba(${accentRgb}, 0.1);
+        --futuristic-gradient: linear-gradient(135deg, ${accentColor}, ${accentSecondaryColor});
+      }
+    `;
+
+    // Stili base stile ekle
+    baseFuturisticThemeStyles = baseFuturisticThemeStyles + customStyles;
   }
 
   if (themeOptions.font) {
@@ -744,6 +1182,7 @@ const FuturisticTheme = ({
 
   const themeClass = `futuristic-theme ${themeOptions.colorTheme === "dark" ? "dark" : "light"}`;
 
+  // Font variables and theme styles combined
   const combinedStyles = `
     ${futuristicThemeStyles}
     
@@ -753,7 +1192,14 @@ const FuturisticTheme = ({
       :root {
         --font-family: ${
           fontFamilies[themeOptions.font as keyof typeof fontFamilies] ||
-          `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, sans-serif`
+          `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, system-ui, sans-serif`
+        } !important;
+      }
+      
+      .futuristic-theme, .futuristic-theme * {
+        font-family: ${
+          fontFamilies[themeOptions.font as keyof typeof fontFamilies] ||
+          `${themeOptions.font.charAt(0).toUpperCase() + themeOptions.font.slice(1)}, system-ui, sans-serif`
         } !important;
       }
     `
@@ -768,6 +1214,13 @@ const FuturisticTheme = ({
       </style>
 
       <div className={themeClass}>
+        {/* Floating Particles */}
+        <div className="particle particle-1"></div>
+        <div className="particle particle-2"></div>
+        <div className="particle particle-3"></div>
+        <div className="particle particle-4"></div>
+        <div className="particle particle-5"></div>
+
         {/* Hero Section */}
         <section className="section py-24">
           <div className="container mx-auto px-4">
@@ -777,28 +1230,53 @@ const FuturisticTheme = ({
               transition={{ duration: 0.7 }}
               className="flex flex-col items-center text-center"
             >
-              <h1 className="hero-text mb-6 text-5xl font-bold leading-tight">
+              <motion.h1
+                className="hero-text mb-6 text-5xl font-bold leading-tight"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.2,
+                }}
+              >
                 {portfolio.contents.hero_header}
-              </h1>
-              <p className="max-w-2xl text-xl leading-relaxed text-[var(--futuristic-text-secondary)]">
-                {portfolio.contents.hero_description}
-              </p>
+              </motion.h1>
 
-              <div className="mt-10 flex flex-wrap justify-center gap-4">
-                {socials.map((social) => (
-                  <Link
+              <motion.p
+                className="max-w-2xl text-xl leading-relaxed text-[var(--futuristic-text-secondary)]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                {portfolio.contents.hero_description}
+              </motion.p>
+
+              <motion.div
+                className="mt-10 flex flex-wrap justify-center gap-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                {socials.map((social, index) => (
+                  <motion.div
                     key={social.id}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.7 + index * 0.1 }}
                   >
-                    <button type="button" className="btn btn-icon">
-                      <span className="sr-only">{social.platform}</span>
-                      {getPlatformIcon(social.platform)}
-                    </button>
-                  </Link>
+                    <Link
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <button type="button" className="btn btn-icon hologram">
+                        <span className="sr-only">{social.platform}</span>
+                        {getPlatformIcon(social.platform)}
+                      </button>
+                    </Link>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </section>
@@ -807,93 +1285,170 @@ const FuturisticTheme = ({
         {portfolio.contents.about_text && (
           <section className="alt-section section">
             <div className="container mx-auto px-4">
-              <div className="section-header">
+              <motion.div
+                className="section-header"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
                 <h2 className="section-title text-3xl font-bold">About Me</h2>
                 <p>Get to know me better</p>
-              </div>
-              <div className="text-center">
-                <p className="mx-auto max-w-3xl text-lg leading-relaxed text-[var(--futuristic-text-secondary)]">
+              </motion.div>
+              <motion.div
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <p className="mx-auto max-w-3xl text-lg leading-relaxed text-[var(--futuristic-text-secondary)] hologram">
                   {portfolio.contents.about_text}
                 </p>
-              </div>
+              </motion.div>
             </div>
           </section>
         )}
 
-        {/* Skills Section */}
+        {/* Skills Section with 3D Grid */}
         {skills && skills.length > 0 && (
-          <section className="section">
+          <section className="alt-section section">
             <div className="container mx-auto px-4">
-              <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Skills</h2>
-                <p>Technologies and tools I work with</p>
-              </div>
-              <div className="mx-auto max-w-4xl">
+              <motion.div
+                className="section-header"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+              >
+                <h2 className="section-title text-3xl font-bold">
+                  <span className="hero-gradient-text" data-text="Skills">
+                    Skills
+                  </span>
+                </h2>
+                <p className="max-w-xl mx-auto text-[var(--futuristic-text-secondary)]">
+                  Technologies and tools I've mastered
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+              >
                 {skills && skills.length > 0 ? (
-                  <div className="flex flex-wrap justify-center gap-3">
-                    {skills.map((skill: Skill) => {
+                  <motion.div
+                    className="skills-grid mt-16"
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                  >
+                    {skills.map((skill: Skill, index) => {
                       const SkillIcon = getSkillIcon(skill.name);
                       const skillColor = getSkillColor(skill.name);
 
                       return (
-                        <span
+                        <motion.div
                           key={skill.id}
-                          className="skill-badge"
+                          variants={itemVariants}
+                          className="skill-card"
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{
+                            duration: 0.5,
+                            delay: index * 0.05,
+                            type: "spring",
+                            stiffness: 100,
+                          }}
                           style={{
-                            borderColor: `${skillColor}20`,
-                            color: skillColor,
-                            background: `${skillColor}10`,
+                            borderColor: `${skillColor}30`,
+                          }}
+                          whileHover={{
+                            boxShadow: `0 20px 40px ${skillColor}20`,
                           }}
                         >
-                          <SkillIcon size={14} />
-                          {skill.name}
-                        </span>
+                          <div
+                            className="skill-icon"
+                            style={{ color: skillColor }}
+                          >
+                            <SkillIcon size={36} />
+                          </div>
+                          <div className="skill-name">{skill.name}</div>
+                          <div
+                            className="skill-glow"
+                            style={{ background: skillColor }}
+                          ></div>
+                        </motion.div>
                       );
                     })}
-                  </div>
+                  </motion.div>
                 ) : (
                   <p className="text-center text-[var(--futuristic-text-secondary)]">
                     No skills information yet.
                   </p>
                 )}
-              </div>
+              </motion.div>
             </div>
           </section>
         )}
 
-        {/* Education Section */}
+        {/* Education Section with Timeline */}
         {educations && educations.length > 0 && (
           <section className="alt-section section">
             <div className="container mx-auto px-4">
-              <div className="section-header">
+              <motion.div
+                className="section-header"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
                 <h2 className="section-title text-3xl font-bold">Education</h2>
                 <p>My academic background and qualifications</p>
-              </div>
-              <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6">
+              </motion.div>
+              <div className="mx-auto max-w-3xl grid grid-cols-1 gap-6">
                 {educations && educations.length > 0 ? (
                   educations.map((education: Education, index) => (
-                    <div key={education.id} className="card">
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <div>
-                          <h3 className="text-xl font-semibold">
-                            {education.degree} in {education.field}
-                          </h3>
-                          <p className="text-[var(--futuristic-text-secondary)] mt-1">
-                            {education.school}
-                          </p>
-                        </div>
-                        <div className="education-date">
-                          <CalendarIcon className="mr-1 size-4" />
-                          <span>
-                            {format(new Date(education.start_date), "MMM yyyy")}{" "}
-                            -{" "}
-                            {education.end_date
-                              ? format(new Date(education.end_date), "MMM yyyy")
-                              : "Present"}
-                          </span>
+                    <motion.div
+                      key={education.id}
+                      className="card"
+                      initial={{ opacity: 0, x: -50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <div className="timeline-container">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                          <div>
+                            <h3 className="text-xl font-semibold">
+                              {education.degree} in {education.field}
+                            </h3>
+                            <p className="text-[var(--futuristic-text-secondary)] mt-1">
+                              {education.school}
+                            </p>
+                          </div>
+                          <div className="education-date hologram">
+                            <CalendarIcon className="mr-1 size-4" />
+                            <span>
+                              {format(
+                                new Date(education.start_date),
+                                "MMM yyyy"
+                              )}{" "}
+                              -{" "}
+                              {education.end_date
+                                ? format(
+                                    new Date(education.end_date),
+                                    "MMM yyyy"
+                                  )
+                                : "Present"}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))
                 ) : (
                   <p className="text-center text-[var(--futuristic-text-secondary)]">
@@ -907,89 +1462,137 @@ const FuturisticTheme = ({
 
         {/* Experience Section */}
         {experiences && experiences.length > 0 && (
-          <section className="section">
-            <div className="container mx-auto px-4">
-              <div className="section-header">
-                <h2 className="section-title text-3xl font-bold">Experience</h2>
-                <p>My professional journey and work history</p>
-              </div>
-              <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6">
-                {experiences && experiences.length > 0 ? (
-                  experiences.map((experience, index) => (
-                    <div key={experience.id} className="card">
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <div>
-                          <h3 className="text-xl font-semibold">
-                            {experience.role}
-                          </h3>
-                          <div className="mt-2 flex items-center gap-3">
-                            {experience.logo && (
-                              <div className="overflow-hidden experience-logo">
-                                <Image
-                                  src={experience.logo}
-                                  alt={experience.company}
-                                  width={40}
-                                  height={40}
-                                  className="object-cover"
-                                />
-                              </div>
-                            )}
-                            <p className="font-medium text-[var(--futuristic-text-secondary)]">
-                              {experience.company}
-                            </p>
-                          </div>
-                          <p className="mt-1 text-sm text-[var(--futuristic-text-secondary)]">
-                            {experience.employment_type}
+          <section className="section py-20">
+            <motion.div
+              className="container mx-auto px-4"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.7 }}
+              viewport={{ once: true }}
+            >
+              <motion.div
+                className="section-header text-center mb-16"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="section-title text-3xl font-bold">
+                  <span className="hero-gradient-text" data-text="Experience">
+                    Experience
+                  </span>
+                </h2>
+                <p className="max-w-xl mx-auto text-[var(--futuristic-text-secondary)]">
+                  My professional journey through time and space
+                </p>
+              </motion.div>
+
+              {experiences && experiences.length > 0 ? (
+                <div className="timeline-container relative">
+                  <div className="timeline-track"></div>
+
+                  {experiences.map((exp, index) => (
+                    <motion.div
+                      key={exp.id}
+                      className="timeline-item"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.5,
+                        delay: index * 0.2,
+                        type: "spring",
+                        stiffness: 100,
+                      }}
+                    >
+                      <div className="timeline-dot"></div>
+                      <motion.div
+                        className="timeline-content card"
+                        whileHover={{
+                          boxShadow:
+                            "0 20px 40px rgba(var(--futuristic-accent-rgb), 0.2)",
+                          y: -5,
+                        }}
+                      >
+                        <span className="timeline-date">
+                          <CalendarIcon className="inline mr-1 size-3" />
+                          {format(exp.start_date, "MMM yyyy")} -{" "}
+                          {exp.end_date
+                            ? format(exp.end_date, "MMM yyyy")
+                            : "Present"}
+                        </span>
+                        <h3 className="text-xl font-semibold">{exp.role}</h3>
+                        <div className="mt-2 flex items-center gap-3">
+                          {exp.logo && (
+                            <div className="overflow-hidden rounded-lg border border-[var(--futuristic-border)] hologram">
+                              <Image
+                                src={exp.logo}
+                                alt={exp.company}
+                                width={40}
+                                height={40}
+                                className="object-cover"
+                              />
+                            </div>
+                          )}
+                          <p className="font-medium text-[var(--futuristic-accent)]">
+                            {exp.company}
                           </p>
                         </div>
-                        <div className="education-date">
-                          <CalendarIcon className="mr-1 size-4" />
-                          <span>
-                            {format(experience.start_date, "MMM yyyy")} -{" "}
-                            {experience.end_date
-                              ? format(experience.end_date, "MMM yyyy")
-                              : "Present"}
-                          </span>
-                        </div>
-                      </div>
-                      <p className="mt-4 text-[var(--futuristic-text-secondary)]">
-                        {experience.description}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-center text-[var(--futuristic-text-secondary)]">
-                    No experience information yet.
-                  </p>
-                )}
-              </div>
-            </div>
+                        <p className="mt-1 text-sm text-[var(--futuristic-text-secondary)]">
+                          {exp.employment_type}
+                        </p>
+                        <p className="mt-4 text-[var(--futuristic-text-secondary)]">
+                          {exp.description}
+                        </p>
+                      </motion.div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-[var(--futuristic-text-secondary)]">
+                  No experience information yet.
+                </p>
+              )}
+            </motion.div>
           </section>
         )}
 
-        {/* Projects Section */}
+        {/* Projects Section with 3D Hover Cards */}
         {projects && projects.length > 0 && (
           <section className="alt-section section">
             <div className="container mx-auto px-4">
-              <div className="section-header">
+              <motion.div
+                className="section-header"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
                 <h2 className="section-title text-3xl font-bold">Projects</h2>
                 <p>Showcasing my work and creative solutions</p>
-              </div>
+              </motion.div>
               <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
                 {projects && projects.length > 0 ? (
                   projects.map((project, index) => (
-                    <div key={project.id} className="project-card">
+                    <motion.div
+                      key={project.id}
+                      className="project-card"
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: 0.1 * index }}
+                    >
                       <div className="card flex h-full flex-col">
                         <div className="relative mb-5 aspect-video overflow-hidden rounded-lg">
                           {project.image ? (
                             <Image
                               src={project.image}
                               alt={project.title}
-                              className="project-image object-cover"
+                              className="project-image object-cover hologram"
                               fill
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-[var(--futuristic-accent)] to-[var(--futuristic-accent-secondary)]">
+                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-r from-[var(--futuristic-accent)] to-[var(--futuristic-accent-secondary)] hologram">
                               <span className="text-xl font-bold text-white">
                                 {project.title.substring(0, 2).toUpperCase()}
                               </span>
@@ -1029,7 +1632,7 @@ const FuturisticTheme = ({
                           )}
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))
                 ) : (
                   <p className="col-span-2 text-center text-[var(--futuristic-text-secondary)]">
@@ -1041,7 +1644,7 @@ const FuturisticTheme = ({
           </section>
         )}
 
-        {/* Footer */}
+        {/* Footer with Glowing Effect */}
         <footer className="py-12 text-center text-[var(--futuristic-text-secondary)]">
           <div className="container mx-auto px-4">
             <div>
