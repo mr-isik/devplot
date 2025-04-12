@@ -1,85 +1,175 @@
 import { ThemeOptions } from "../types/theme-options";
 
-// Color theme definitions
-export const colorThemes = {
-  light: {
-    bg: "#fafafa",
-    textPrimary: "#171717",
-    textSecondary: "#525252",
-    accent: "#2563eb",
-    accentLight: "#60a5fa",
-    border: "#e5e5e5",
-    cardBg: "#ffffff",
-    sectionBg: "#f5f5f5",
-    gradient: "linear-gradient(135deg, #3b82f6, #2563eb)",
+// Define a color theme type
+export interface ColorTheme {
+  id: string;
+  name: string;
+  colors: string[];
+  theme: {
+    bg: string;
+    textPrimary: string;
+    textSecondary: string;
+    accent: string;
+    accentLight: string;
+    border: string;
+    cardBg: string;
+    sectionBg: string;
+    gradient: string;
+  };
+}
+
+// Color theme definitions - converted to array for better iteration
+export const colorThemes: ColorTheme[] = [
+  {
+    id: "light",
+    name: "Light Mode",
+    colors: ["#ffffff", "#f8fafc", "#f1f5f9", "#0f172a", "#3b82f6"],
+    theme: {
+      bg: "#ffffff",
+      textPrimary: "#0f172a",
+      textSecondary: "#475569",
+      accent: "#3b82f6",
+      accentLight: "#60a5fa",
+      border: "#e2e8f0",
+      cardBg: "#ffffff",
+      sectionBg: "#f8fafc",
+      gradient: "linear-gradient(135deg, #3b82f6, #2563eb)",
+    },
   },
-  dark: {
-    bg: "#121212",
-    textPrimary: "#f5f5f5",
-    textSecondary: "#a3a3a3",
-    accent: "#3b82f6",
-    accentLight: "#93c5fd",
-    border: "#262626",
-    cardBg: "#1e1e1e",
-    sectionBg: "#171717",
-    gradient: "linear-gradient(135deg, #3b82f6, #1d4ed8)",
+  {
+    id: "dark",
+    name: "Dark Mode",
+    colors: ["#0f172a", "#1e293b", "#334155", "#f8fafc", "#38bdf8"],
+    theme: {
+      bg: "#0f172a",
+      textPrimary: "#f8fafc",
+      textSecondary: "#94a3b8",
+      accent: "#38bdf8",
+      accentLight: "#7dd3fc",
+      border: "#334155",
+      cardBg: "#1e293b",
+      sectionBg: "#172554",
+      gradient: "linear-gradient(135deg, #38bdf8, #0369a1)",
+    },
   },
-  blue: {
-    bg: "#EFF6FF",
-    textPrimary: "#1E3A8A",
-    textSecondary: "#3B82F6",
-    accent: "#2563EB",
-    accentLight: "#60A5FA",
-    border: "#BFDBFE",
-    cardBg: "#FFFFFF",
-    sectionBg: "#DBEAFE",
-    gradient: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+  {
+    id: "blue",
+    name: "Ocean Blue",
+    colors: ["#f0f9ff", "#e0f2fe", "#bae6fd", "#0c4a6e", "#0ea5e9"],
+    theme: {
+      bg: "#f0f9ff",
+      textPrimary: "#0c4a6e",
+      textSecondary: "#0369a1",
+      accent: "#0ea5e9",
+      accentLight: "#7dd3fc",
+      border: "#bae6fd",
+      cardBg: "#ffffff",
+      sectionBg: "#e0f2fe",
+      gradient: "linear-gradient(135deg, #0ea5e9, #0284c7)",
+    },
   },
-  green: {
-    bg: "#ECFDF5",
-    textPrimary: "#064E3B",
-    textSecondary: "#059669",
-    accent: "#059669",
-    accentLight: "#34D399",
-    border: "#A7F3D0",
-    cardBg: "#FFFFFF",
-    sectionBg: "#D1FAE5",
-    gradient: "linear-gradient(135deg, #059669, #047857)",
+  {
+    id: "green",
+    name: "Forest Green",
+    colors: ["#f0fdf4", "#dcfce7", "#bbf7d0", "#052e16", "#10b981"],
+    theme: {
+      bg: "#f0fdf4",
+      textPrimary: "#052e16",
+      textSecondary: "#14532d",
+      accent: "#10b981",
+      accentLight: "#34d399",
+      border: "#bbf7d0",
+      cardBg: "#ffffff",
+      sectionBg: "#dcfce7",
+      gradient: "linear-gradient(135deg, #10b981, #059669)",
+    },
   },
-  purple: {
-    bg: "#F5F3FF",
-    textPrimary: "#4C1D95",
-    textSecondary: "#7C3AED",
-    accent: "#7C3AED",
-    accentLight: "#A78BFA",
-    border: "#DDD6FE",
-    cardBg: "#FFFFFF",
-    sectionBg: "#E9D5FF",
-    gradient: "linear-gradient(135deg, #7C3AED, #6D28D9)",
+  {
+    id: "purple",
+    name: "Royal Purple",
+    colors: ["#faf5ff", "#f3e8ff", "#e9d5ff", "#3b0764", "#a855f7"],
+    theme: {
+      bg: "#faf5ff",
+      textPrimary: "#3b0764",
+      textSecondary: "#5b21b6",
+      accent: "#a855f7",
+      accentLight: "#c084fc",
+      border: "#e9d5ff",
+      cardBg: "#ffffff",
+      sectionBg: "#f3e8ff",
+      gradient: "linear-gradient(135deg, #a855f7, #8b5cf6)",
+    },
   },
-  orange: {
-    bg: "#FFF7ED",
-    textPrimary: "#7C2D12",
-    textSecondary: "#EA580C",
-    accent: "#EA580C",
-    accentLight: "#FB923C",
-    border: "#FED7AA",
-    cardBg: "#FFFFFF",
-    sectionBg: "#FFEDD5",
-    gradient: "linear-gradient(135deg, #EA580C, #C2410C)",
+  {
+    id: "orange",
+    name: "Sunset Orange",
+    colors: ["#fff7ed", "#ffedd5", "#fed7aa", "#7c2d12", "#f97316"],
+    theme: {
+      bg: "#fff7ed",
+      textPrimary: "#7c2d12",
+      textSecondary: "#9a3412",
+      accent: "#f97316",
+      accentLight: "#fb923c",
+      border: "#fed7aa",
+      cardBg: "#ffffff",
+      sectionBg: "#ffedd5",
+      gradient: "linear-gradient(135deg, #f97316, #ea580c)",
+    },
   },
-  custom: {
-    bg: "#FFFFFF",
-    textPrimary: "#000000",
-    textSecondary: "#525252",
-    accent: "#3B82F6",
-    accentLight: "#60A5FA",
-    border: "#E5E5E5",
-    cardBg: "#FFFFFF",
-    sectionBg: "#F5F5F5",
-    gradient: "linear-gradient(135deg, #3B82F6, #2563EB)",
+  {
+    id: "red",
+    name: "Ruby Red",
+    colors: ["#fef2f2", "#fee2e2", "#fecaca", "#450a0a", "#ef4444"],
+    theme: {
+      bg: "#fef2f2",
+      textPrimary: "#450a0a",
+      textSecondary: "#991b1b",
+      accent: "#ef4444",
+      accentLight: "#f87171",
+      border: "#fecaca",
+      cardBg: "#ffffff",
+      sectionBg: "#fee2e2",
+      gradient: "linear-gradient(135deg, #ef4444, #dc2626)",
+    },
   },
-};
+  {
+    id: "teal",
+    name: "Tropical Teal",
+    colors: ["#f0fdfa", "#ccfbf1", "#99f6e4", "#134e4a", "#14b8a6"],
+    theme: {
+      bg: "#f0fdfa",
+      textPrimary: "#134e4a",
+      textSecondary: "#115e59",
+      accent: "#14b8a6",
+      accentLight: "#2dd4bf",
+      border: "#99f6e4",
+      cardBg: "#ffffff",
+      sectionBg: "#ccfbf1",
+      gradient: "linear-gradient(135deg, #14b8a6, #0d9488)",
+    },
+  },
+  {
+    id: "custom",
+    name: "Custom Colors",
+    colors: ["#ffffff", "#f5f5f5", "#e5e5e5", "#000000", "#3b82f6"],
+    theme: {
+      bg: "#ffffff",
+      textPrimary: "#000000",
+      textSecondary: "#525252",
+      accent: "#3b82f6",
+      accentLight: "#60a5fa",
+      border: "#e5e5e5",
+      cardBg: "#ffffff",
+      sectionBg: "#f5f5f5",
+      gradient: "linear-gradient(135deg, #3b82f6, #2563eb)",
+    },
+  },
+];
+
+// Helper function to find a color theme by ID
+export function getColorTheme(id: string): ColorTheme {
+  return colorThemes.find((theme) => theme.id === id) || colorThemes[0];
+}
 
 export const fontFamilies = {
   inter: "'Inter', system-ui, sans-serif",
@@ -107,43 +197,31 @@ export function applyThemeCustomization(
 ): string {
   let customizedStyles = baseStyles;
 
-  const colorTheme = options.colorTheme || "light";
+  const colorThemeId = options.colorTheme || "light";
+  const colorTheme = getColorTheme(colorThemeId);
 
-  let themeColors = { ...colorThemes[colorTheme as keyof typeof colorThemes] };
-
-  if (!themeColors && options.theme && typeof options.theme === "string") {
-    if (options.theme in colorThemes) {
-      themeColors = {
-        ...colorThemes[options.theme as keyof typeof colorThemes],
-      };
-    }
-  }
-
-  if (!themeColors) {
-    themeColors = { ...colorThemes["light"] };
-  }
+  let themeColors = { ...colorTheme.theme };
 
   if (
     options.colors &&
     Array.isArray(options.colors) &&
-    options.colors.length >= 5
+    options.colors.length >= 5 &&
+    colorThemeId === "custom"
   ) {
-    if (colorTheme === "custom" || options.theme === "custom") {
-      // Custom renkleri ayarla
-      themeColors = {
-        bg: options.colors[0],
-        textPrimary: options.colors[3],
-        textSecondary: options.colors[3] + "99", // Add transparency
-        accent: options.colors[4],
-        accentLight: options.colors[4] + "99", // Add transparency
-        border: options.colors[2],
-        cardBg: options.colors[0],
-        sectionBg: options.colors[1],
-        gradient: `linear-gradient(135deg, ${options.colors[4]}, ${adjustColor(options.colors[4], -20)})`,
-      };
-    }
+    // Set custom colors
+    themeColors = {
+      bg: options.colors[0],
+      textPrimary: options.colors[3],
+      textSecondary: options.colors[3] + "99", // Add transparency
+      accent: options.colors[4],
+      accentLight: options.colors[4] + "99", // Add transparency
+      border: options.colors[2],
+      cardBg: options.colors[0],
+      sectionBg: options.colors[1],
+      gradient: `linear-gradient(135deg, ${options.colors[4]}, ${adjustColor(options.colors[4], -20)})`,
+    };
 
-    // Özel renkleri colorPalette'e de yansıt
+    // Update color palette
     if (!options.colorPalette) {
       options.colorPalette = {
         primary: options.colors[4],

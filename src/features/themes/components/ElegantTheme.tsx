@@ -513,141 +513,152 @@ let baseElegantThemeStyles = `
   /* Elegant Timeline Design */
   .elegant-theme .timeline-container {
     position: relative;
-    padding: 4rem 0 2rem;
-  }
-
-  .elegant-theme .timeline-header {
-    text-align: center;
-    margin-bottom: 5rem;
-  }
-
-  .elegant-theme .timeline-main {
-    position: relative;
-    max-width: 1200px;
+    padding: 3rem 0;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 0 4rem;
   }
 
-  .elegant-theme .timeline-main::before {
-    content: '';
+  .elegant-theme .timeline-line {
     position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(to right, 
-      rgba(var(--elegant-accent-rgb), 0),
-      rgba(var(--elegant-accent-rgb), 0.7),
-      rgba(var(--elegant-accent-rgb), 0.7),
-      rgba(var(--elegant-accent-rgb), 0));
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(to bottom, 
+      transparent 0%,
+      var(--elegant-gold) 15%,
+      var(--elegant-gold) 85%, 
+      transparent 100%);
+    transform: translateX(-50%);
     z-index: 1;
-  }
-
-  .elegant-theme .timeline-items {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    position: relative;
-    padding: 3rem 0 1rem;
-    gap: 2rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--elegant-accent) transparent;
-  }
-
-  .elegant-theme .timeline-items::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .elegant-theme .timeline-items::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 10px;
-  }
-
-  .elegant-theme .timeline-items::-webkit-scrollbar-thumb {
-    background-color: var(--elegant-accent);
-    border-radius: 10px;
   }
 
   .elegant-theme .timeline-item {
     position: relative;
-    min-width: 350px;
-    flex: 0 0 auto;
-    opacity: 0.8;
-    transition: all 0.4s ease;
-  }
-
-  .elegant-theme .timeline-item::before {
-    content: '';
-    position: absolute;
-    top: -3rem;
-    left: 50%;
-    width: 1px;
-    height: 3rem;
-    background: linear-gradient(to top, var(--elegant-accent), transparent);
-    transform: translateX(-50%);
+    margin-bottom: 5rem;
+    width: 100%;
+    display: flex;
     z-index: 2;
   }
 
-  .elegant-theme .timeline-item::after {
-    content: '';
-    position: absolute;
-    top: -3.25rem;
-    left: 50%;
-    width: 12px;
-    height: 12px;
-    border: 1px solid var(--elegant-accent);
-    border-radius: 50%;
-    background: var(--elegant-bg);
-    transform: translateX(-50%);
-    z-index: 3;
-    transition: all 0.4s ease;
-  }
-
-  .elegant-theme .timeline-item:hover {
-    opacity: 1;
-    transform: translateY(-5px);
-  }
-
-  .elegant-theme .timeline-item:hover::after {
-    background: var(--elegant-accent);
-    box-shadow: 0 0 15px rgba(var(--elegant-accent-rgb), 0.5);
-    transform: translateX(-50%) scale(1.2);
-  }
-
-  .elegant-theme .timeline-date {
-    position: absolute;
-    top: -6rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    text-align: center;
-    font-family: "Playfair Display", serif;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    color: var(--elegant-accent);
-    white-space: nowrap;
-    background: var(--elegant-bg);
-    padding: 0.4rem 1.2rem;
-    border-bottom: 1px solid var(--elegant-accent);
+  .elegant-theme .timeline-item:last-child {
+    margin-bottom: 0;
   }
 
   .elegant-theme .timeline-content {
-    width: 100%;
+    width: calc(50% - 2.5rem);
     position: relative;
     transition: all 0.4s ease;
   }
 
+  .elegant-theme .timeline-item:nth-child(odd) .timeline-content {
+    margin-left: auto;
+    padding-left: 2.5rem;
+  }
+
+  .elegant-theme .timeline-item:nth-child(even) .timeline-content {
+    margin-right: auto;
+    padding-right: 2.5rem;
+    text-align: right;
+  }
+
+  .elegant-theme .timeline-dot {
+    position: absolute;
+    top: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--elegant-bg);
+    border: 2px solid var(--elegant-gold);
+    border-radius: 50%;
+    z-index: 3;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.4s ease;
+  }
+
+  .elegant-theme .timeline-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.6rem;
+    height: 0.6rem;
+    background: var(--elegant-gold);
+    border-radius: 50%;
+    transition: all 0.4s ease;
+  }
+
+  .elegant-theme .timeline-item:hover .timeline-dot {
+    border-width: 3px;
+    box-shadow: 0 0 15px rgba(var(--elegant-accent-rgb), 0.3);
+  }
+
+  .elegant-theme .timeline-item:nth-child(odd)::before {
+    content: '';
+    position: absolute;
+    top: 1.75rem;
+    left: 50%;
+    width: 2.5rem;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--elegant-gold));
+  }
+
+  .elegant-theme .timeline-item:nth-child(even)::before {
+    content: '';
+    position: absolute;
+    top: 1.75rem;
+    right: 50%;
+    width: 2.5rem;
+    height: 1px;
+    background: linear-gradient(to left, transparent, var(--elegant-gold));
+  }
+
+  .elegant-theme .timeline-date {
+    position: absolute;
+    top: -1.8rem;
+    font-family: "Playfair Display", serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    color: var(--elegant-accent);
+    font-style: italic;
+  }
+
+  .elegant-theme .timeline-item:nth-child(odd) .timeline-date {
+    right: 0;
+  }
+
+  .elegant-theme .timeline-item:nth-child(even) .timeline-date {
+    left: 0;
+  }
+
   @media (max-width: 768px) {
-    .elegant-theme .timeline-main {
-      padding: 0 1rem;
+    .elegant-theme .timeline-line {
+      left: 2rem;
     }
     
-    .elegant-theme .timeline-items {
-      gap: 1.5rem;
+    .elegant-theme .timeline-content {
+      width: calc(100% - 4rem);
+      margin-left: auto !important;
+      padding-left: 2rem !important;
+      text-align: left !important;
     }
     
-    .elegant-theme .timeline-item {
-      min-width: 300px;
+    .elegant-theme .timeline-dot {
+      left: 2rem;
+    }
+    
+    .elegant-theme .timeline-item::before {
+      left: 2rem !important;
+      right: auto !important;
+      width: 2rem !important;
+      background: linear-gradient(to right, transparent, var(--elegant-gold)) !important;
+    }
+    
+    .elegant-theme .timeline-date {
+      top: -1.5rem;
+      right: auto !important;
+      left: 0 !important;
     }
   }
 `;
@@ -870,7 +881,7 @@ const ElegantTheme = ({
                 <div className="corner-top-right"></div>
                 <div className="corner-bottom-left"></div>
                 <motion.h1
-                  className="accent-text mb-6 text-5xl font-bold leading-tight"
+                  className="accent-text mb-6 text-5xl font-bold leading-tigth"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.2 }}
@@ -1042,45 +1053,38 @@ const ElegantTheme = ({
               </motion.div>
 
               <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6">
-                {educations && educations.length > 0 ? (
-                  educations.map((education: Education, index) => (
-                    <motion.div
-                      key={education.id}
-                      className="card decorative-corners"
-                      initial={{ opacity: 0, x: -30 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <div className="corner-top-right"></div>
-                      <div className="corner-bottom-left"></div>
-                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                        <div>
-                          <h3 className="text-xl font-semibold accent-text underlined">
-                            {education.degree} in {education.field}
-                          </h3>
-                          <p className="text-[var(--elegant-text-secondary)] mt-1">
-                            {education.school}
-                          </p>
-                        </div>
-                        <div className="education-date premium-hover">
-                          <CalendarIcon className="mr-1 size-4" />
-                          <span>
-                            {format(new Date(education.start_date), "MMM yyyy")}{" "}
-                            -{" "}
-                            {education.end_date
-                              ? format(new Date(education.end_date), "MMM yyyy")
-                              : "Present"}
-                          </span>
-                        </div>
+                {educations.map((education: Education, index) => (
+                  <motion.div
+                    key={education.id}
+                    className="card decorative-corners"
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <div className="corner-top-right"></div>
+                    <div className="corner-bottom-left"></div>
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                      <div>
+                        <h3 className="text-xl font-semibold accent-text underlined">
+                          {education.degree} in {education.field}
+                        </h3>
+                        <p className="text-[var(--elegant-text-secondary)] mt-1">
+                          {education.school}
+                        </p>
                       </div>
-                    </motion.div>
-                  ))
-                ) : (
-                  <p className="text-center text-[var(--elegant-text-secondary)]">
-                    No education information yet.
-                  </p>
-                )}
+                      <div className="education-date premium-hover">
+                        <CalendarIcon className="mr-1 size-4" />
+                        <span>
+                          {format(new Date(education.start_date), "MMM yyyy")} -{" "}
+                          {education.end_date
+                            ? format(new Date(education.end_date), "MMM yyyy")
+                            : "Present"}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </section>
@@ -1104,73 +1108,71 @@ const ElegantTheme = ({
               </motion.div>
 
               <div className="timeline-container">
-                <div className="timeline-main">
-                  <div className="timeline-main::before"></div>
+                <div className="timeline-line"></div>
+                {experiences && experiences.length > 0 ? (
+                  experiences.map((experience, index) => (
+                    <motion.div
+                      key={experience.id}
+                      className="timeline-item"
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <div className="timeline-dot"></div>
+                      <div className="timeline-content">
+                        <div className="timeline-date">
+                          <CalendarIcon className="mr-1 size-3 inline" />
+                          {format(
+                            new Date(experience.start_date),
+                            "MMM yyyy"
+                          )}{" "}
+                          -{" "}
+                          {experience.end_date
+                            ? format(new Date(experience.end_date), "MMM yyyy")
+                            : "Present"}
+                        </div>
+                        <div className="card decorative-corners">
+                          <div className="corner-top-right"></div>
+                          <div className="corner-bottom-left"></div>
+                          <div className="shimmer-effect absolute inset-0"></div>
 
-                  <motion.div
-                    className="timeline-items"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7 }}
-                  >
-                    {experiences && experiences.length > 0 ? (
-                      experiences.map((experience, index) => (
-                        <motion.div
-                          key={experience.id}
-                          className="timeline-item"
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.5, delay: index * 0.1 }}
-                        >
-                          <div className="timeline-date">
-                            <CalendarIcon className="mr-1 size-3 inline" />
-                            {format(experience.start_date, "MMM yyyy")} -{" "}
-                            {experience.end_date
-                              ? format(experience.end_date, "MMM yyyy")
-                              : "Present"}
-                          </div>
-                          <div className="timeline-content card decorative-corners">
-                            <div className="corner-top-right"></div>
-                            <div className="corner-bottom-left"></div>
-                            <div className="shimmer-effect absolute inset-0"></div>
-
-                            <h3 className="text-xl font-semibold gold-text">
-                              {experience.role}
-                            </h3>
-                            <div className="mt-3 flex items-center gap-3">
-                              {experience.logo && (
-                                <div className="overflow-hidden experience-logo">
-                                  <Image
-                                    src={experience.logo}
-                                    alt={experience.company}
-                                    width={50}
-                                    height={50}
-                                    className="object-cover"
-                                  />
-                                </div>
-                              )}
-                              <p className="font-medium accent-text">
-                                {experience.company}
-                              </p>
-                            </div>
-                            <p className="mt-1 text-sm text-[var(--elegant-text-secondary)]">
-                              {experience.employment_type}
-                            </p>
-                            <p className="mt-4 text-[var(--elegant-text-secondary)]">
-                              {experience.description}
+                          <h3 className="text-xl font-semibold gold-text">
+                            {experience.role}
+                          </h3>
+                          <div
+                            className={`mt-3 flex items-center gap-3 justify-end`}
+                          >
+                            {experience.logo && (
+                              <div className="overflow-hidden experience-logo">
+                                <Image
+                                  src={experience.logo}
+                                  alt={experience.company}
+                                  width={50}
+                                  height={50}
+                                  className="object-cover"
+                                />
+                              </div>
+                            )}
+                            <p className="font-medium accent-text">
+                              {experience.company}
                             </p>
                           </div>
-                        </motion.div>
-                      ))
-                    ) : (
-                      <p className="text-center text-[var(--elegant-text-secondary)]">
-                        No experience information yet.
-                      </p>
-                    )}
-                  </motion.div>
-                </div>
+                          <p className="mt-1 text-sm text-[var(--elegant-text-secondary)]">
+                            {experience.employment_type}
+                          </p>
+                          <p className="mt-4 text-[var(--elegant-text-secondary)]">
+                            {experience.description}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <p className="text-center text-[var(--elegant-text-secondary)]">
+                    No experience information yet.
+                  </p>
+                )}
               </div>
             </div>
           </section>

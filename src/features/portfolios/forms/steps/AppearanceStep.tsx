@@ -52,45 +52,32 @@ import {
   getThemeById,
 } from "@/features/themes/registry/themeRegistry";
 import { DEFAULT_THEME_ID } from "@/features/themes/registry/themeRegistry";
+import {
+  colorThemes,
+  getColorTheme,
+} from "@/features/themes/utils/themeCustomization";
 
-const colorThemes = [
-  {
-    id: "light",
-    name: "Light",
-    colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
-  },
-  {
-    id: "dark",
-    name: "Dark",
-    colors: ["#1E1E1E", "#2D2D2D", "#3E3E3E", "#FFFFFF", "#3B82F6"],
-  },
-  {
-    id: "blue",
-    name: "Blue",
-    colors: ["#EFF6FF", "#DBEAFE", "#BFDBFE", "#000000", "#2563EB"],
-  },
-  {
-    id: "green",
-    name: "Green",
-    colors: ["#ECFDF5", "#D1FAE5", "#A7F3D0", "#000000", "#059669"],
-  },
-  {
-    id: "purple",
-    name: "Purple",
-    colors: ["#F5F3FF", "#E9D5FF", "#D8B4FE", "#000000", "#7C3AED"],
-  },
-  {
-    id: "orange",
-    name: "Orange",
-    colors: ["#FFF7ED", "#FFEDD5", "#FED7AA", "#000000", "#EA580C"],
-  },
-  {
-    id: "custom",
-    name: "Custom",
-    colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
-  },
-];
+// Component types
+interface ThemeCardProps {
+  theme: Theme;
+  isSelected: boolean;
+  onSelect: () => void;
+}
 
+interface ColorOptionProps {
+  id: string;
+  name: string;
+  colors: string[];
+  isSelected: boolean;
+  onSelect: () => void;
+}
+
+interface ColorEditorProps {
+  colors: string[];
+  onChange: (index: number, color: string) => void;
+}
+
+// Fonts data
 const fonts = [
   { value: "inter", label: "Inter", description: "A clean and modern font" },
   {
@@ -135,15 +122,10 @@ const fonts = [
   },
 ];
 
-function ThemeCard({
-  theme,
-  isSelected,
-  onSelect,
-}: {
-  theme: Theme;
-  isSelected: boolean;
-  onSelect: () => void;
-}) {
+// Components separated for better modularity following SOLID principles
+
+// ThemeCard component - displays a single theme option
+function ThemeCard({ theme, isSelected, onSelect }: ThemeCardProps) {
   return (
     <motion.div
       whileHover={{ y: -5 }}
@@ -191,6 +173,110 @@ function ThemeCard({
   );
 }
 
+// ColorOption component - displays a single color theme option
+function ColorOption({
+  id,
+  name,
+  colors,
+  isSelected,
+  onSelect,
+}: ColorOptionProps) {
+  return (
+    <Button
+      key={id}
+      variant="outline"
+      className={`h-auto cursor-pointer flex-col rounded-lg p-4 transition-all hover:border-primary ${
+        isSelected ? "border-2 border-primary" : ""
+      }`}
+      onClick={onSelect}
+    >
+      <div className="flex flex-col items-center">
+        <div className="mb-3 flex space-x-1">
+          {colors.map((color: string, index: number) => (
+            <div
+              key={index}
+              className="size-6 rounded"
+              style={{ backgroundColor: color }}
+            />
+          ))}
+        </div>
+        <span className="text-sm font-medium">{name}</span>
+      </div>
+    </Button>
+  );
+}
+
+// CustomColorEditor component - allows editing of custom colors
+function CustomColorEditor({ colors, onChange }: ColorEditorProps) {
+  const colorLabels = [
+    { index: 0, name: "Background" },
+    { index: 1, name: "Secondary Background" },
+    { index: 2, name: "Accent" },
+    { index: 3, name: "Text" },
+    { index: 4, name: "Primary" },
+  ];
+
+  return (
+    <div className="space-y-4 rounded-lg border p-4">
+      <h3 className="font-medium">Custom Color Settings</h3>
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {colorLabels.map(({ index, name }) => (
+          <div key={index} className="space-y-3">
+            <label htmlFor={`color-${index}`} className="text-sm font-medium">
+              {name}
+            </label>
+            <div className="flex items-center gap-2">
+              <div
+                className="size-8 rounded border"
+                style={{ backgroundColor: colors[index] }}
+              />
+              <Input
+                id={`color-${index}`}
+                type="color"
+                value={colors[index]}
+                onChange={(e) => onChange(index, e.target.value)}
+                className="w-full"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div
+        className="mt-4 rounded-lg p-4"
+        style={{
+          backgroundColor: colors[0],
+          color: colors[3],
+        }}
+      >
+        <h4 style={{ color: colors[4] }}>Preview</h4>
+        <p className="text-sm">This is how your color scheme will look</p>
+        <div className="mt-2 flex gap-2">
+          <Button
+            style={{
+              backgroundColor: colors[4],
+              color: colors[0],
+            }}
+          >
+            Primary Button
+          </Button>
+          <Button
+            style={{
+              backgroundColor: "transparent",
+              borderColor: colors[3],
+              color: colors[3],
+            }}
+          >
+            Secondary
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main component
 export default function AppearanceStep() {
   const form = useFormContext<PortfolioFormValues>();
   const themes = getAllThemes();
@@ -202,6 +288,7 @@ export default function AppearanceStep() {
     font: "inter",
   };
 
+  // Initialize form values if not present
   useEffect(() => {
     if (!options.theme) {
       form.setValue("options.theme", DEFAULT_THEME_ID);
@@ -224,8 +311,9 @@ export default function AppearanceStep() {
     if (!options.font) {
       form.setValue("options.font", "inter");
     }
-  }, [form]);
+  }, [form, options]);
 
+  // State for selected theme
   const [selectedThemeId, setSelectedThemeId] = useState<string>(
     options.theme || DEFAULT_THEME_ID
   );
@@ -233,50 +321,183 @@ export default function AppearanceStep() {
     Theme | undefined
   >(getThemeById(selectedThemeId as any));
 
+  // State for color theme
   const [selectedColorTheme, setSelectedColorTheme] = useState<string>(
     options.colorTheme || "light"
   );
 
+  // State for preview dialog and custom colors
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [customColors, setCustomColors] = useState<string[]>(
     options.colors || ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"]
   );
 
+  // Mock portfolio data for preview
+  const [previewData, setPreviewData] = useState({
+    portfolio: {
+      contents: {
+        hero_header: "John Doe",
+        hero_description: "Senior Frontend Developer & UX Designer",
+        about_text:
+          "I'm a passionate developer with 5+ years of experience building modern web applications with React, TypeScript, and Next.js.",
+        meta_title: "John Doe - Portfolio",
+      },
+      options: [
+        {
+          options: JSON.stringify({
+            theme: selectedThemeId,
+            colorTheme: selectedColorTheme,
+            colors: customColors,
+            font: form.getValues("options.font") || "inter",
+          }),
+        },
+      ],
+    },
+    experiences: [
+      {
+        id: "1",
+        company: "Acme Inc",
+        role: "Senior Frontend Developer",
+        logo: "https://placehold.co/100",
+        description:
+          "Led the development of a complex SaaS platform using React, TypeScript and Next.js.",
+        employment_type: "Full-time",
+        start_date: new Date("2021-06-01"),
+        end_date: null,
+      },
+      {
+        id: "2",
+        company: "Tech Solutions",
+        role: "Frontend Developer",
+        logo: "https://placehold.co/100",
+        description:
+          "Responsible for building responsive web applications and improving UX across multiple projects.",
+        employment_type: "Full-time",
+        start_date: new Date("2019-03-01"),
+        end_date: new Date("2021-05-30"),
+      },
+    ],
+    projects: [
+      {
+        id: "1",
+        title: "E-commerce Platform",
+        description:
+          "A modern e-commerce platform built with Next.js and Tailwind CSS.",
+        image: "https://placehold.co/600x400",
+        repo_url: "https://github.com",
+        live_url: "https://example.com",
+      },
+      {
+        id: "2",
+        title: "Portfolio Website",
+        description:
+          "Personal portfolio website showcasing my projects and skills.",
+        image: "https://placehold.co/600x400",
+        repo_url: "https://github.com",
+        live_url: "https://example.com",
+      },
+    ],
+    socials: [
+      {
+        id: "1",
+        platform: "github",
+        url: "https://github.com",
+      },
+      {
+        id: "2",
+        platform: "linkedin",
+        url: "https://linkedin.com",
+      },
+      {
+        id: "3",
+        platform: "twitter",
+        url: "https://twitter.com",
+      },
+    ],
+    skills: [
+      {
+        id: "1",
+        name: "React",
+      },
+      {
+        id: "2",
+        name: "TypeScript",
+      },
+      {
+        id: "3",
+        name: "Next.js",
+      },
+      {
+        id: "4",
+        name: "Tailwind CSS",
+      },
+    ],
+    educations: [
+      {
+        id: "1",
+        school: "University of Technology",
+        degree: "Bachelor's",
+        field: "Computer Science",
+        start_date: new Date("2015-09-01"),
+        end_date: new Date("2019-06-30"),
+      },
+    ],
+  });
+
+  // Update preview data when theme options change
+  useEffect(() => {
+    setPreviewData((prev) => ({
+      ...prev,
+      portfolio: {
+        ...prev.portfolio,
+        options: [
+          {
+            options: JSON.stringify({
+              theme: selectedThemeId,
+              colorTheme: selectedColorTheme,
+              colors: customColors,
+              font: form.getValues("options.font") || "inter",
+            }),
+          },
+        ],
+      },
+    }));
+  }, [selectedThemeId, selectedColorTheme, customColors, form]);
+
+  // Effect to update form when theme changes
   useEffect(() => {
     if (selectedThemeId) {
       const themeDetails = getThemeById(selectedThemeId as any);
       setSelectedThemeDetails(themeDetails);
-
       form.setValue("options.theme", selectedThemeId);
     }
   }, [selectedThemeId, form]);
 
+  // Effect to update form when color theme changes
   useEffect(() => {
     if (selectedColorTheme) {
-      const themeColors = colorThemes.find(
-        (theme) => theme.id === selectedColorTheme
-      )?.colors;
-
+      const selectedTheme = getColorTheme(selectedColorTheme);
       form.setValue("options.colorTheme", selectedColorTheme);
 
-      if (selectedColorTheme !== "custom" && themeColors) {
-        form.setValue("options.colors", themeColors);
+      if (selectedColorTheme !== "custom" && selectedTheme?.colors) {
+        form.setValue("options.colors", selectedTheme.colors);
+        setCustomColors(selectedTheme.colors);
       }
     }
   }, [selectedColorTheme, form]);
 
+  // Handler for theme selection
   const handleThemeSelect = (theme: Theme) => {
     setSelectedThemeId(theme.id);
     setSelectedThemeDetails(theme);
-
     form.setValue("options.theme", theme.id);
   };
 
+  // Handler for color theme selection
   const handleColorThemeSelect = (colorTheme: string) => {
     setSelectedColorTheme(colorTheme);
 
-    const selectedTheme = colorThemes.find((theme) => theme.id === colorTheme);
-
+    const selectedTheme = getColorTheme(colorTheme);
     form.setValue("options.colorTheme", colorTheme);
 
     if (selectedTheme) {
@@ -284,10 +505,12 @@ export default function AppearanceStep() {
         form.setValue("options.colors", customColors);
       } else {
         form.setValue("options.colors", selectedTheme.colors);
+        setCustomColors(selectedTheme.colors);
       }
     }
   };
 
+  // Handler for custom color changes
   const handleCustomColorChange = (index: number, color: string) => {
     const newColors = [...customColors];
     newColors[index] = color;
@@ -298,15 +521,19 @@ export default function AppearanceStep() {
     }
   };
 
+  // Handler for preview
   const handlePreview = () => {
     setIsPreviewOpen(true);
   };
+
+  // Get the theme component for preview
+  const ThemeComponent = selectedThemeDetails?.component;
 
   return (
     <div className="space-y-6">
       {/* Theme Preview Dialog */}
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
               <span>Theme Preview</span>
@@ -320,9 +547,50 @@ export default function AppearanceStep() {
               </Button>
             </DialogTitle>
             <DialogDescription>
-              Preview how your portfolio will look with the selected theme
+              Preview how your portfolio will look with the selected theme and
+              color scheme
             </DialogDescription>
           </DialogHeader>
+
+          <div className="mt-4 border rounded-lg overflow-hidden h-[70vh]">
+            {ThemeComponent ? (
+              <div className="w-full h-full overflow-y-auto transform scale-[0.85] origin-top">
+                <ThemeComponent
+                  portfolio={previewData.portfolio}
+                  experiences={previewData.experiences}
+                  projects={previewData.projects}
+                  socials={previewData.socials}
+                  skills={previewData.skills}
+                  educations={previewData.educations}
+                />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-full">
+                <p>Theme preview not available</p>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="bg-primary/10">
+                {selectedThemeDetails?.name} Theme
+              </Badge>
+              <Badge variant="outline" className="bg-primary/10">
+                {selectedColorTheme.charAt(0).toUpperCase() +
+                  selectedColorTheme.slice(1)}{" "}
+                Colors
+              </Badge>
+              <Badge variant="outline" className="bg-primary/10">
+                {form.getValues("options.font")?.charAt(0).toUpperCase() +
+                  form.getValues("options.font")?.slice(1) || "Inter"}{" "}
+                Font
+              </Badge>
+            </div>
+            <Button onClick={() => setIsPreviewOpen(false)}>
+              Close Preview
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -398,188 +666,23 @@ export default function AppearanceStep() {
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                 {colorThemes.map((theme) => (
-                  <Button
+                  <ColorOption
                     key={theme.id}
-                    variant="outline"
-                    className={`h-auto cursor-pointer flex-col rounded-lg p-4 transition-all hover:border-primary ${
-                      selectedColorTheme === theme.id
-                        ? "border-2 border-primary"
-                        : ""
-                    }`}
-                    onClick={() => handleColorThemeSelect(theme.id)}
-                  >
-                    <div className="flex flex-col items-center">
-                      <div className="mb-3 flex space-x-1">
-                        {theme.colors.map((color: string, index: number) => (
-                          <div
-                            key={index}
-                            className="size-6 rounded"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm font-medium">{theme.name}</span>
-                    </div>
-                  </Button>
+                    id={theme.id}
+                    name={theme.name}
+                    colors={theme.colors}
+                    isSelected={selectedColorTheme === theme.id}
+                    onSelect={() => handleColorThemeSelect(theme.id)}
+                  />
                 ))}
               </div>
 
               {/* Custom color editor (visible when Custom theme is selected) */}
               {selectedColorTheme === "custom" && (
-                <div className="space-y-4 rounded-lg border p-4">
-                  <h3 className="font-medium">Custom Color Settings</h3>
-
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div className="space-y-3">
-                      <label htmlFor="bg-color" className="text-sm font-medium">
-                        Background
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="size-8 rounded border"
-                          style={{ backgroundColor: customColors[0] }}
-                        />
-                        <Input
-                          id="bg-color"
-                          type="color"
-                          value={customColors[0]}
-                          onChange={(e) =>
-                            handleCustomColorChange(0, e.target.value)
-                          }
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <label
-                        htmlFor="sec-bg-color"
-                        className="text-sm font-medium"
-                      >
-                        Secondary Background
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="size-8 rounded border"
-                          style={{ backgroundColor: customColors[1] }}
-                        />
-                        <Input
-                          id="sec-bg-color"
-                          type="color"
-                          value={customColors[1]}
-                          onChange={(e) =>
-                            handleCustomColorChange(1, e.target.value)
-                          }
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <label
-                        htmlFor="accent-color"
-                        className="text-sm font-medium"
-                      >
-                        Accent
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="size-8 rounded border"
-                          style={{ backgroundColor: customColors[2] }}
-                        />
-                        <Input
-                          id="accent-color"
-                          type="color"
-                          value={customColors[2]}
-                          onChange={(e) =>
-                            handleCustomColorChange(2, e.target.value)
-                          }
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <label
-                        htmlFor="text-color"
-                        className="text-sm font-medium"
-                      >
-                        Text
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="size-8 rounded border"
-                          style={{ backgroundColor: customColors[3] }}
-                        />
-                        <Input
-                          id="text-color"
-                          type="color"
-                          value={customColors[3]}
-                          onChange={(e) =>
-                            handleCustomColorChange(3, e.target.value)
-                          }
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <label
-                        htmlFor="primary-color"
-                        className="text-sm font-medium"
-                      >
-                        Primary
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="size-8 rounded border"
-                          style={{ backgroundColor: customColors[4] }}
-                        />
-                        <Input
-                          id="primary-color"
-                          type="color"
-                          value={customColors[4]}
-                          onChange={(e) =>
-                            handleCustomColorChange(4, e.target.value)
-                          }
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className="mt-4 rounded-lg p-4"
-                    style={{
-                      backgroundColor: customColors[0],
-                      color: customColors[3],
-                    }}
-                  >
-                    <h4 style={{ color: customColors[4] }}>Preview</h4>
-                    <p className="text-sm">
-                      This is how your color scheme will look
-                    </p>
-                    <div className="mt-2 flex gap-2">
-                      <Button
-                        style={{
-                          backgroundColor: customColors[4],
-                          color: customColors[0],
-                        }}
-                      >
-                        Primary Button
-                      </Button>
-                      <Button
-                        style={{
-                          backgroundColor: "transparent",
-                          borderColor: customColors[3],
-                          color: customColors[3],
-                        }}
-                      >
-                        Secondary
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                <CustomColorEditor
+                  colors={customColors}
+                  onChange={handleCustomColorChange}
+                />
               )}
             </CardContent>
           </Card>
