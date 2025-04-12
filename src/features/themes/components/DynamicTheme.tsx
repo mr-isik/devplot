@@ -398,7 +398,7 @@ const DynamicTheme = ({
                       <CalendarIcon className="mr-1 w-4 h-4" />
                       <span>
                         {format(new Date(education.start_date), "MMM yyyy")} -{" "}
-                        {education.end_date
+                        {education.end_date && education.end_date !== "Present"
                           ? format(new Date(education.end_date), "MMM yyyy")
                           : "Present"}
                       </span>
@@ -486,7 +486,8 @@ const DynamicTheme = ({
                         <span>
                           {format(new Date(experience.start_date), "MMM yyyy")}{" "}
                           -{" "}
-                          {experience.end_date
+                          {experience.end_date &&
+                          experience.end_date !== "Present"
                             ? format(new Date(experience.end_date), "MMM yyyy")
                             : "Present"}
                         </span>

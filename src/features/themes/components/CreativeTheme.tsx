@@ -958,7 +958,8 @@ const CreativeTheme = ({
                                 "MMM yyyy"
                               )}{" "}
                               -{" "}
-                              {education.end_date
+                              {education.end_date &&
+                              education.end_date !== "Present"
                                 ? format(
                                     new Date(education.end_date),
                                     "MMM yyyy"
@@ -1014,7 +1015,8 @@ const CreativeTheme = ({
 
                         <div className="timeline-date">
                           {format(experience.start_date, "MMM yyyy")} -{" "}
-                          {experience.end_date
+                          {experience.end_date &&
+                          experience.end_date !== "Present"
                             ? format(experience.end_date, "MMM yyyy")
                             : "Present"}
                         </div>

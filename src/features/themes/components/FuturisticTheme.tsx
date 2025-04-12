@@ -47,7 +47,6 @@ let baseFuturisticThemeStyles = `
   }
 
   .futuristic-theme.dark {
-    /* Dark Teması Değerleri - Yine Kullanıcı Özelleştirmelerine Göre Değişecek */
     --futuristic-bg: #0a0b18;
     --futuristic-bg-secondary: #11132b;
     --futuristic-text-primary: #ffffff;
@@ -57,7 +56,6 @@ let baseFuturisticThemeStyles = `
   }
   
   .futuristic-theme.light {
-    /* Light Teması Değerleri - Yine Kullanıcı Özelleştirmelerine Göre Değişecek */
     --futuristic-bg: #f0f2ff;
     --futuristic-bg-secondary: #e0e4ff;
     --futuristic-text-primary: #11142b;
@@ -1052,7 +1050,7 @@ const FuturisticTheme = ({
 
     return result
       ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
-      : "0, 0, 0"; // Siyah varsayılan değer
+      : "0, 0, 0";
   };
 
   // Tema konfigürasyonu
@@ -1115,20 +1113,12 @@ const FuturisticTheme = ({
     Array.isArray(themeOptions.colors) &&
     themeOptions.colors.length >= 5
   ) {
-    // Ana renk ve RGB değerini hesaplama
     const accentColor = themeOptions.colors[4];
     const accentRgb = hexToRgb(accentColor);
 
-    // İkincil rengi hesaplama - kullanıcının seçimine göre ayarlama
-    // Ana renkten %20 daha koyu bir ton oluşturuyoruz
     const accentSecondaryColor = adjustColor(accentColor, -20);
     const accentSecondaryRgb = hexToRgb(accentSecondaryColor);
 
-    // Metin rengini arka plan rengine göre kontrastlı olacak şekilde ayarlama
-    // const contrastText = isLightColor(themeOptions.colors[0]) ? "#11142b" : "#ffffff";
-    // const contrastTextSecondary = isLightColor(themeOptions.colors[0]) ? "#414366" : "#c3c4d8";
-
-    // Özelleştirilmiş renk paleti
     themeOptions.colorPalette = {
       primary: accentColor,
       secondary: accentSecondaryColor,
@@ -1140,7 +1130,6 @@ const FuturisticTheme = ({
       card: `rgba(${hexToRgb(themeOptions.colors[1])}, 0.7)`,
     };
 
-    // CSS değişkenleri için özel stil eklemesi - tüm renkleri kullanıcının seçtiği renklerle değiştir
     const customStyles = `
       .futuristic-theme {
         --futuristic-accent-rgb: ${accentRgb};
@@ -1182,7 +1171,6 @@ const FuturisticTheme = ({
 
   const themeClass = `futuristic-theme ${themeOptions.colorTheme === "dark" ? "dark" : "light"}`;
 
-  // Font variables and theme styles combined
   const combinedStyles = `
     ${futuristicThemeStyles}
     
@@ -1438,7 +1426,8 @@ const FuturisticTheme = ({
                                 "MMM yyyy"
                               )}{" "}
                               -{" "}
-                              {education.end_date
+                              {education.end_date &&
+                              education.end_date !== "Present"
                                 ? format(
                                     new Date(education.end_date),
                                     "MMM yyyy"
@@ -1517,7 +1506,7 @@ const FuturisticTheme = ({
                         <span className="timeline-date">
                           <CalendarIcon className="inline mr-1 size-3" />
                           {format(exp.start_date, "MMM yyyy")} -{" "}
-                          {exp.end_date
+                          {exp.end_date && exp.end_date !== "Present"
                             ? format(exp.end_date, "MMM yyyy")
                             : "Present"}
                         </span>
