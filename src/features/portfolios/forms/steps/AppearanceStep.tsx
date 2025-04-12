@@ -2,6 +2,12 @@
 
 import type { Theme } from "@/features/themes/types";
 import type { PortfolioFormValues } from "@/lib/validations/portfolio";
+import type { Portfolio, Content, Option } from "@/features/portfolios/types";
+import type { Experience } from "@/features/experiences/types";
+import type { Project } from "@/features/projects/types";
+import type { Skill } from "@/features/skills/types";
+import type { Social } from "@/features/socials/types";
+import type { Education } from "@/features/educations/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -333,17 +339,33 @@ export default function AppearanceStep() {
   );
 
   // Mock portfolio data for preview
-  const [previewData, setPreviewData] = useState({
+  const [previewData, setPreviewData] = useState<{
+    portfolio: Portfolio;
+    experiences: Experience[];
+    projects: Project[];
+    socials: Social[];
+    skills: Skill[];
+    educations: Education[];
+  }>({
     portfolio: {
+      id: "preview",
+      user_id: "preview-user",
+      created_at: new Date().toISOString(),
+      is_published: true,
       contents: {
+        id: "preview-content",
+        portfolio_id: "preview",
         hero_header: "John Doe",
         hero_description: "Senior Frontend Developer & UX Designer",
         about_text:
           "I'm a passionate developer with 5+ years of experience building modern web applications with React, TypeScript, and Next.js.",
         meta_title: "John Doe - Portfolio",
+        meta_description: "Portfolio of John Doe, Full Stack Developer",
       },
       options: [
         {
+          id: "preview-option",
+          portfolio_id: "preview",
           options: JSON.stringify({
             theme: selectedThemeId,
             colorTheme: selectedColorTheme,
@@ -352,34 +374,45 @@ export default function AppearanceStep() {
           }),
         },
       ],
+      socials: [],
+      experiences: [],
+      projects: [],
+      educations: [],
+      skills: [],
     },
     experiences: [
       {
         id: "1",
+        portfolio_id: "preview",
+        created_at: new Date().toISOString(),
         company: "Acme Inc",
         role: "Senior Frontend Developer",
         logo: "https://placehold.co/100",
         description:
           "Led the development of a complex SaaS platform using React, TypeScript and Next.js.",
         employment_type: "Full-time",
-        start_date: new Date("2021-06-01"),
+        start_date: new Date("2021-06-01").toISOString(),
         end_date: null,
       },
       {
         id: "2",
+        portfolio_id: "preview",
+        created_at: new Date().toISOString(),
         company: "Tech Solutions",
         role: "Frontend Developer",
         logo: "https://placehold.co/100",
         description:
           "Responsible for building responsive web applications and improving UX across multiple projects.",
         employment_type: "Full-time",
-        start_date: new Date("2019-03-01"),
-        end_date: new Date("2021-05-30"),
+        start_date: new Date("2019-03-01").toISOString(),
+        end_date: new Date("2021-05-30").toISOString(),
       },
     ],
     projects: [
       {
         id: "1",
+        portfolio_id: "preview",
+        created_at: new Date().toISOString(),
         title: "E-commerce Platform",
         description:
           "A modern e-commerce platform built with Next.js and Tailwind CSS.",
@@ -389,6 +422,8 @@ export default function AppearanceStep() {
       },
       {
         id: "2",
+        portfolio_id: "preview",
+        created_at: new Date().toISOString(),
         title: "Portfolio Website",
         description:
           "Personal portfolio website showcasing my projects and skills.",
@@ -400,16 +435,22 @@ export default function AppearanceStep() {
     socials: [
       {
         id: "1",
+        portfolio_id: "preview",
+        created_at: new Date().toISOString(),
         platform: "github",
         url: "https://github.com",
       },
       {
         id: "2",
+        portfolio_id: "preview",
+        created_at: new Date().toISOString(),
         platform: "linkedin",
         url: "https://linkedin.com",
       },
       {
         id: "3",
+        portfolio_id: "preview",
+        created_at: new Date().toISOString(),
         platform: "twitter",
         url: "https://twitter.com",
       },
@@ -417,29 +458,35 @@ export default function AppearanceStep() {
     skills: [
       {
         id: "1",
+        portfolio_id: "preview",
         name: "React",
       },
       {
         id: "2",
+        portfolio_id: "preview",
         name: "TypeScript",
       },
       {
         id: "3",
+        portfolio_id: "preview",
         name: "Next.js",
       },
       {
         id: "4",
+        portfolio_id: "preview",
         name: "Tailwind CSS",
       },
     ],
     educations: [
       {
         id: "1",
+        portfolio_id: "preview",
+        created_at: new Date().toISOString(),
         school: "University of Technology",
         degree: "Bachelor's",
         field: "Computer Science",
-        start_date: new Date("2015-09-01"),
-        end_date: new Date("2019-06-30"),
+        start_date: new Date("2015-09-01").toISOString(),
+        end_date: new Date("2019-06-30").toISOString(),
       },
     ],
   });
@@ -452,6 +499,8 @@ export default function AppearanceStep() {
         ...prev.portfolio,
         options: [
           {
+            id: "preview-option",
+            portfolio_id: "preview",
             options: JSON.stringify({
               theme: selectedThemeId,
               colorTheme: selectedColorTheme,
