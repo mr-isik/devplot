@@ -18,6 +18,7 @@ import {
   fontFamilies,
 } from "../utils/themeCustomization";
 import { FaGithub } from "react-icons/fa";
+import { useState, useEffect } from "react";
 
 let baseFuturisticThemeStyles = `
   .futuristic-theme {
@@ -38,6 +39,11 @@ let baseFuturisticThemeStyles = `
     --futuristic-neon-text-shadow: 0 0 5px rgba(var(--futuristic-accent-rgb), 0.7);
     --futuristic-grid-color: rgba(var(--futuristic-accent-rgb), 0.1);
     --futuristic-gradient: linear-gradient(135deg, var(--futuristic-accent), var(--futuristic-accent-secondary));
+    --futuristic-highlight: rgba(var(--futuristic-accent-rgb), 0.2);
+    --futuristic-glow-intense: 0 0 20px rgba(var(--futuristic-accent-rgb), 0.8), 0 0 40px rgba(var(--futuristic-accent-rgb), 0.4);
+    --futuristic-scan-line: rgba(var(--futuristic-accent-rgb), 0.05);
+    --futuristic-hologram-shine: rgba(var(--futuristic-accent-rgb), 0.3);
+    --futuristic-3d-shadow: 0 20px 60px rgba(var(--futuristic-accent-rgb), 0.3);
     
     color: var(--futuristic-text-primary);
     background-color: var(--futuristic-bg);
@@ -80,6 +86,36 @@ let baseFuturisticThemeStyles = `
     opacity: 0.5;
     pointer-events: none;
     animation: gridPulse 10s ease-in-out infinite alternate;
+  }
+  
+  /* Scanline effect for cyberpunk feel */
+  .futuristic-theme::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--futuristic-scan-line) 0.5%,
+      transparent 1%
+    );
+    background-size: 100% 4px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.3;
+    animation: scanline 6s linear infinite;
+  }
+  
+  @keyframes scanline {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 0 100%;
+    }
   }
   
   @keyframes gridPulse {
@@ -236,7 +272,7 @@ let baseFuturisticThemeStyles = `
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 3px;
     background: var(--futuristic-gradient);
     transform: scaleX(0);
     transform-origin: left;
@@ -244,10 +280,10 @@ let baseFuturisticThemeStyles = `
   }
   
   .futuristic-theme .card:hover {
-    transform: translateY(-10px) scale(1.02) rotateX(3deg) rotateY(3deg);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 
-      0 0 20px rgba(var(--futuristic-accent-rgb), 0.3),
-      0 0 0 1px rgba(var(--futuristic-accent-rgb), 0.1);
+    transform: translateY(-15px) scale(1.03) rotateX(5deg) rotateY(5deg);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 
+      0 0 30px rgba(var(--futuristic-accent-rgb), 0.4),
+      0 0 0 1px rgba(var(--futuristic-accent-rgb), 0.2);
   }
   
   .futuristic-theme .card:hover::before {
@@ -266,7 +302,7 @@ let baseFuturisticThemeStyles = `
     padding: 0.875rem 2rem;
     font-weight: 600;
     font-size: 0.95rem;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     position: relative;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -275,6 +311,13 @@ let baseFuturisticThemeStyles = `
     z-index: 1;
     transform-style: preserve-3d;
     perspective: 1000px;
+    clip-path: polygon(
+      0 0, 
+      100% 0, 
+      100% calc(100% - 10px), 
+      calc(100% - 10px) 100%, 
+      0 100%
+    );
   }
   
   .futuristic-theme .btn::before {
@@ -287,6 +330,13 @@ let baseFuturisticThemeStyles = `
     background: var(--futuristic-gradient);
     z-index: -2;
     border-radius: 0.5rem;
+    clip-path: polygon(
+      0 0, 
+      100% 0, 
+      100% calc(100% - 10px), 
+      calc(100% - 10px) 100%, 
+      0 100%
+    );
   }
   
   .futuristic-theme .btn::after {
@@ -298,6 +348,13 @@ let baseFuturisticThemeStyles = `
     z-index: -1;
     opacity: 1;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    clip-path: polygon(
+      0 0, 
+      100% 0, 
+      100% calc(100% - 10px), 
+      calc(100% - 10px) 100%, 
+      0 100%
+    );
   }
   
   .futuristic-theme .btn-primary {
@@ -309,10 +366,10 @@ let baseFuturisticThemeStyles = `
   
   .futuristic-theme .btn-primary:hover {
     color: var(--futuristic-bg);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(var(--futuristic-accent-rgb), 0.3),
-      0 0 15px rgba(var(--futuristic-accent-rgb), 0.3),
-      0 0 0 1px rgba(var(--futuristic-accent-rgb), 0.2);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(var(--futuristic-accent-rgb), 0.4),
+      0 0 20px rgba(var(--futuristic-accent-rgb), 0.4),
+      0 0 0 1px rgba(var(--futuristic-accent-rgb), 0.3);
   }
   
   .futuristic-theme .btn-primary:hover::after {
@@ -540,12 +597,18 @@ let baseFuturisticThemeStyles = `
     transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     transform-style: preserve-3d;
     perspective: 1000px;
+    clip-path: polygon(
+      0 0, 
+      100% 0, 
+      100% calc(100% - 15px), 
+      calc(100% - 15px) 100%, 
+      0 100%
+    );
   }
   
   .futuristic-theme .project-card:hover {
-    transform: translateY(-10px) scale(1.02) rotateY(5deg);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2),
-      0 0 20px rgba(var(--futuristic-accent-rgb), 0.3);
+    transform: translateY(-15px) scale(1.03) rotateY(10deg);
+    box-shadow: var(--futuristic-3d-shadow);
     border: 1px solid rgba(var(--futuristic-accent-rgb), 0.3);
   }
   
@@ -555,7 +618,7 @@ let baseFuturisticThemeStyles = `
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 3px;
     background: var(--futuristic-gradient);
     transform: scaleX(0);
     transform-origin: left;
@@ -571,7 +634,8 @@ let baseFuturisticThemeStyles = `
   }
   
   .futuristic-theme .project-card:hover .project-image {
-    transform: scale(1.1);
+    transform: scale(1.1) rotateZ(2deg);
+    filter: saturate(1.2) contrast(1.1);
   }
   
   .futuristic-theme .education-card {
@@ -656,6 +720,7 @@ let baseFuturisticThemeStyles = `
   @media (max-width: 640px) {
     .futuristic-theme .btn {
       padding: 0.75rem 1.5rem;
+      flex-wrap: nowrap;
     }
     
     .futuristic-theme .btn-icon {
@@ -676,21 +741,34 @@ let baseFuturisticThemeStyles = `
   .hologram::before {
     content: '';
     position: absolute;
-    top: -50%;
+    top: -150%;
     left: -50%;
     width: 200%;
     height: 200%;
     background: linear-gradient(
       to bottom right,
-      transparent,
-      rgba(var(--futuristic-accent-rgb), 0.2),
-      transparent,
-      transparent
+      transparent 30%,
+      var(--futuristic-hologram-shine) 50%,
+      transparent 70%
     );
     transform: rotate(30deg);
-    animation: hologramScan 4s linear infinite;
+    animation: hologramScan 3s cubic-bezier(0.42, 0, 0.58, 1) infinite;
     pointer-events: none;
     z-index: 1;
+  }
+
+  .hologram::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at center,
+      var(--futuristic-accent) 0%,
+      transparent 70%
+    );
+    opacity: 0.05;
+    z-index: 0;
+    animation: hologramPulse 4s ease-in-out infinite alternate;
   }
 
   @keyframes hologramScan {
@@ -699,6 +777,15 @@ let baseFuturisticThemeStyles = `
     }
     100% {
       transform: rotate(30deg) translateY(100%);
+    }
+  }
+
+  @keyframes hologramPulse {
+    0% {
+      opacity: 0.05;
+    }
+    100% {
+      opacity: 0.15;
     }
   }
 
@@ -721,8 +808,8 @@ let baseFuturisticThemeStyles = `
       rgba(var(--futuristic-accent-rgb), 0));
     transform: translateX(-50%);
     z-index: 1;
+    box-shadow: 0 0 20px rgba(var(--futuristic-accent-rgb), 0.5);
   }
-
   .futuristic-theme .timeline-track::before,
   .futuristic-theme .timeline-track::after {
     content: '';
@@ -745,16 +832,26 @@ let baseFuturisticThemeStyles = `
     bottom: 0;
   }
 
-  @keyframes pulse {
+  .futuristic-theme .timeline-dot {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background: var(--futuristic-accent);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: var(--futuristic-neon-glow);
+    z-index: 3;
+    animation: pulseDot 2s infinite alternate;
+  }
+
+  @keyframes pulseDot {
     0% {
-      box-shadow: 0 0 10px rgba(var(--futuristic-accent-rgb), 0.5), 
-                  0 0 20px rgba(var(--futuristic-accent-rgb), 0.3);
-      transform: translateX(-50%) scale(1);
+      box-shadow: 0 0 10px rgba(var(--futuristic-accent-rgb), 0.7);
     }
     100% {
-      box-shadow: 0 0 15px rgba(var(--futuristic-accent-rgb), 0.7), 
-                  0 0 30px rgba(var(--futuristic-accent-rgb), 0.5);
-      transform: translateX(-50%) scale(1.2);
+      box-shadow: 0 0 20px rgba(var(--futuristic-accent-rgb), 1);
     }
   }
 
@@ -782,45 +879,6 @@ let baseFuturisticThemeStyles = `
   .futuristic-theme .timeline-item:nth-child(even) .timeline-content {
     margin-left: 2rem;
     transform-origin: left center;
-  }
-
-  .futuristic-theme .timeline-dot {
-    position: absolute;
-    top: 2rem;
-    left: 50%;
-    width: 16px;
-    height: 16px;
-    background: var(--futuristic-accent);
-    border-radius: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 0 15px rgba(var(--futuristic-accent-rgb), 0.8);
-    z-index: 3;
-  }
-
-  .futuristic-theme .timeline-dot::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 20px;
-    height: 2px;
-    background: linear-gradient(
-      to var(--direction, right), 
-      var(--futuristic-accent), 
-      rgba(var(--futuristic-accent-rgb), 0)
-    );
-    z-index: 2;
-  }
-
-  .futuristic-theme .timeline-item:nth-child(odd) .timeline-dot::before {
-    --direction: left;
-    right: 15px;
-    transform: translateY(-50%);
-  }
-
-  .futuristic-theme .timeline-item:nth-child(even) .timeline-dot::before {
-    --direction: right;
-    left: 15px;
-    transform: translateY(-50%);
   }
 
   .futuristic-theme .timeline-content {
@@ -887,7 +945,7 @@ let baseFuturisticThemeStyles = `
     gap: 1.5rem;
     max-width: 900px;
     margin: 0 auto;
-    perspective: 1000px;
+    perspective: 1200px;
   }
 
   .futuristic-theme .skill-card {
@@ -895,7 +953,7 @@ let baseFuturisticThemeStyles = `
     height: 130px;
     background: rgba(var(--futuristic-bg-secondary-rgb), 0.4);
     backdrop-filter: blur(10px);
-    border-radius: 1rem;
+    border-radius: 0.75rem;
     border: 1px solid rgba(var(--futuristic-accent-rgb), 0.1);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -907,6 +965,13 @@ let baseFuturisticThemeStyles = `
     justify-content: center;
     padding: 1.5rem;
     text-align: center;
+    clip-path: polygon(
+      0 0, 
+      100% 0, 
+      100% calc(100% - 10px), 
+      calc(100% - 10px) 100%, 
+      0 100%
+    );
   }
 
   .futuristic-theme .skill-card::before {
@@ -915,7 +980,7 @@ let baseFuturisticThemeStyles = `
     inset: 0;
     background: linear-gradient(135deg, 
       rgba(var(--futuristic-accent-rgb), 0), 
-      rgba(var(--futuristic-accent-rgb), 0.05));
+      rgba(var(--futuristic-accent-rgb), 0.1));
     z-index: 0;
   }
 
@@ -928,7 +993,7 @@ let baseFuturisticThemeStyles = `
     height: 200%;
     background: conic-gradient(
       transparent, 
-      rgba(var(--futuristic-accent-rgb), 0.1), 
+      rgba(var(--futuristic-accent-rgb), 0.2), 
       transparent
     );
     animation: rotate 10s linear infinite;
@@ -940,18 +1005,9 @@ let baseFuturisticThemeStyles = `
     opacity: 1;
   }
 
-  @keyframes rotate {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
   .futuristic-theme .skill-card:hover {
-    transform: translateY(-15px) rotateX(10deg) rotateY(10deg);
-    box-shadow: 0 20px 40px rgba(var(--futuristic-accent-rgb), 0.2);
+    transform: translateY(-20px) rotateX(15deg) rotateY(15deg) scale(1.05);
+    box-shadow: var(--futuristic-3d-shadow);
     border-color: rgba(var(--futuristic-accent-rgb), 0.5);
   }
 
@@ -961,11 +1017,12 @@ let baseFuturisticThemeStyles = `
     font-size: 2.5rem;
     margin-bottom: 0.75rem;
     transition: all 0.4s ease;
+    filter: drop-shadow(0 0 5px rgba(var(--futuristic-accent-rgb), 0.3));
   }
 
   .futuristic-theme .skill-card:hover .skill-icon {
-    transform: scale(1.2);
-    filter: drop-shadow(0 0 10px rgba(var(--futuristic-accent-rgb), 0.7));
+    transform: translateZ(20px) scale(1.3);
+    filter: drop-shadow(0 0 15px rgba(var(--futuristic-accent-rgb), 0.8));
   }
 
   .futuristic-theme .skill-name {
@@ -974,27 +1031,12 @@ let baseFuturisticThemeStyles = `
     font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.4s ease;
+    text-shadow: 0 0 5px rgba(var(--futuristic-accent-rgb), 0.5);
   }
 
-  .futuristic-theme .skill-glow {
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 40px;
-    background: var(--futuristic-accent);
-    filter: blur(20px);
-    opacity: 0.3;
-    border-radius: 50%;
-    transition: all 0.4s ease;
-  }
-
-  .futuristic-theme .skill-card:hover .skill-glow {
-    opacity: 0.7;
-    width: 50px;
-    height: 50px;
-    filter: blur(25px);
+  .futuristic-theme .skill-card:hover .skill-name {
+    transform: translateZ(10px);
+    text-shadow: 0 0 10px rgba(var(--futuristic-accent-rgb), 0.8);
   }
 
   @media (max-width: 768px) {
@@ -1008,8 +1050,110 @@ let baseFuturisticThemeStyles = `
       padding: 1rem;
     }
   }
-`;
 
+  /* Cursor particle trail effect */
+  .cursor-particle {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--futuristic-accent);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    filter: blur(2px);
+    box-shadow: 0 0 10px var(--futuristic-accent), 0 0 20px var(--futuristic-accent);
+    transition: opacity 0.2s ease;
+  }
+
+  /* Enhanced Hero Section with Cyberpunk Typography */
+  .futuristic-theme .hero-text {
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px rgba(var(--futuristic-accent-rgb), 0.7);
+    transition: text-shadow 0.3s ease;
+  }
+
+  .futuristic-theme .hero-text::before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--futuristic-accent);
+    filter: blur(8px);
+    opacity: 0.7;
+    z-index: -1;
+    animation: textGlow 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes textGlow {
+    0% { 
+      filter: blur(4px);
+      opacity: 0.5;
+    }
+    100% { 
+      filter: blur(8px);
+      opacity: 0.9;
+    }
+  }
+
+  .futuristic-theme .glitch-text {
+    position: relative;
+    animation: glitch 5s infinite;
+    text-shadow: 
+      0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+      0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+
+  @keyframes glitch {
+    0% {
+      text-shadow: 
+        0.05em 0 0 rgba(255, 0, 0, 0.75),
+        -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+        -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+    }
+    14% {
+      text-shadow: 
+        0.05em 0 0 rgba(255, 0, 0, 0.75),
+        -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+        -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+    }
+    15% {
+      text-shadow: 
+        -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+        0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+        -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+    }
+    49% {
+      text-shadow: 
+        -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+        0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+        -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+    }
+    50% {
+      text-shadow: 
+        0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+        0.05em 0 0 rgba(0, 255, 0, 0.75),
+        0 -0.05em 0 rgba(0, 0, 255, 0.75);
+    }
+    99% {
+      text-shadow: 
+        0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+        0.05em 0 0 rgba(0, 255, 0, 0.75),
+        0 -0.05em 0 rgba(0, 0, 255, 0.75);
+    }
+    100% {
+      text-shadow: 
+        -0.025em 0 0 rgba(255, 0, 0, 0.75),
+        -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
+        -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
+    }
+  }
+`;
 const FuturisticTheme = ({
   portfolio,
   experiences,
@@ -1036,6 +1180,51 @@ const FuturisticTheme = ({
       transition: { duration: 0.5 },
     },
   };
+
+  // Mouse pozisyonu için state
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [cursorParticles, setCursorParticles] = useState<
+    Array<{ id: number; x: number; y: number; opacity: number }>
+  >([]);
+  const [nextParticleId, setNextParticleId] = useState(0);
+
+  // Mouse hareketini izleme
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+
+      // Belirli bir olasılıkla parçacık ekle (her hareket için değil)
+      if (Math.random() > 0.7) {
+        const newParticle = {
+          id: nextParticleId,
+          x: e.clientX,
+          y: e.clientY,
+          opacity: 0.7,
+        };
+        setCursorParticles((prev) => [...prev, newParticle]);
+        setNextParticleId((prev) => prev + 1);
+      }
+    };
+
+    // Parçacıkları temizleme (zamanla kaybolacaklar)
+    const cleanupInterval = setInterval(() => {
+      setCursorParticles((prev) =>
+        prev
+          .map((particle) => ({
+            ...particle,
+            opacity: particle.opacity - 0.02,
+          }))
+          .filter((particle) => particle.opacity > 0)
+      );
+    }, 50);
+
+    // Mouse takibini devre dışı bırakıyoruz, noktalar istenmediği için
+    // window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      // window.removeEventListener("mousemove", handleMouseMove);
+      clearInterval(cleanupInterval);
+    };
+  }, [nextParticleId]);
 
   // Renk RGB değerlerini hesaplama fonksiyonu
   const hexToRgb = (hex: string) => {
@@ -1202,6 +1391,20 @@ const FuturisticTheme = ({
       </style>
 
       <div className={themeClass}>
+        {/* Cursor Particles Trail */}
+        {cursorParticles.map((particle) => (
+          <div
+            key={particle.id}
+            className="cursor-particle"
+            style={{
+              left: `${particle.x}px`,
+              top: `${particle.y}px`,
+              opacity: particle.opacity,
+              transform: `scale(${particle.opacity})`,
+            }}
+          />
+        ))}
+
         {/* Floating Particles */}
         <div className="particle particle-1"></div>
         <div className="particle particle-2"></div>
@@ -1209,7 +1412,6 @@ const FuturisticTheme = ({
         <div className="particle particle-4"></div>
         <div className="particle particle-5"></div>
 
-        {/* Hero Section */}
         <section className="section py-24">
           <div className="container mx-auto px-4">
             <motion.div
@@ -1220,6 +1422,7 @@ const FuturisticTheme = ({
             >
               <motion.h1
                 className="hero-text mb-6 text-5xl font-bold leading-tight"
+                data-text={portfolio.contents.hero_header}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
@@ -1227,7 +1430,9 @@ const FuturisticTheme = ({
                   delay: 0.2,
                 }}
               >
-                {portfolio.contents.hero_header}
+                <span className="glitch-text">
+                  {portfolio.contents.hero_header}
+                </span>
               </motion.h1>
 
               <motion.p
@@ -1238,6 +1443,39 @@ const FuturisticTheme = ({
               >
                 {portfolio.contents.hero_description}
               </motion.p>
+
+              {/* Interactive Cyber Button */}
+              <motion.div
+                className="mt-8 mb-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+              >
+                <motion.a
+                  href="#about"
+                  className="btn btn-primary"
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow:
+                      "0 0 30px rgba(var(--futuristic-accent-rgb), 0.8)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <motion.span
+                    animate={{
+                      opacity: [1, 0.7, 1],
+                      textShadow: [
+                        "0 0 5px rgba(var(--futuristic-accent-rgb), 0.8)",
+                        "0 0 15px rgba(var(--futuristic-accent-rgb), 1)",
+                        "0 0 5px rgba(var(--futuristic-accent-rgb), 0.8)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    Explore Interface
+                  </motion.span>
+                </motion.a>
+              </motion.div>
 
               <motion.div
                 className="mt-10 flex flex-wrap justify-center gap-4"
@@ -1257,16 +1495,60 @@ const FuturisticTheme = ({
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <button type="button" className="btn btn-icon hologram">
+                      <motion.button
+                        type="button"
+                        className="btn btn-icon hologram"
+                        whileHover={{
+                          scale: 1.2,
+                          boxShadow:
+                            "0 0 20px rgba(var(--futuristic-accent-rgb), 0.8)",
+                        }}
+                        whileTap={{ scale: 0.9 }}
+                      >
                         <span className="sr-only">{social.platform}</span>
                         {getPlatformIcon(social.platform)}
-                      </button>
+                      </motion.button>
                     </Link>
                   </motion.div>
                 ))}
               </motion.div>
             </motion.div>
           </div>
+
+          {/* Cyberpunk style scrolling indicator */}
+          <motion.div
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.5 }}
+          >
+            <motion.div
+              className="w-6 h-12 rounded-full border-2 border-[var(--futuristic-accent)] flex justify-center py-2"
+              animate={{
+                boxShadow: [
+                  "0 0 5px rgba(var(--futuristic-accent-rgb), 0.3)",
+                  "0 0 15px rgba(var(--futuristic-accent-rgb), 0.7)",
+                  "0 0 5px rgba(var(--futuristic-accent-rgb), 0.3)",
+                ],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <motion.div
+                className="w-1.5 h-3 bg-[var(--futuristic-accent)] rounded-full"
+                animate={{ y: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+            </motion.div>
+            <motion.p
+              className="mt-2 text-xs text-[var(--futuristic-accent)] font-mono"
+              animate={{
+                opacity: [0.5, 1, 0.5],
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              SCROLL DOWN
+            </motion.p>
+          </motion.div>
         </section>
 
         {/* About Section */}
@@ -1365,10 +1647,6 @@ const FuturisticTheme = ({
                             <SkillIcon size={36} />
                           </div>
                           <div className="skill-name">{skill.name}</div>
-                          <div
-                            className="skill-glow"
-                            style={{ background: skillColor }}
-                          ></div>
                         </motion.div>
                       );
                     })}
@@ -1602,10 +1880,10 @@ const FuturisticTheme = ({
                               href={project.repo_url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="btn btn-outline"
+                              className="btn btn-outline flex-nowrap"
                             >
                               <FaGithub className="mr-2 size-4" />
-                              Source Code
+                              Code
                             </Link>
                           )}
                           {project.live_url && (

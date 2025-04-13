@@ -101,7 +101,7 @@ const baseCreativeThemeStyles = `
   .creative-theme .card {
     background-color: var(--creative-card-bg);
     border-radius: 1.75rem;
-    box-shadow: 0 15px 35px rgba(114, 9, 183, 0.07), 0 5px 15px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 15px 35px color-mix(in srgb, var(--creative-accent) 7%, transparent), 0 5px 15px rgba(0, 0, 0, 0.04);
     padding: 2.25rem;
     transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     position: relative;
@@ -126,7 +126,7 @@ const baseCreativeThemeStyles = `
   
   .creative-theme .card:hover {
     transform: translateY(-12px) scale(1.03);
-    box-shadow: 0 25px 50px rgba(114, 9, 183, 0.18), 0 8px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 25px 50px color-mix(in srgb, var(--creative-accent) 18%, transparent), 0 8px 20px rgba(0, 0, 0, 0.06);
   }
   
   .creative-theme .card:hover::before {
@@ -167,26 +167,26 @@ const baseCreativeThemeStyles = `
   .creative-theme .btn-primary {
     background: var(--creative-gradient);
     color: white;
-    box-shadow: 0 8px 20px rgba(114, 9, 183, 0.3);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--creative-accent) 30%, transparent);
   }
   
   .creative-theme .btn-primary:hover {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 30px rgba(114, 9, 183, 0.45);
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--creative-accent) 45%, transparent);
   }
   
   .creative-theme .btn-outline {
     background-color: transparent;
     border: 2px solid var(--creative-accent);
     color: var(--creative-accent);
-    box-shadow: 0 5px 15px rgba(114, 9, 183, 0.08);
+    box-shadow: 0 5px 15px color-mix(in srgb, var(--creative-accent) 8%, transparent);
   }
   
   .creative-theme .btn-outline:hover {
     background-color: var(--creative-accent);
     color: white;
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 30px rgba(114, 9, 183, 0.3);
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--creative-accent) 30%, transparent);
   }
   
   .creative-theme .btn-icon {
@@ -203,7 +203,7 @@ const baseCreativeThemeStyles = `
     color: white;
     border-color: var(--creative-accent);
     transform: translateY(-5px) scale(1.1) rotate(8deg);
-    box-shadow: 0 12px 30px rgba(114, 9, 183, 0.3);
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--creative-accent) 30%, transparent);
   }
   
   .creative-theme .badge {
@@ -217,14 +217,14 @@ const baseCreativeThemeStyles = `
     color: var(--creative-accent);
     transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
     border: 2px solid transparent;
-    box-shadow: 0 4px 12px rgba(114, 9, 183, 0.15);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--creative-accent) 15%, transparent);
   }
   
   .creative-theme .badge:hover {
     background-color: var(--creative-accent);
     color: white;
     transform: translateY(-5px) scale(1.07);
-    box-shadow: 0 8px 20px rgba(114, 9, 183, 0.25);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--creative-accent) 25%, transparent);
   }
   
   .creative-theme .skill-badge {
@@ -332,7 +332,7 @@ const baseCreativeThemeStyles = `
   
   .creative-theme .project-card:hover {
     transform: translateY(-12px) scale(1.03);
-    box-shadow: 0 25px 50px rgba(114, 9, 183, 0.18);
+    box-shadow: 0 25px 50px color-mix(in srgb, var(--creative-accent) 18%, transparent);
   }
   
   .creative-theme .project-image {
@@ -352,13 +352,13 @@ const baseCreativeThemeStyles = `
     background: var(--creative-section-bg);
     color: var(--creative-accent);
     font-weight: 500;
-    box-shadow: 0 4px 12px rgba(114, 9, 183, 0.1);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--creative-accent) 10%, transparent);
     transition: all 0.3s ease;
   }
   
   .creative-theme .education-date:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(114, 9, 183, 0.15);
+    box-shadow: 0 6px 15px color-mix(in srgb, var(--creative-accent) 15%, transparent);
   }
   
   .creative-theme .experience-logo {
@@ -370,7 +370,7 @@ const baseCreativeThemeStyles = `
   }
   
   .creative-theme .card:hover .experience-logo {
-    box-shadow: 0 12px 30px rgba(114, 9, 183, 0.2);
+    box-shadow: 0 12px 30px color-mix(in srgb, var(--creative-accent) 20%, transparent);
     transform: scale(1.08) rotate(3deg);
   }
   
@@ -426,9 +426,9 @@ const baseCreativeThemeStyles = `
     left: 50%;
     width: 5px;
     background: linear-gradient(to bottom,
-      rgba(114, 9, 183, 0.1),
-      rgba(181, 23, 158, 0.8),
-      rgba(114, 9, 183, 0.1));
+      color-mix(in srgb, var(--creative-accent) 10%, transparent),
+      var(--creative-accent),
+      color-mix(in srgb, var(--creative-accent) 10%, transparent));
     border-radius: 10px;
     transform: translateX(-50%);
   }
@@ -494,7 +494,7 @@ const baseCreativeThemeStyles = `
     transform: translate(-50%, -50%);
     background: var(--creative-section-bg);
     border-radius: 50%;
-    box-shadow: 0 5px 15px rgba(114, 9, 183, 0.2);
+    box-shadow: 0 5px 15px color-mix(in srgb, var(--creative-accent) 20%, transparent);
     z-index: 4;
     display: flex;
     align-items: center;
@@ -527,7 +527,7 @@ const baseCreativeThemeStyles = `
 
   .creative-theme .timeline-item:hover .timeline-point {
     transform: translate(-50%, -50%) scale(1.1);
-    box-shadow: 0 10px 25px rgba(114, 9, 183, 0.35);
+    box-shadow: 0 10px 25px color-mix(in srgb, var(--creative-accent) 35%, transparent);
   }
 
   .creative-theme .timeline-item:hover .timeline-point::before {
@@ -552,7 +552,7 @@ const baseCreativeThemeStyles = `
     color: white;
     font-size: 0.85rem;
     font-weight: 500;
-    box-shadow: 0 5px 15px rgba(114, 9, 183, 0.25);
+    box-shadow: 0 5px 15px color-mix(in srgb, var(--creative-accent) 25%, transparent);
     white-space: nowrap;
     z-index: 5;
   }
@@ -573,7 +573,9 @@ const baseCreativeThemeStyles = `
     top: 30px;
     width: 30px;
     height: 3px;
-    background: linear-gradient(to right, rgba(114, 9, 183, 0.5), rgba(114, 9, 183, 0.1));
+    background: linear-gradient(to right, 
+      color-mix(in srgb, var(--creative-accent) 50%, transparent), 
+      color-mix(in srgb, var(--creative-accent) 10%, transparent));
     z-index: 3;
   }
 
@@ -583,7 +585,9 @@ const baseCreativeThemeStyles = `
 
   .creative-theme .timeline-item:nth-child(even) .timeline-content .card::after {
     left: -30px;
-    background: linear-gradient(to left, rgba(114, 9, 183, 0.5), rgba(114, 9, 183, 0.1));
+    background: linear-gradient(to left, 
+      color-mix(in srgb, var(--creative-accent) 50%, transparent), 
+      color-mix(in srgb, var(--creative-accent) 10%, transparent));
   }
 
   .creative-theme .timeline-deco {
@@ -641,7 +645,9 @@ const baseCreativeThemeStyles = `
     .creative-theme .timeline-item:nth-child(even) .timeline-content .card::after {
       left: -30px;
       right: auto;
-      background: linear-gradient(to left, rgba(114, 9, 183, 0.5), rgba(114, 9, 183, 0.1));
+      background: linear-gradient(to left, 
+        color-mix(in srgb, var(--creative-accent) 50%, transparent), 
+        color-mix(in srgb, var(--creative-accent) 10%, transparent));
     }
   }
 `;

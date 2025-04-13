@@ -150,11 +150,11 @@ function ThemeCard({ theme, isSelected, onSelect }: ThemeCardProps) {
             alt={theme.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="duration-3000 object-cover object-top transition-all ease-linear hover:object-bottom"
+            className="duration-[1s] object-cover object-top transition-all ease-linear hover:object-bottom"
           />
           <div className="absolute right-2 top-2 flex gap-1">
             <Badge
-              variant={isSelected ? "default" : "outline"}
+              variant={isSelected ? "default" : "secondary"}
               className="font-semibold"
             >
               {theme.name}
@@ -586,14 +586,6 @@ export default function AppearanceStep() {
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between">
               <span>Theme Preview</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsPreviewOpen(false)}
-                className="absolute right-4 top-4"
-              >
-                <XIcon className="size-4" />
-              </Button>
             </DialogTitle>
             <DialogDescription>
               Preview how your portfolio will look with the selected theme and

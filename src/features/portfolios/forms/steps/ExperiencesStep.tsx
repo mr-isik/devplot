@@ -331,7 +331,7 @@ export default function ExperiencesStep() {
                   <DynamicFormField
                     control={experienceForm.control}
                     name="start_date"
-                    label="Start Date *"
+                    label="Start Date (mm/dd/yyyy)"
                     placeholder="E.g.: 2020-01-01"
                     fieldType={FormFieldType.DATE}
                   />
@@ -363,7 +363,7 @@ export default function ExperiencesStep() {
                     <DynamicFormField
                       control={experienceForm.control}
                       name="end_date"
-                      label="End Date *"
+                      label="End Date (mm/dd/yyyy)"
                       fieldType={FormFieldType.DATE}
                       disabled={currentlyWorking}
                     />
