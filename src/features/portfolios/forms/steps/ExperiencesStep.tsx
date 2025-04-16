@@ -2,6 +2,7 @@
 
 import type { DropzoneOptions } from "react-dropzone";
 import type { z } from "zod";
+import { toast } from "sonner";
 import DynamicFormField, {
   FormFieldType,
 } from "@/components/globals/DynamicFormField";
@@ -24,8 +25,19 @@ import { BriefcaseIcon, PlusCircleIcon, Trash2Icon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import {
+  createExperience,
+  deleteExperience,
+  updateExperience,
+} from "@/actions/experiences/actions";
 
-type ExperienceFormValues = z.infer<typeof experienceSchema>;
+type ExperienceFormValues = z.infer<typeof experienceSchema> & {
+  id?: string;
+};
+
+interface ExperiencesStepProps {
+  portfolioId?: string;
+}
 
 const logoOptions: DropzoneOptions = {
   accept: { "image/*": [".jpg", ".jpeg", ".png", ".gif"] },
@@ -41,7 +53,9 @@ const employmentTypeOptions = [
   { value: "freelance", label: "Freelance" },
 ];
 
-export default function ExperiencesStep() {
+export default function ExperiencesStep({
+  portfolioId,
+}: ExperiencesStepProps = {}) {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -49,6 +63,7 @@ export default function ExperiencesStep() {
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const experienceForm = useForm<ExperienceFormValues>({
     resolver: zodResolver(experienceSchema),
@@ -91,18 +106,104 @@ export default function ExperiencesStep() {
   };
 
   const handleAddExperience = async (data: ExperienceFormValues) => {
-    const formattedData = {
-      ...data,
-      employment_type: data.employment_type || undefined,
-    };
+    setIsSubmitting(true);
 
-    if (editingIndex !== null) {
-      remove(editingIndex);
-      append(formattedData);
-    } else {
-      append(formattedData);
+    try {
+      // Edit workflow: Existing experience update with id
+      if (editingIndex !== null && data.id && portfolioId) {
+        // Database update via server action
+        const { error } = await updateExperience({
+          id: data.id,
+          role: data.role,
+          company: data.company,
+          employment_type: data.employment_type,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          description: data.description,
+          // logo update is not included here for simplicity
+        });
+
+        if (error) {
+          throw new Error(`Failed to update experience: ${error.message}`);
+        }
+
+        // Update form state
+        remove(editingIndex);
+        append(data);
+        toast.success("Experience updated successfully");
+      }
+      // Create workflow: New experience with portfolioId
+      else if (portfolioId) {
+        // Create via server action
+        const { data: newExperience, error } = await createExperience(
+          {
+            role: data.role,
+            company: data.company,
+            employment_type: data.employment_type,
+            start_date: data.start_date,
+            end_date: data.end_date,
+            description: data.description,
+            logo: data.logo || null,
+          },
+          portfolioId
+        );
+
+        if (error) {
+          throw new Error(`Failed to add experience: ${error.message}`);
+        }
+
+        // Update form state with backend id
+        if (newExperience && newExperience[0]) {
+          append({
+            ...data,
+            id: newExperience[0]?.id || data.id,
+          });
+        } else {
+          append(data);
+        }
+        toast.success("Experience added successfully");
+      }
+      // Create workflow: Just form state update
+      else {
+        if (editingIndex !== null) {
+          remove(editingIndex);
+        }
+        append(data);
+        toast.success(
+          editingIndex !== null ? "Experience updated" : "Experience added"
+        );
+      }
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error saving experience:", error);
+      toast.error("Failed to save experience");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsDialogOpen(false);
+  };
+
+  const handleRemoveExperience = async (index: number, id?: string) => {
+    setIsSubmitting(true);
+    try {
+      // If id and portfolioId exist, delete from database
+      if (id && portfolioId) {
+        const { error } = await deleteExperience(id);
+
+        if (error) {
+          throw new Error(`Failed to delete experience: ${error.message}`);
+        }
+        toast.success("Experience removed from database");
+      }
+
+      // Always remove from form state
+      remove(index);
+      toast.success("Experience removed");
+    } catch (error) {
+      console.error("Error removing experience:", error);
+      toast.error("Failed to remove experience");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const currentlyWorking = experienceForm.watch("end_date") === "Present";
@@ -169,7 +270,9 @@ export default function ExperiencesStep() {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => remove(index)}
+                                onClick={() =>
+                                  handleRemoveExperience(index, experience.id)
+                                }
                                 className="size-8 text-muted-foreground hover:text-destructive"
                               >
                                 <Trash2Icon className="size-4" />
@@ -183,10 +286,18 @@ export default function ExperiencesStep() {
                             {experience.logo && (
                               <div className="relative size-10 rounded-md border">
                                 <Image
-                                  src={URL.createObjectURL(experience.logo[0]!)}
+                                  src={
+                                    typeof experience.logo === "string"
+                                      ? experience.logo
+                                      : experience.logo[0] instanceof File
+                                        ? URL.createObjectURL(
+                                            experience.logo[0]
+                                          )
+                                        : ""
+                                  }
                                   alt={experience.company}
                                   fill
-                                  className="object-cover"
+                                  className="object-cover rounded-md"
                                 />
                               </div>
                             )}
@@ -237,7 +348,9 @@ export default function ExperiencesStep() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => remove(index)}
+                            onClick={() =>
+                              handleRemoveExperience(index, experience.id)
+                            }
                             className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
                           >
                             <Trash2Icon className="mr-1 size-3" />

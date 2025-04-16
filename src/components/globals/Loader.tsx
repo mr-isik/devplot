@@ -1,29 +1,25 @@
-import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
-import React from 'react';
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import React from "react";
 
 type Props = {
   state: boolean;
   className?: string;
-  children: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
+  children?: React.ReactNode;
+  size?: "sm" | "md" | "lg";
 };
 
-const Loader = ({ state, children, className, size = 'md' }: Props) => {
+const Loader = ({ state, children, className, size = "md" }: Props) => {
   if (!state) {
     return children;
   }
 
-  const sizeClass
-    = size === 'sm'
-      ? 'size-4'
-      : size === 'lg'
-        ? 'size-8'
-        : 'size-6';
+  const sizeClass =
+    size === "sm" ? "size-4" : size === "lg" ? "size-8" : "size-6";
 
   return (
-    <div className={cn('flex items-center justify-center', className)}>
+    <div className={cn("flex items-center justify-center", className)}>
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -35,7 +31,7 @@ const Loader = ({ state, children, className, size = 'md' }: Props) => {
           transition={{
             repeat: Infinity,
             duration: 1,
-            ease: 'linear',
+            ease: "linear",
           }}
         >
           <Loader2 className={cn(sizeClass)} />

@@ -1,6 +1,7 @@
 "use client";
 
 import type { z } from "zod";
+import { toast } from "sonner";
 import DynamicFormField, {
   FormFieldType,
 } from "@/components/globals/DynamicFormField";
@@ -21,16 +22,29 @@ import { format } from "date-fns";
 import { GraduationCapIcon, PlusCircleIcon, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import {
+  createEducation,
+  deleteEducation,
+  updateEducation,
+} from "@/actions/educations/actions";
 
-type EducationFormValues = z.infer<typeof educationSchema>;
+type EducationFormValues = z.infer<typeof educationSchema> & {
+  id?: string;
+};
 
-export default function EducationsStep() {
+interface EducationsStepProps {
+  portfolioId?: string;
+}
+
+export default function EducationsStep({
+  portfolioId,
+}: EducationsStepProps = {}) {
   const { control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: "educations",
   });
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -49,6 +63,7 @@ export default function EducationsStep() {
     if (index !== undefined && index >= 0 && index < fields.length) {
       const education = fields[index] as unknown as EducationFormValues;
       educationForm.reset({
+        id: education.id,
         school: education.school || "",
         degree: education.degree || "",
         field: education.field || "",
@@ -58,6 +73,7 @@ export default function EducationsStep() {
       setEditingIndex(index);
     } else {
       educationForm.reset({
+        id: undefined,
         school: "",
         degree: "",
         field: "",
@@ -69,14 +85,90 @@ export default function EducationsStep() {
     setIsDialogOpen(true);
   };
 
-  const handleAddEducation = (data: EducationFormValues) => {
-    if (editingIndex !== null) {
-      remove(editingIndex);
-      append(data);
-    } else {
-      append(data);
+  const handleAddEducation = async (data: EducationFormValues) => {
+    setIsSubmitting(true);
+    try {
+      if (editingIndex !== null && data.id && portfolioId) {
+        const { error } = await updateEducation({
+          id: data.id,
+          school: data.school,
+          degree: data.degree,
+          field: data.field,
+          start_date: data.start_date,
+          end_date: data.end_date,
+        });
+
+        if (error) {
+          throw new Error(`Failed to update education: ${error.message}`);
+        }
+
+        remove(editingIndex);
+        append(data);
+        toast.success("Education updated successfully");
+      } else if (portfolioId) {
+        const { data: newEducation, error } = await createEducation(
+          {
+            school: data.school,
+            degree: data.degree,
+            field: data.field,
+            start_date: data.start_date,
+            end_date: data.end_date,
+          },
+          portfolioId
+        );
+
+        if (error) {
+          throw new Error(`Failed to add education: ${error.message}`);
+        }
+
+        if (newEducation && newEducation[0]) {
+          append({
+            ...data,
+            /* @ts-ignore */
+            id: newEducation[0].id,
+          });
+        } else {
+          append(data);
+        }
+        toast.success("Education added successfully");
+      } else {
+        if (editingIndex !== null) {
+          remove(editingIndex);
+        }
+        append(data);
+        toast.success(
+          editingIndex !== null ? "Education updated" : "Education added"
+        );
+      }
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error saving education:", error);
+      toast.error("Failed to save education");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsDialogOpen(false);
+  };
+
+  const handleRemoveEducation = async (index: number, id?: string) => {
+    setIsSubmitting(true);
+    try {
+      if (id && portfolioId) {
+        const { error } = await deleteEducation(id);
+
+        if (error) {
+          throw new Error(`Failed to delete education: ${error.message}`);
+        }
+        toast.success("Education removed from database");
+      }
+
+      remove(index);
+      toast.success("Education removed");
+    } catch (error) {
+      console.error("Error removing education:", error);
+      toast.error("Failed to remove education");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const currentlyStudying = educationForm.watch("end_date") === "Present";
@@ -104,7 +196,6 @@ export default function EducationsStep() {
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Mobile header - only visible on mobile */}
               <div className="mb-4 flex items-center justify-between sm:hidden">
                 <h2 className="text-lg font-semibold">Education</h2>
                 <Button
@@ -112,13 +203,13 @@ export default function EducationsStep() {
                   variant="outline"
                   onClick={() => resetAndOpenDialog()}
                   className="gap-1"
+                  disabled={isSubmitting}
                 >
                   <PlusCircleIcon className="size-4" />
                   Add
                 </Button>
               </div>
 
-              {/* Education cards list */}
               <div className="space-y-3">
                 {fields.map((field, index) => {
                   const education = field as unknown as EducationFormValues;
@@ -137,14 +228,18 @@ export default function EducationsStep() {
                                   size="sm"
                                   onClick={() => resetAndOpenDialog(index)}
                                   className="h-8 px-2"
+                                  disabled={isSubmitting}
                                 >
                                   Edit
                                 </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => remove(index)}
+                                  onClick={() =>
+                                    handleRemoveEducation(index, education.id)
+                                  }
                                   className="size-8 text-muted-foreground hover:text-destructive"
+                                  disabled={isSubmitting}
                                 >
                                   <Trash2Icon className="size-4" />
                                 </Button>
@@ -186,21 +281,24 @@ export default function EducationsStep() {
                             </p>
                           </div>
 
-                          {/* Mobile actions - Only visible on mobile */}
                           <div className="mt-3 flex justify-end border-t pt-2 sm:hidden">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => resetAndOpenDialog(index)}
                               className="h-8 px-3 text-xs"
+                              disabled={isSubmitting}
                             >
                               Edit
                             </Button>
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => remove(index)}
+                              onClick={() =>
+                                handleRemoveEducation(index, education.id)
+                              }
                               className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
+                              disabled={isSubmitting}
                             >
                               <Trash2Icon className="mr-1 size-3" />
                               Remove
@@ -213,11 +311,11 @@ export default function EducationsStep() {
                 })}
               </div>
 
-              {/* Desktop add button - only visible on desktop */}
               <div className="mt-6 hidden sm:block">
                 <Button
                   onClick={() => resetAndOpenDialog()}
                   className="gap-1.5"
+                  disabled={isSubmitting}
                 >
                   <PlusCircleIcon className="size-4" />
                   Add Education
@@ -227,7 +325,6 @@ export default function EducationsStep() {
           )}
         </div>
 
-        {/* Count indicator for educations */}
         {fields.length > 0 && (
           <div className="mt-4 hidden border-t px-6 py-4 sm:block">
             <p className="text-sm text-muted-foreground">
@@ -238,7 +335,6 @@ export default function EducationsStep() {
         )}
       </div>
 
-      {/* Dialog for adding/editing educations */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <form onSubmit={educationForm.handleSubmit(handleAddEducation)}>
@@ -324,17 +420,17 @@ export default function EducationsStep() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
+                disabled={isSubmitting}
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                onClick={() => {
-                  // Tüm form alanlarının doğrulamasını tetikle
-                  educationForm.trigger();
-                }}
-              >
-                {editingIndex !== null ? "Update" : "Add"} Education
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting
+                  ? "Saving..."
+                  : editingIndex !== null
+                    ? "Update"
+                    : "Add"}{" "}
+                Education
               </Button>
             </DialogFooter>
           </form>

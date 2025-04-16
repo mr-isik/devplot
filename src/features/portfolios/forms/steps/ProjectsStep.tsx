@@ -2,6 +2,7 @@
 
 import type { DropzoneOptions } from "react-dropzone";
 import type { z } from "zod";
+import { toast } from "sonner";
 import DynamicFormField, {
   FormFieldType,
 } from "@/components/globals/DynamicFormField";
@@ -27,8 +28,19 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import {
+  createProject,
+  deleteProject,
+  updateProject,
+} from "@/actions/projects/actions";
 
-type ProjectFormValues = z.infer<typeof projectSchema>;
+type ProjectFormValues = z.infer<typeof projectSchema> & {
+  id?: string;
+};
+
+interface ProjectsStepProps {
+  portfolioId?: string;
+}
 
 const imageOptions: DropzoneOptions = {
   accept: { "image/*": [".jpg", ".jpeg", ".png", ".gif"] },
@@ -37,7 +49,7 @@ const imageOptions: DropzoneOptions = {
   maxSize: 1024 * 1024 * 4, // 4MB
 };
 
-export default function ProjectsStep() {
+export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -46,6 +58,7 @@ export default function ProjectsStep() {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const projectForm = useForm<ProjectFormValues>({
     resolver: zodResolver(projectSchema),
@@ -61,6 +74,7 @@ export default function ProjectsStep() {
     if (index !== undefined && index >= 0 && index < fields.length) {
       const project = fields[index] as unknown as ProjectFormValues;
       projectForm.reset({
+        id: project.id,
         title: project.title || "",
         description: project.description || "",
         repo_url: project.repo_url || "",
@@ -70,6 +84,7 @@ export default function ProjectsStep() {
       setEditingIndex(index);
     } else {
       projectForm.reset({
+        id: undefined,
         title: "",
         description: "",
         repo_url: "",
@@ -81,14 +96,92 @@ export default function ProjectsStep() {
     setIsDialogOpen(true);
   };
 
-  const handleAddProject = (data: ProjectFormValues) => {
-    if (editingIndex !== null) {
-      remove(editingIndex);
-      append(data);
-    } else {
-      append(data);
+  const handleAddProject = async (data: ProjectFormValues) => {
+    setIsSubmitting(true);
+    try {
+      // Edit workflow: Update existing project in database
+      if (editingIndex !== null && data.id && portfolioId) {
+        const { error } = await updateProject({
+          id: data.id,
+          title: data.title,
+          description: data.description,
+          repo_url: data.repo_url,
+          live_url: data.live_url,
+          // Image update not included for simplicity
+        });
+
+        if (error) {
+          throw new Error(`Failed to update project: ${error.message}`);
+        }
+
+        // Update form state
+        remove(editingIndex);
+        append(data);
+        toast.success("Project updated successfully");
+      }
+      // Create workflow: Add new project to database
+      else if (portfolioId) {
+        const { data: newProject, error } = await createProject(
+          data,
+          portfolioId
+        );
+
+        if (error) {
+          throw new Error(`Failed to add project: ${error.message}`);
+        }
+
+        // Update form state with backend ID
+        if (newProject && newProject[0]) {
+          append({
+            ...data,
+            id: newProject[0].id,
+          });
+        } else {
+          append(data);
+        }
+        toast.success("Project added successfully");
+      }
+      // Only update form state (no database)
+      else {
+        if (editingIndex !== null) {
+          remove(editingIndex);
+        }
+        append(data);
+        toast.success(
+          editingIndex !== null ? "Project updated" : "Project added"
+        );
+      }
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error("Error saving project:", error);
+      toast.error("Failed to save project");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsDialogOpen(false);
+  };
+
+  const handleRemoveProject = async (index: number, id?: string) => {
+    setIsSubmitting(true);
+    try {
+      // If project exists in database, delete it
+      if (id && portfolioId) {
+        const { error } = await deleteProject(id);
+
+        if (error) {
+          throw new Error(`Failed to delete project: ${error.message}`);
+        }
+        toast.success("Project removed from database");
+      }
+
+      // Always remove from form state
+      remove(index);
+      toast.success("Project removed");
+    } catch (error) {
+      console.error("Error removing project:", error);
+      toast.error("Failed to remove project");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -108,7 +201,11 @@ export default function ProjectsStep() {
                 expertise. Add projects you've worked on to impress potential
                 employers or clients.
               </p>
-              <Button onClick={() => resetAndOpenDialog()} className="gap-1.5">
+              <Button
+                onClick={() => resetAndOpenDialog()}
+                className="gap-1.5"
+                disabled={isSubmitting}
+              >
                 <PlusCircleIcon className="size-4" />
                 Add Your First Project
               </Button>
@@ -123,6 +220,7 @@ export default function ProjectsStep() {
                   variant="outline"
                   onClick={() => resetAndOpenDialog()}
                   className="gap-1"
+                  disabled={isSubmitting}
                 >
                   <PlusCircleIcon className="size-4" />
                   Add
@@ -148,14 +246,18 @@ export default function ProjectsStep() {
                                   size="sm"
                                   onClick={() => resetAndOpenDialog(index)}
                                   className="h-8 px-2"
+                                  disabled={isSubmitting}
                                 >
                                   Edit
                                 </Button>
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => remove(index)}
+                                  onClick={() =>
+                                    handleRemoveProject(index, project.id)
+                                  }
                                   className="size-8 text-muted-foreground hover:text-destructive"
+                                  disabled={isSubmitting}
                                 >
                                   <Trash2Icon className="size-4" />
                                 </Button>
@@ -214,14 +316,18 @@ export default function ProjectsStep() {
                               size="sm"
                               onClick={() => resetAndOpenDialog(index)}
                               className="h-8 px-3 text-xs"
+                              disabled={isSubmitting}
                             >
                               Edit
                             </Button>
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => remove(index)}
+                              onClick={() =>
+                                handleRemoveProject(index, project.id)
+                              }
                               className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
+                              disabled={isSubmitting}
                             >
                               <Trash2Icon className="mr-1 size-3" />
                               Remove
@@ -239,6 +345,7 @@ export default function ProjectsStep() {
                 <Button
                   onClick={() => resetAndOpenDialog()}
                   className="gap-1.5"
+                  disabled={isSubmitting}
                 >
                   <PlusCircleIcon className="size-4" />
                   Add Project
@@ -319,40 +426,18 @@ export default function ProjectsStep() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
+                disabled={isSubmitting}
               >
                 Cancel
               </Button>
-              <Button type="submit">Save</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting
+                  ? "Saving..."
+                  : editingIndex !== null
+                    ? "Update"
+                    : "Save"}
+              </Button>
             </DialogFooter>
-
-            {/* Errors */}
-            <div className="mt-4">
-              {projectForm.formState.errors.title && (
-                <span className="text-destructive">
-                  {projectForm.formState.errors.title?.message}
-                </span>
-              )}
-              {projectForm.formState.errors.image && (
-                <span className="text-destructive">
-                  {projectForm.formState.errors.image?.message}
-                </span>
-              )}
-              {projectForm.formState.errors.description && (
-                <span className="text-destructive">
-                  {projectForm.formState.errors.description?.message}
-                </span>
-              )}
-              {projectForm.formState.errors.repo_url && (
-                <span className="text-destructive">
-                  {projectForm.formState.errors.repo_url?.message}
-                </span>
-              )}
-              {projectForm.formState.errors.live_url && (
-                <span className="text-destructive">
-                  {projectForm.formState.errors.live_url?.message}
-                </span>
-              )}
-            </div>
           </form>
         </DialogContent>
       </Dialog>

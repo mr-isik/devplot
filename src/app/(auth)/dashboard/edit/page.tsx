@@ -1,5 +1,6 @@
-import { getPortfolioByUserId } from "@/actions/portfolios/actions";
+import { getFullPortfolio, getPortfolio } from "@/actions/portfolios/actions";
 import { getUser } from "@/actions/users/actions";
+import EditPortfolioForm from "@/features/portfolios/forms/EditPortfolioForm";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata() {
@@ -12,9 +13,20 @@ export async function generateMetadata() {
 export default async function EditPortfolioPage() {
   const { userData } = await getUser();
 
-  const { data: portfolios } = await getPortfolioByUserId(userData[0].id);
+  if (!userData || userData.length === 0) {
+    redirect("/login");
+  }
+
+  const { data: portfolios } = await getPortfolio(userData[0].id);
 
   if (!portfolios || portfolios.length === 0) {
+    redirect(`/dashboard/create`);
+  }
+
+  const username = userData[0].username;
+  const { data: fullPortfolio, error } = await getFullPortfolio(username);
+
+  if (error || !fullPortfolio || fullPortfolio.length === 0) {
     redirect(`/dashboard/create`);
   }
 
@@ -25,13 +37,10 @@ export default async function EditPortfolioPage() {
         <p className="text-muted-foreground">Update your portfolio details</p>
       </div>
 
-      <div className="h-[calc(100vh-250px)]">
-        <div className="flex h-full items-center justify-center">
-          <p className="text-xl text-muted-foreground">
-            Portfolio edit page is under construction
-          </p>
-        </div>
-      </div>
+      <EditPortfolioForm
+        portfolioData={fullPortfolio[0]}
+        portfolioId={portfolios[0].id}
+      />
     </div>
   );
 }

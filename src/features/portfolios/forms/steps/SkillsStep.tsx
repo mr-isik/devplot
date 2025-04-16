@@ -37,8 +37,22 @@ import * as React from "react";
 import { useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { createSkill, deleteSkill } from "@/actions/skills/actions";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-type SkillFormValues = z.infer<typeof skillSchema>;
+type SkillFormValues = z.infer<typeof skillSchema> & {
+  id?: string;
+};
+
+interface SkillsStepProps {
+  portfolioId?: string;
+}
 
 // Top skills to show in quick-add section
 const TOP_SKILLS = [
@@ -57,7 +71,14 @@ const TOP_SKILLS = [
   "Docker",
 ];
 
-export default function SkillsStep() {
+const SKILL_LEVELS = [
+  { value: "beginner", label: "Beginner" },
+  { value: "intermediate", label: "Intermediate" },
+  { value: "advanced", label: "Advanced" },
+  { value: "expert", label: "Expert" },
+];
+
+export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -82,11 +103,13 @@ export default function SkillsStep() {
     if (index !== undefined && index >= 0 && index < fields.length) {
       const skill = fields[index] as unknown as SkillFormValues;
       skillForm.reset({
+        id: skill.id,
         name: skill.name || "",
       });
       setEditingIndex(index);
     } else {
       skillForm.reset({
+        id: undefined,
         name: "",
       });
       setEditingIndex(null);
@@ -104,34 +127,42 @@ export default function SkillsStep() {
   };
 
   const handleAddSkill = async (data: SkillFormValues) => {
+    setIsSubmitting(true);
     try {
-      setIsSubmitting(true);
+      // Create workflow: Add new skill to database
+      if (portfolioId) {
+        const { data: newSkill, error } = await createSkill({
+          name: data.name,
+          portfolio_id: portfolioId,
+        });
 
-      const isValid = await skillForm.trigger();
-      if (!isValid) {
-        return;
+        if (error) {
+          throw new Error(`Failed to add skill: ${error.message}`);
+        }
+
+        // Update form state with backend ID
+        if (newSkill && newSkill[0]) {
+          append({
+            ...data,
+            id: newSkill[0].id,
+          });
+        } else {
+          append(data);
+        }
+        toast.success("Skill added successfully");
       }
-
-      // Check for duplicates
-      if (isSkillAlreadyAdded(data.name)) {
-        toast.error(`Skill "${data.name}" is already added`);
-        return;
-      }
-
-      if (editingIndex !== null) {
-        remove(editingIndex);
+      // Only update form state (no database)
+      else {
+        if (editingIndex !== null) {
+          remove(editingIndex);
+        }
         append(data);
-      } else {
-        append(data);
+        toast.success(editingIndex !== null ? "Skill updated" : "Skill added");
       }
-
       setIsDialogOpen(false);
-      toast.success(editingIndex !== null ? "Skill updated" : "Skill added");
-
-      skillForm.reset();
     } catch (error) {
-      console.error("Error adding skill:", error);
-      toast.error("Failed to add skill");
+      console.error("Error saving skill:", error);
+      toast.error("Failed to save skill");
     } finally {
       setIsSubmitting(false);
     }
@@ -148,13 +179,27 @@ export default function SkillsStep() {
     toast.success(`Added ${skillName}`);
   };
 
-  const handleRemoveSkill = async (index: number) => {
+  const handleRemoveSkill = async (index: number, id?: string) => {
+    setIsSubmitting(true);
     try {
+      // If skill exists in database, delete it
+      if (id && portfolioId) {
+        const { error } = await deleteSkill(id);
+
+        if (error) {
+          throw new Error(`Failed to delete skill: ${error.message}`);
+        }
+        toast.success("Skill removed from database");
+      }
+
+      // Always remove from form state
       remove(index);
       toast.success("Skill removed");
     } catch (error) {
       console.error("Error removing skill:", error);
       toast.error("Failed to remove skill");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -249,37 +294,53 @@ export default function SkillsStep() {
               </div>
 
               {/* Skills list */}
-              <div className="flex flex-wrap gap-2">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {fields.map((field, index) => {
                   const skill = field as unknown as SkillFormValues;
                   const SkillIcon = getSkillIcon(skill.name);
                   const skillColor = getSkillColor(skill.name);
 
                   return (
-                    <Badge
-                      key={field.id}
-                      variant="secondary"
-                      className="group flex items-center gap-1.5 px-3 py-1.5 hover:bg-secondary"
-                    >
-                      <div
-                        className="flex size-5 items-center justify-center rounded-full"
-                        style={{ backgroundColor: `${skillColor}20` }}
-                      >
-                        <SkillIcon
-                          className="size-3"
-                          style={{ color: skillColor }}
-                        />
+                    <div key={field.id} className="mobile-card group relative">
+                      <div className="mobile-card-inner rounded-lg border bg-card p-4 shadow-sm transition-all hover:shadow-md sm:bg-transparent">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-medium">{skill.name}</h4>
+                            </div>
+                            <div className="shrink-0">
+                              <div className="hidden items-center gap-1.5 sm:flex">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() =>
+                                    handleRemoveSkill(index, skill.id)
+                                  }
+                                  className="size-8 text-muted-foreground hover:text-destructive"
+                                  disabled={isSubmitting}
+                                >
+                                  <TrashIcon className="size-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Mobile actions - Only visible on mobile */}
+                          <div className="mt-3 flex justify-end border-t pt-2 sm:hidden">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleRemoveSkill(index, skill.id)}
+                              className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
+                              disabled={isSubmitting}
+                            >
+                              <TrashIcon className="mr-1 size-3" />
+                              Remove
+                            </Button>
+                          </div>
+                        </div>
                       </div>
-                      <span className="font-medium">{skill.name}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="ml-1 size-4 rounded-full p-0 opacity-0 group-hover:opacity-100"
-                        onClick={() => handleRemoveSkill(index)}
-                      >
-                        <TrashIcon className="size-3" />
-                      </Button>
-                    </Badge>
+                    </div>
                   );
                 })}
               </div>
