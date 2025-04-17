@@ -1,31 +1,39 @@
-'use server';
+"use server";
 
-import type { Skill } from '@/features/skills/types';
-import { createClient } from '@/utils/supabase/server';
-import { revalidatePath } from 'next/cache';
+import { skillSchema } from "@/lib/validations/portfolio";
+import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-export const createSkill = async (skill: Partial<Skill>) => {
+export const createSkill = async (skill: z.infer<typeof skillSchema>) => {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('skills').insert(skill).select();
+  const { data, error } = await supabase.from("skills").insert(skill).select();
 
-  revalidatePath('/');
+  revalidatePath("/");
   return { data, error };
 };
 
 export const getSkills = async (portfolioId: string) => {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('skills').select('*').eq('portfolio_id', portfolioId);
+  const { data, error } = await supabase
+    .from("skills")
+    .select("*")
+    .eq("portfolio_id", portfolioId);
 
   return { data, error };
 };
 
-export const deleteSkill = async (id: string) => {
+export const deleteSkill = async (id: number) => {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('skills').delete().eq('id', id).select();
+  const { data, error } = await supabase
+    .from("skills")
+    .delete()
+    .eq("id", id)
+    .select();
 
-  revalidatePath('/');
+  revalidatePath("/");
   return { data, error };
 };

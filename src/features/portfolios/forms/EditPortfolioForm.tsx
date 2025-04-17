@@ -30,9 +30,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { deletePortfolio, updatePortfolio } from "@/actions/portfolios/actions";
-import { updateContent } from "@/actions/contents/action";
-import { updateOption } from "@/actions/options/actions";
+import { deletePortfolio } from "@/actions/portfolios/actions";
 import {
   BriefcaseIcon,
   EyeIcon,
@@ -53,7 +51,6 @@ import ProjectsStep from "./steps/ProjectsStep";
 import PublishStep from "./steps/PublishStep";
 import SkillsStep from "./steps/SkillsStep";
 import SocialsStep from "./steps/SocialsStep";
-import SaveChangesBar from "@/components/globals/SaveChangesBar";
 import Loader from "@/components/globals/Loader";
 
 interface EditPortfolioFormProps {
@@ -70,7 +67,28 @@ export default function EditPortfolioForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const options = JSON.parse(portfolioData.options[0].options);
+  // Safely parse options with fallback to default values
+  let parsedOptions = {
+    theme: "minimal",
+    colorTheme: "light",
+    colors: ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"],
+    font: "inter",
+  };
+
+  try {
+    if (portfolioData.options && portfolioData.options.length > 0) {
+      const optionsStr = portfolioData.options[0].options;
+      if (optionsStr) {
+        const parsed = JSON.parse(optionsStr);
+        parsedOptions = {
+          ...parsedOptions,
+          ...parsed,
+        };
+      }
+    }
+  } catch (error) {
+    console.error("Error parsing options:", error);
+  }
 
   // Initialize the form with existing portfolio data
   const form = useForm<PortfolioFormValues>({
@@ -80,16 +98,10 @@ export default function EditPortfolioForm({
         is_published: portfolioData.is_published || false,
       },
       options: {
-        theme: options?.theme || "minimal",
-        colorTheme: options?.color_theme || "light",
-        colors: options?.colors || [
-          "#FFFFFF",
-          "#F5F5F5",
-          "#E5E5E5",
-          "#000000",
-          "#3B82F6",
-        ],
-        font: options?.font || "inter",
+        theme: parsedOptions.theme,
+        colorTheme: parsedOptions.colorTheme,
+        colors: parsedOptions.colors,
+        font: parsedOptions.font,
       },
       content: {
         hero_header: portfolioData.contents?.hero_header || "",
@@ -98,18 +110,33 @@ export default function EditPortfolioForm({
         meta_description: portfolioData.contents?.meta_description || "",
         about_text: portfolioData.contents?.about_text || "",
       },
-      experiences: portfolioData.experiences || [],
-      educations: portfolioData.educations || [],
-      projects: portfolioData.projects || [],
-      skills: portfolioData.skills || [],
-      socials: portfolioData.socials || [],
+      experiences:
+        (portfolioData.experiences || []).map((experience: any) => ({
+          ...experience,
+          item_id: experience.id,
+        })) || [],
+      educations:
+        (portfolioData.educations || []).map((education: any) => ({
+          ...education,
+          item_id: education.id,
+        })) || [],
+      projects:
+        (portfolioData.projects || []).map((project: any) => ({
+          ...project,
+          item_id: project.id,
+        })) || [],
+      skills:
+        (portfolioData.skills || []).map((skill: any) => ({
+          ...skill,
+          item_id: skill.id,
+        })) || [],
+      socials:
+        (portfolioData.socials || []).map((social: any) => ({
+          ...social,
+          item_id: social.id,
+        })) || [],
     },
   });
-
-  // Track which sections are dirty (have unsaved changes)
-  const isBasicInfoDirty = form.formState.dirtyFields.content !== undefined;
-  const isAppearanceDirty = form.formState.dirtyFields.options !== undefined;
-  const isPublishDirty = form.formState.dirtyFields.portfolio !== undefined;
 
   // Steps configuration
   const STEPS = [
@@ -118,24 +145,21 @@ export default function EditPortfolioForm({
       title: "Basic Information",
       description: "Main details and SEO",
       icon: <InfoIcon className="mr-2 size-4" />,
-      component: <BasicInfoStep />,
-      isDirty: isBasicInfoDirty,
+      component: <BasicInfoStep portfolioId={portfolioId} />,
     },
     {
       id: "appearance",
       title: "Appearance",
       description: "Theme, colors and typography",
       icon: <Paintbrush2Icon className="mr-2 size-4" />,
-      component: <AppearanceStep />,
-      isDirty: isAppearanceDirty,
+      component: <AppearanceStep portfolioId={portfolioId} />,
     },
     {
       id: "experiences",
       title: "Experience",
       description: "Work history",
       icon: <BriefcaseIcon className="mr-2 size-4" />,
-      component: <ExperiencesStep portfolioId={portfolioData.id} />,
-      isDirty: false,
+      component: <ExperiencesStep portfolioId={portfolioId} />,
     },
     {
       id: "educations",
@@ -143,31 +167,27 @@ export default function EditPortfolioForm({
       description: "Academic background",
       icon: <GraduationCapIcon className="mr-2 size-4" />,
       component: <EducationsStep portfolioId={portfolioId} />,
-      isDirty: false,
     },
     {
       id: "projects",
       title: "Projects",
       description: "Your portfolio work",
       icon: <RocketIcon className="mr-2 size-4" />,
-      component: <ProjectsStep />,
-      isDirty: false,
+      component: <ProjectsStep portfolioId={portfolioId} />,
     },
     {
       id: "skills",
       title: "Skills",
       description: "Showcase your expertise",
       icon: <WrenchIcon className="mr-2 size-4" />,
-      component: <SkillsStep />,
-      isDirty: false,
+      component: <SkillsStep portfolioId={portfolioId} />,
     },
     {
       id: "socials",
       title: "Social Media",
       description: "Connect online",
       icon: <LinkIcon className="mr-2 size-4" />,
-      component: <SocialsStep />,
-      isDirty: false,
+      component: <SocialsStep portfolioId={portfolioId} />,
     },
     {
       id: "publish",
@@ -175,103 +195,8 @@ export default function EditPortfolioForm({
       description: "Review and publish",
       icon: <EyeIcon className="mr-2 size-4" />,
       component: <PublishStep preview={false} portfolioId={portfolioId} />,
-      isDirty: isPublishDirty,
     },
   ];
-
-  // Save functions for different sections
-  const saveBasicInfo = async () => {
-    setIsSubmitting(true);
-    try {
-      const formValues = form.getValues();
-      const contentData = formValues.content;
-
-      // Update content
-      const { error: contentError } = await updateContent(
-        {
-          hero_header: contentData.hero_header,
-          hero_description: contentData.hero_description,
-          meta_title: contentData.meta_title,
-          meta_description: contentData.meta_description,
-          about_text: contentData.about_text,
-        },
-        portfolioId
-      );
-
-      if (contentError) {
-        throw new Error(`Failed to update content: ${contentError.message}`);
-      }
-
-      toast.success("Basic information updated successfully");
-      form.reset(formValues);
-    } catch (error) {
-      console.error("Error updating basic info:", error);
-      toast.error("Failed to update basic information");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const saveAppearance = async () => {
-    setIsSubmitting(true);
-    try {
-      const formValues = form.getValues();
-      const optionsData = formValues.options;
-
-      // Update options
-      const { error: optionsError } = await updateOption(
-        {
-          portfolio_id: portfolioId,
-          options: JSON.stringify({
-            theme: optionsData.theme,
-            colorTheme: optionsData.colorTheme,
-            colors: optionsData.colors,
-            font: optionsData.font,
-          }),
-        },
-        portfolioId
-      );
-
-      if (optionsError) {
-        throw new Error(`Failed to update appearance: ${optionsError.message}`);
-      }
-
-      toast.success("Appearance updated successfully");
-      form.reset(formValues);
-    } catch (error) {
-      console.error("Error updating appearance:", error);
-      toast.error("Failed to update appearance");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const savePublish = async () => {
-    setIsSubmitting(true);
-    try {
-      const formValues = form.getValues();
-
-      // Update portfolio publish status
-      const { error: portfolioError } = await updatePortfolio({
-        id: portfolioId,
-        is_published: formValues.portfolio.is_published,
-      });
-
-      if (portfolioError) {
-        throw new Error(
-          `Failed to update publish status: ${portfolioError.message}`
-        );
-      }
-
-      toast.success("Publish settings updated successfully");
-      form.reset(formValues);
-    } catch (error) {
-      console.error("Error updating publish settings:", error);
-      toast.error("Failed to update publish settings");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const handleDeletePortfolio = async () => {
     setIsSubmitting(true);
@@ -290,37 +215,6 @@ export default function EditPortfolioForm({
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // Determine which save function to use based on active tab
-  const getSaveFunction = () => {
-    switch (activeTab) {
-      case "basics":
-        return saveBasicInfo;
-      case "appearance":
-        return saveAppearance;
-      case "publish":
-        return savePublish;
-      default:
-        return () => {}; // No-op for tabs that don't need external save handling
-    }
-  };
-
-  // Determine if the current section is dirty
-  const isCurrentSectionDirty = () => {
-    const step = STEPS.find((step) => step.id === activeTab);
-    return step ? step.isDirty : false;
-  };
-
-  // These steps handle their own data saving internally
-  const isSelfSavingStep = () => {
-    return [
-      "experiences",
-      "educations",
-      "projects",
-      "skills",
-      "socials",
-    ].includes(activeTab);
   };
 
   return (
@@ -346,9 +240,6 @@ export default function EditPortfolioForm({
                       {step.icon}
                       <span className="hidden md:inline">{step.title}</span>
                     </span>
-                    {step.isDirty && (
-                      <span className="absolute -top-1 -right-1 size-2 bg-primary rounded-full" />
-                    )}
                   </TabsTrigger>
                 ))}
               </TabsList>
@@ -408,16 +299,6 @@ export default function EditPortfolioForm({
             </Button>
           </CardFooter>
         </Card>
-
-        {/* Save changes bar only appears for sections that need external saving */}
-        {!isSelfSavingStep() && (
-          <SaveChangesBar
-            isDirty={isCurrentSectionDirty()}
-            isSubmitting={isSubmitting}
-            onSave={getSaveFunction()}
-            section={STEPS.find((step) => step.id === activeTab)?.title || ""}
-          />
-        )}
       </div>
     </FormProvider>
   );

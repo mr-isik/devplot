@@ -105,6 +105,54 @@ export const updatePortfolio = async (portfolio: Partial<Portfolio>) => {
   return { data, error };
 };
 
+export const updatePortfolioOptions = async (
+  portfolioId: string,
+  optionsData: {
+    theme: string;
+    colorTheme: string;
+    colors: string[];
+    font: string;
+  }
+) => {
+  const supabase = await createClient();
+
+  // First get the existing options to get the ID
+  const { data: existingOptions, error: fetchError } = await supabase
+    .from("options")
+    .select("*")
+    .eq("portfolio_id", portfolioId);
+
+  if (fetchError) {
+    return { data: null, error: fetchError };
+  }
+
+  if (!existingOptions || existingOptions.length === 0) {
+    // Create new options if none exist
+    const { data, error } = await supabase
+      .from("options")
+      .insert({
+        portfolio_id: portfolioId,
+        options: JSON.stringify(optionsData),
+      })
+      .select();
+
+    revalidatePath("/");
+    return { data, error };
+  }
+
+  // Update existing options
+  const { data, error } = await supabase
+    .from("options")
+    .update({
+      options: JSON.stringify(optionsData),
+    })
+    .eq("id", existingOptions[0].id)
+    .select();
+
+  revalidatePath("/");
+  return { data, error };
+};
+
 export const deletePortfolio = async (id: string) => {
   const supabase = await createClient();
 

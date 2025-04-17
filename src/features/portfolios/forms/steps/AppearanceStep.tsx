@@ -49,6 +49,7 @@ import {
   Paintbrush2Icon,
   Settings2Icon,
   XIcon,
+  SaveIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -62,6 +63,11 @@ import {
   colorThemes,
   getColorTheme,
 } from "@/features/themes/utils/themeCustomization";
+import {
+  updatePortfolio,
+  updatePortfolioOptions,
+} from "@/actions/portfolios/actions";
+import { toast } from "sonner";
 
 // Component types
 interface ThemeCardProps {
@@ -81,6 +87,11 @@ interface ColorOptionProps {
 interface ColorEditorProps {
   colors: string[];
   onChange: (index: number, color: string) => void;
+}
+
+// Added interface for AppearanceStep props
+interface AppearanceStepProps {
+  portfolioId?: string;
 }
 
 // Fonts data
@@ -283,7 +294,9 @@ function CustomColorEditor({ colors, onChange }: ColorEditorProps) {
 }
 
 // Main component
-export default function AppearanceStep() {
+export default function AppearanceStep({
+  portfolioId,
+}: AppearanceStepProps = {}) {
   const form = useFormContext<PortfolioFormValues>();
   const themes = getAllThemes();
 
@@ -337,6 +350,9 @@ export default function AppearanceStep() {
   const [customColors, setCustomColors] = useState<string[]>(
     options.colors || ["#FFFFFF", "#F5F5F5", "#E5E5E5", "#000000", "#3B82F6"]
   );
+
+  // State for saving
+  const [isSaving, setIsSaving] = useState(false);
 
   // Mock portfolio data for preview
   const [previewData, setPreviewData] = useState<{
@@ -575,6 +591,38 @@ export default function AppearanceStep() {
     setIsPreviewOpen(true);
   };
 
+  // Handle saving options
+  const handleSaveOptions = async () => {
+    if (!portfolioId) return;
+
+    setIsSaving(true);
+    try {
+      const values = form.getValues();
+      const options = values.options || {};
+
+      await updatePortfolioOptions(portfolioId, {
+        theme: options.theme || DEFAULT_THEME_ID,
+        colorTheme: options.colorTheme || "light",
+        colors: options.colors || [
+          "#FFFFFF",
+          "#F5F5F5",
+          "#E5E5E5",
+          "#000000",
+          "#3B82F6",
+        ],
+        font: options.font || "inter",
+      });
+
+      form.reset(form.getValues());
+      toast.success("Appearance settings saved");
+    } catch (error) {
+      console.error("Error saving appearance settings:", error);
+      toast.error("Failed to save appearance settings");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   // Get the theme component for preview
   const ThemeComponent = selectedThemeDetails?.component;
 
@@ -785,6 +833,19 @@ export default function AppearanceStep() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {portfolioId && (
+        <div className="flex justify-end mt-6">
+          <Button
+            onClick={handleSaveOptions}
+            disabled={isSaving || !form.formState.isDirty}
+            className="gap-2"
+          >
+            <SaveIcon className="h-4 w-4" />
+            {isSaving ? "Saving..." : "Save Appearance Settings"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

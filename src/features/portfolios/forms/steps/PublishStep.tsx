@@ -30,6 +30,7 @@ import {
   LinkIcon,
   PaintbrushIcon,
   RocketIcon,
+  UserIcon,
   XIcon,
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -37,6 +38,7 @@ import { useFormContext } from "react-hook-form";
 import { ThemeProps } from "@/features/themes/types";
 import { usePortfolioData } from "@/features/portfolios/hooks/usePortfolioData";
 import { toast } from "sonner";
+import { updatePortfolio } from "@/actions/portfolios/actions";
 
 type PublishStepProps = {
   preview?: boolean;
@@ -74,12 +76,45 @@ export default function PublishStep({
     }
   }, [preview]);
 
-  const updatePublishState = (checked: boolean) => {
+  const updatePublishState = async (checked: boolean) => {
     setPublishEnabled(checked);
     form.setValue("portfolio.is_published", checked, {
       shouldDirty: true,
       shouldValidate: true,
     });
+
+    // Directly save changes when toggle is changed
+    if (portfolioId) {
+      try {
+        const { error } = await updatePortfolio({
+          id: portfolioId,
+          is_published: checked,
+        });
+
+        if (error) {
+          throw new Error(`Failed to update publish status: ${error.message}`);
+        }
+
+        toast.success(
+          checked
+            ? "Portfolio is now published"
+            : "Portfolio is now unpublished"
+        );
+
+        // Reset form to mark as clean
+        const formValues = form.getValues();
+        form.reset(formValues);
+      } catch (error) {
+        console.error("Error updating publish status:", error);
+        toast.error("Failed to update publish status");
+
+        // Revert the toggle if there was an error
+        setPublishEnabled(!checked);
+        form.setValue("portfolio.is_published", !checked, {
+          shouldDirty: true,
+        });
+      }
+    }
   };
 
   // Handle preview opening
@@ -271,7 +306,7 @@ export default function PublishStep({
             <p className="mb-3 text-sm text-muted-foreground">
               Your portfolio includes these sections
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
               <div className="p-3 rounded-md bg-muted/30 flex flex-col items-center justify-center text-center">
                 <BriefcaseIcon className="size-5 mb-2 text-primary" />
                 <span className="text-sm font-medium">
@@ -292,6 +327,11 @@ export default function PublishStep({
                 <span className="text-xs text-muted-foreground">
                   Educations
                 </span>
+              </div>
+              <div className="p-3 rounded-md bg-muted/30 flex flex-col items-center justify-center text-center">
+                <UserIcon className="size-5 mb-2 text-primary" />
+                <span className="text-sm font-medium">{skills.length}</span>
+                <span className="text-xs text-muted-foreground">Skills</span>
               </div>
               <div className="p-3 rounded-md bg-muted/30 flex flex-col items-center justify-center text-center">
                 <LinkIcon className="size-5 mb-2 text-primary" />

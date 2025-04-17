@@ -67,7 +67,10 @@ export const createProject = async (
       const { data: projectData, error: projectError } = await supabase
         .from("projects")
         .insert({
-          ...project,
+          title: project.title,
+          description: project.description,
+          repo_url: project.repo_url,
+          live_url: project.live_url,
           image: imageData.publicUrl,
           portfolio_id: portfolioId,
         })
@@ -104,7 +107,10 @@ export const createProject = async (
     const { data, error } = await supabase
       .from("projects")
       .insert({
-        ...project,
+        title: project.title,
+        description: project.description,
+        repo_url: project.repo_url,
+        live_url: project.live_url,
         portfolio_id: portfolioId,
       })
       .select();
@@ -134,8 +140,8 @@ export const getProjects = async (portfolioId: string) => {
   return { data, error };
 };
 
-export const updateProject = async (project: Partial<Project>) => {
-  if (!project.id) {
+export const updateProject = async (project: z.infer<typeof projectSchema>) => {
+  if (!project.item_id) {
     return {
       data: null,
       error: new Error("Project ID is required for update"),
@@ -146,15 +152,21 @@ export const updateProject = async (project: Partial<Project>) => {
 
   const { data, error } = await supabase
     .from("projects")
-    .update(project)
-    .eq("id", project.id)
+    .update({
+      title: project.title,
+      description: project.description,
+      repo_url: project.repo_url,
+      live_url: project.live_url,
+      image: project.image,
+    })
+    .eq("id", project.item_id)
     .select();
 
   revalidatePath("/");
   return { data, error };
 };
 
-export const deleteProject = async (id: string) => {
+export const deleteProject = async (id: number) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase

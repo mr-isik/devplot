@@ -78,7 +78,11 @@ export const createExperience = async (
         .getPublicUrl(logo_path);
 
       const experienceToInsert = {
-        ...experience,
+        role: experience.role,
+        company: experience.company,
+        start_date: experience.start_date,
+        end_date: experience.end_date,
+        description: experience.description,
         logo: logoData.publicUrl,
         portfolio_id: portfolioId,
         employment_type: experience.employment_type || undefined,
@@ -142,8 +146,10 @@ export const createExperience = async (
   }
 };
 
-export const updateExperience = async (experience: Partial<Experience>) => {
-  if (!experience.id) {
+export const updateExperience = async (
+  experience: z.infer<typeof experienceSchema>
+) => {
+  if (!experience.item_id) {
     return {
       data: null,
       error: new Error("Experience ID is required for update"),
@@ -154,22 +160,23 @@ export const updateExperience = async (experience: Partial<Experience>) => {
 
   const { data, error } = await supabase
     .from("experiences")
-    .update(experience)
-    .eq("id", experience.id)
+    .update({
+      role: experience.role,
+    })
+    .eq("id", experience.item_id)
     .select();
 
   revalidatePath("/");
   return { data, error };
 };
 
-export const deleteExperience = async (id: string) => {
+export const deleteExperience = async (item_id: number) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("experiences")
     .delete()
-    .eq("id", id)
-    .select();
+    .eq("id", item_id);
 
   revalidatePath("/");
   return { data, error };

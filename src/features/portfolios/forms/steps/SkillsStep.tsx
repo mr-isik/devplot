@@ -1,9 +1,7 @@
 "use client";
 
 import type { z } from "zod";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
 import {
   Dialog,
   DialogContent,
@@ -19,12 +17,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  COMMON_SKILLS,
-  getSkillColor,
-  getSkillIcon,
-  SKILL_CATEGORIES,
-} from "@/lib/skillsData";
+import { COMMON_SKILLS, getSkillColor, getSkillIcon } from "@/lib/skillsData";
 import { skillSchema } from "@/lib/validations/portfolio";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -38,17 +31,8 @@ import { useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { createSkill, deleteSkill } from "@/actions/skills/actions";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-type SkillFormValues = z.infer<typeof skillSchema> & {
-  id?: string;
-};
+type SkillFormValues = z.infer<typeof skillSchema>;
 
 interface SkillsStepProps {
   portfolioId?: string;
@@ -97,19 +81,17 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
     },
   });
 
-  const selectedSkillName = skillForm.watch("name");
-
   const resetAndOpenDialog = (index?: number) => {
     if (index !== undefined && index >= 0 && index < fields.length) {
       const skill = fields[index] as unknown as SkillFormValues;
       skillForm.reset({
-        id: skill.id,
+        item_id: skill.item_id,
         name: skill.name || "",
       });
       setEditingIndex(index);
     } else {
       skillForm.reset({
-        id: undefined,
+        item_id: undefined,
         name: "",
       });
       setEditingIndex(null);
@@ -127,6 +109,9 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
   };
 
   const handleAddSkill = async (data: SkillFormValues) => {
+    console.log("Skill data:", data);
+    console.log("Portfolio ID:", portfolioId);
+
     setIsSubmitting(true);
     try {
       // Create workflow: Add new skill to database
@@ -137,14 +122,17 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
         });
 
         if (error) {
+          console.error("Database error:", error);
           throw new Error(`Failed to add skill: ${error.message}`);
         }
+
+        console.log("New skill response:", newSkill);
 
         // Update form state with backend ID
         if (newSkill && newSkill[0]) {
           append({
             ...data,
-            id: newSkill[0].id,
+            item_id: newSkill[0].id, // Store as item_id instead of id
           });
         } else {
           append(data);
@@ -169,17 +157,55 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
   };
 
   // Quick add a skill with one click
-  const handleQuickAddSkill = (skillName: string) => {
+  const handleQuickAddSkill = async (skillName: string) => {
     if (isSkillAlreadyAdded(skillName)) {
       toast.error(`Skill "${skillName}" is already added`);
       return;
     }
 
-    append({ name: skillName });
-    toast.success(`Added ${skillName}`);
+    setIsSubmitting(true);
+    try {
+      // If portfolioId exists, save to database
+      if (portfolioId) {
+        const { data: newSkill, error } = await createSkill({
+          name: skillName,
+          portfolio_id: portfolioId,
+        });
+
+        if (error) {
+          console.error("Quick add database error:", error);
+          throw new Error(`Failed to add skill: ${error.message}`);
+        }
+
+        // Update form state with backend ID
+        if (newSkill && newSkill[0]) {
+          append({
+            name: skillName,
+            item_id: newSkill[0].id,
+          });
+          toast.success(`Added ${skillName} to your portfolio`);
+        } else {
+          // Fallback - just add to form state
+          append({ name: skillName });
+          toast.success(`Added ${skillName}`);
+        }
+      } else {
+        // No portfolioId, just add to form state
+        append({ name: skillName });
+        toast.success(`Added ${skillName}`);
+      }
+    } catch (error) {
+      console.error("Error quick adding skill:", error);
+      toast.error(`Failed to add ${skillName}`);
+
+      // Add to form state anyway as fallback
+      append({ name: skillName });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleRemoveSkill = async (index: number, id?: string) => {
+  const handleRemoveSkill = async (index: number, id?: number) => {
     setIsSubmitting(true);
     try {
       // If skill exists in database, delete it
@@ -207,24 +233,6 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
   const filteredSkills = COMMON_SKILLS.filter((skill) =>
     skill.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const comboboxItems = filteredSkills.map((skill) => ({
-    value: skill.name,
-    label: skill.name,
-    icon: (
-      <div
-        className="flex size-5 items-center justify-center rounded-full"
-        style={{ backgroundColor: `${skill.color}20` }}
-      >
-        {skill.icon &&
-          React.createElement(skill.icon, {
-            className: "size-3",
-            style: { color: skill.color },
-          })}
-      </div>
-    ),
-    group: skill.category,
-  }));
 
   // Filter top skills that haven't been added yet
   const availableTopSkills = TOP_SKILLS.filter(
@@ -314,7 +322,7 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
                                   variant="ghost"
                                   size="icon"
                                   onClick={() =>
-                                    handleRemoveSkill(index, skill.id)
+                                    handleRemoveSkill(index, skill.item_id)
                                   }
                                   className="size-8 text-muted-foreground hover:text-destructive"
                                   disabled={isSubmitting}
@@ -330,7 +338,9 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleRemoveSkill(index, skill.id)}
+                              onClick={() =>
+                                handleRemoveSkill(index, skill.item_id)
+                              }
                               className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
                               disabled={isSubmitting}
                             >

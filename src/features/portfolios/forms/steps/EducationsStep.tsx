@@ -27,10 +27,9 @@ import {
   deleteEducation,
   updateEducation,
 } from "@/actions/educations/actions";
+import Loader from "@/components/globals/Loader";
 
-type EducationFormValues = z.infer<typeof educationSchema> & {
-  id?: string;
-};
+type EducationFormValues = z.infer<typeof educationSchema>;
 
 interface EducationsStepProps {
   portfolioId?: string;
@@ -63,7 +62,7 @@ export default function EducationsStep({
     if (index !== undefined && index >= 0 && index < fields.length) {
       const education = fields[index] as unknown as EducationFormValues;
       educationForm.reset({
-        id: education.id,
+        item_id: education.item_id,
         school: education.school || "",
         degree: education.degree || "",
         field: education.field || "",
@@ -73,7 +72,7 @@ export default function EducationsStep({
       setEditingIndex(index);
     } else {
       educationForm.reset({
-        id: undefined,
+        item_id: undefined,
         school: "",
         degree: "",
         field: "",
@@ -88,9 +87,9 @@ export default function EducationsStep({
   const handleAddEducation = async (data: EducationFormValues) => {
     setIsSubmitting(true);
     try {
-      if (editingIndex !== null && data.id && portfolioId) {
+      if (editingIndex !== null && data.item_id && portfolioId) {
         const { error } = await updateEducation({
-          id: data.id,
+          item_id: data.item_id,
           school: data.school,
           degree: data.degree,
           field: data.field,
@@ -102,8 +101,7 @@ export default function EducationsStep({
           throw new Error(`Failed to update education: ${error.message}`);
         }
 
-        remove(editingIndex);
-        append(data);
+        update(editingIndex, data);
         toast.success("Education updated successfully");
       } else if (portfolioId) {
         const { data: newEducation, error } = await createEducation(
@@ -125,7 +123,7 @@ export default function EducationsStep({
           append({
             ...data,
             /* @ts-ignore */
-            id: newEducation[0].id,
+            item_id: newEducation[0].id,
           });
         } else {
           append(data);
@@ -149,7 +147,7 @@ export default function EducationsStep({
     }
   };
 
-  const handleRemoveEducation = async (index: number, id?: string) => {
+  const handleRemoveEducation = async (index: number, id?: number) => {
     setIsSubmitting(true);
     try {
       if (id && portfolioId) {
@@ -236,7 +234,10 @@ export default function EducationsStep({
                                   variant="ghost"
                                   size="icon"
                                   onClick={() =>
-                                    handleRemoveEducation(index, education.id)
+                                    handleRemoveEducation(
+                                      index,
+                                      education.item_id
+                                    )
                                   }
                                   className="size-8 text-muted-foreground hover:text-destructive"
                                   disabled={isSubmitting}
@@ -295,7 +296,7 @@ export default function EducationsStep({
                               variant="ghost"
                               size="sm"
                               onClick={() =>
-                                handleRemoveEducation(index, education.id)
+                                handleRemoveEducation(index, education.item_id)
                               }
                               className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
                               disabled={isSubmitting}
@@ -425,12 +426,9 @@ export default function EducationsStep({
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting
-                  ? "Saving..."
-                  : editingIndex !== null
-                    ? "Update"
-                    : "Add"}{" "}
-                Education
+                <Loader state={isSubmitting}>
+                  {editingIndex !== null ? "Update" : "Add"} Education
+                </Loader>
               </Button>
             </DialogFooter>
           </form>

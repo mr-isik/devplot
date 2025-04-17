@@ -1,6 +1,181 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { useEffect, useState } from "react";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
+}
+
+/**
+ * Safely creates an object URL from various image input types
+ * Returns null if the image is invalid, so the component can decide whether to render anything
+ */
+export function getSafeImageUrl(image: any): string | undefined {
+  try {
+    // Case 1: null, undefined, empty values
+    if (!image) {
+      return undefined;
+    }
+
+    // Case 2: Already a simple string (URL or path)
+    if (typeof image === "string") {
+      // Check for empty string or array-like strings
+      if (
+        image.trim() === "" ||
+        image === "[]" ||
+        image === "{}" ||
+        image === "null"
+      ) {
+        return undefined;
+      }
+      return image;
+    }
+
+    // Case 3: Single File object
+    if (image instanceof File) {
+      return URL.createObjectURL(image);
+    }
+
+    // Case 4: Array with items
+    if (Array.isArray(image)) {
+      // Empty array check
+      if (image.length === 0) {
+        return undefined;
+      }
+
+      const firstItem = image[0];
+
+      // First item null/undefined check
+      if (!firstItem) {
+        return undefined;
+      }
+
+      // Check if first item is a string that represents an empty array/object
+      if (typeof firstItem === "string") {
+        if (
+          firstItem.trim() === "" ||
+          firstItem === "[]" ||
+          firstItem === "{}" ||
+          firstItem === "null"
+        ) {
+          return undefined;
+        }
+        return firstItem;
+      }
+
+      // If first item is a File
+      if (firstItem instanceof File) {
+        return URL.createObjectURL(firstItem);
+      }
+    }
+
+    // Default: Nothing valid found
+    return undefined;
+  } catch (error) {
+    console.error("Image processing error:", error);
+    return undefined;
+  }
+}
+
+/**
+ * A hook to safely create and manage object URLs from various image input types
+ * Automatically revokes object URLs when component unmounts
+ * Returns null if the image is invalid, so the component can decide whether to render anything
+ */
+export function useSafeImageUrl(image: any): string | undefined {
+  const [url, setUrl] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    let objectUrl = "";
+
+    try {
+      // Null/undefined check
+      if (!image) {
+        setUrl(undefined);
+        return;
+      }
+
+      // String URL
+      if (typeof image === "string") {
+        // Check for empty string or array-like strings
+        if (
+          image.trim() === "" ||
+          image === "[]" ||
+          image === "{}" ||
+          image === "null"
+        ) {
+          setUrl(undefined);
+          return;
+        }
+        setUrl(image);
+        return;
+      }
+
+      // File object
+      if (image instanceof File) {
+        objectUrl = URL.createObjectURL(image);
+        setUrl(objectUrl);
+        return;
+      }
+
+      // Array of items
+      if (Array.isArray(image)) {
+        // Empty array check
+        if (image.length === 0) {
+          setUrl(undefined);
+          return;
+        }
+
+        const firstItem = image[0];
+
+        // First item null/undefined check
+        if (!firstItem) {
+          setUrl(undefined);
+          return;
+        }
+
+        // String URL in array
+        if (typeof firstItem === "string") {
+          // Check if first item is a string that represents an empty array/object
+          if (
+            firstItem.trim() === "" ||
+            firstItem === "[]" ||
+            firstItem === "{}" ||
+            firstItem === "null"
+          ) {
+            setUrl(undefined);
+            return;
+          }
+          setUrl(firstItem);
+          return;
+        }
+
+        // File in array
+        if (firstItem instanceof File) {
+          objectUrl = URL.createObjectURL(firstItem);
+          setUrl(objectUrl);
+          return;
+        }
+      }
+
+      // Default fallback
+      setUrl(undefined);
+    } catch (error) {
+      console.error("Error in useSafeImageUrl:", error);
+      setUrl(undefined);
+    }
+
+    // Cleanup function to revoke object URL
+    return () => {
+      if (objectUrl) {
+        try {
+          URL.revokeObjectURL(objectUrl);
+        } catch (error) {
+          console.error("Error revoking object URL:", error);
+        }
+      }
+    };
+  }, [image]);
+
+  return url;
 }

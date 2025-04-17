@@ -30,10 +30,10 @@ import {
   deleteExperience,
   updateExperience,
 } from "@/actions/experiences/actions";
+import { cn, getSafeImageUrl } from "@/lib/utils";
+import Loader from "@/components/globals/Loader";
 
-type ExperienceFormValues = z.infer<typeof experienceSchema> & {
-  id?: string;
-};
+type ExperienceFormValues = z.infer<typeof experienceSchema>;
 
 interface ExperiencesStepProps {
   portfolioId?: string;
@@ -52,6 +52,22 @@ const employmentTypeOptions = [
   { value: "contract", label: "Contract" },
   { value: "freelance", label: "Freelance" },
 ];
+
+/**
+ * Checks if a logo field is effectively empty (null, undefined, empty array, string "[]", etc.)
+ */
+function isLogoEmpty(logo: any): boolean {
+  if (!logo) return true;
+  if (typeof logo === "string") {
+    return (
+      logo.trim() === "" || logo === "[]" || logo === "{}" || logo === "null"
+    );
+  }
+  if (Array.isArray(logo)) {
+    return logo.length === 0;
+  }
+  return false;
+}
 
 export default function ExperiencesStep({
   portfolioId,
@@ -81,13 +97,14 @@ export default function ExperiencesStep({
     if (index !== undefined && index >= 0 && index < fields.length) {
       const experience = fields[index] as unknown as ExperienceFormValues;
       experienceForm.reset({
+        item_id: experience.item_id,
         role: experience.role || "",
         company: experience.company || "",
         employment_type: experience.employment_type || undefined,
         start_date: experience.start_date || "",
         end_date: experience.end_date || "",
         description: experience.description || "",
-        logo: experience.logo || [],
+        logo: isLogoEmpty(experience.logo) ? [] : experience.logo,
       });
       setEditingIndex(index);
     } else {
@@ -110,17 +127,17 @@ export default function ExperiencesStep({
 
     try {
       // Edit workflow: Existing experience update with id
-      if (editingIndex !== null && data.id && portfolioId) {
+      if (editingIndex !== null && data.item_id && portfolioId) {
         // Database update via server action
         const { error } = await updateExperience({
-          id: data.id,
+          item_id: data.item_id,
           role: data.role,
           company: data.company,
           employment_type: data.employment_type,
           start_date: data.start_date,
           end_date: data.end_date,
           description: data.description,
-          // logo update is not included here for simplicity
+          logo: data.logo,
         });
 
         if (error) {
@@ -155,8 +172,14 @@ export default function ExperiencesStep({
         // Update form state with backend id
         if (newExperience && newExperience[0]) {
           append({
-            ...data,
-            id: newExperience[0]?.id || data.id,
+            item_id: newExperience[0].id,
+            role: data.role,
+            company: data.company,
+            employment_type: data.employment_type,
+            start_date: data.start_date,
+            end_date: data.end_date,
+            description: data.description,
+            logo: data.logo,
           });
         } else {
           append(data);
@@ -182,7 +205,7 @@ export default function ExperiencesStep({
     }
   };
 
-  const handleRemoveExperience = async (index: number, id?: string) => {
+  const handleRemoveExperience = async (index: number, id?: number) => {
     setIsSubmitting(true);
     try {
       // If id and portfolioId exist, delete from database
@@ -190,13 +213,14 @@ export default function ExperiencesStep({
         const { error } = await deleteExperience(id);
 
         if (error) {
-          throw new Error(`Failed to delete experience: ${error.message}`);
+          toast.error("Failed to remove experience");
         }
         toast.success("Experience removed from database");
       }
 
       // Always remove from form state
       remove(index);
+
       toast.success("Experience removed");
     } catch (error) {
       console.error("Error removing experience:", error);
@@ -271,7 +295,10 @@ export default function ExperiencesStep({
                                 variant="ghost"
                                 size="icon"
                                 onClick={() =>
-                                  handleRemoveExperience(index, experience.id)
+                                  handleRemoveExperience(
+                                    index,
+                                    experience.item_id
+                                  )
                                 }
                                 className="size-8 text-muted-foreground hover:text-destructive"
                               >
@@ -283,21 +310,12 @@ export default function ExperiencesStep({
 
                         <div className="flex flex-col gap-1">
                           <div className="mb-2 flex items-center gap-2">
-                            {experience.logo && (
-                              <div className="relative size-10 rounded-md border">
-                                <Image
-                                  src={
-                                    typeof experience.logo === "string"
-                                      ? experience.logo
-                                      : experience.logo[0] instanceof File
-                                        ? URL.createObjectURL(
-                                            experience.logo[0]
-                                          )
-                                        : ""
-                                  }
-                                  alt={experience.company}
-                                  fill
-                                  className="object-cover rounded-md"
+                            {!isLogoEmpty(experience.logo) && (
+                              <div className="relative size-10 rounded-md border overflow-hidden">
+                                <img
+                                  src={getSafeImageUrl(experience.logo)}
+                                  alt={experience.company || "Company"}
+                                  className="w-full h-full object-cover"
                                 />
                               </div>
                             )}
@@ -349,7 +367,7 @@ export default function ExperiencesStep({
                             variant="ghost"
                             size="sm"
                             onClick={() =>
-                              handleRemoveExperience(index, experience.id)
+                              handleRemoveExperience(index, experience.item_id)
                             }
                             className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
                           >
@@ -417,13 +435,15 @@ export default function ExperiencesStep({
                 fieldType={FormFieldType.INPUT}
               />
 
-              <DynamicFormField
-                control={experienceForm.control}
-                name="logo"
-                label="Logo (1MB max)"
-                fieldType={FormFieldType.FILE}
-                fileOptions={logoOptions}
-              />
+              {editingIndex === null && (
+                <DynamicFormField
+                  control={experienceForm.control}
+                  name="logo"
+                  label="Logo (1MB max)"
+                  fieldType={FormFieldType.FILE}
+                  fileOptions={logoOptions}
+                />
+              )}
 
               <DynamicFormField
                 control={experienceForm.control}
@@ -501,8 +521,10 @@ export default function ExperiencesStep({
               >
                 Cancel
               </Button>
-              <Button type="submit">
-                {editingIndex !== null ? "Update" : "Add"} Experience
+              <Button type="submit" disabled={isSubmitting}>
+                <Loader state={isSubmitting}>
+                  {editingIndex !== null ? "Update" : "Add"} Experience
+                </Loader>
               </Button>
             </DialogFooter>
 

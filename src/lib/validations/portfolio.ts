@@ -37,6 +37,7 @@ export const contentSchema = z.object({
 
 // Schema for experience information
 export const experienceSchema = z.object({
+  item_id: z.number().optional(),
   role: z.string().min(3, { message: "Role must be at least 3 characters" }),
   company: z
     .string()
@@ -77,6 +78,7 @@ export const experiencesSchema = z
 
 // Schema for education information
 export const educationSchema = z.object({
+  item_id: z.number().optional(),
   school: z
     .string()
     .min(2, { message: "School name must be at least 2 characters" }),
@@ -95,6 +97,7 @@ export const educationsSchema = z.array(educationSchema).optional().default([]);
 
 // Schema for project information
 export const projectSchema = z.object({
+  item_id: z.number().optional(),
   title: z
     .string()
     .min(3, { message: "Project title must be at least 3 characters" }),
@@ -138,6 +141,7 @@ export const projectsSchema = z.array(projectSchema).optional().default([]);
 
 // Schema for social media information
 export const socialSchema = z.object({
+  item_id: z.number().optional(),
   platform: z
     .string()
     .min(2, { message: "Platform name must be at least 2 characters" }),
@@ -149,7 +153,7 @@ export const socialsSchema = z.array(socialSchema).optional().default([]);
 
 // Schema for skill information
 export const skillSchema = z.object({
-  id: z.string().optional(),
+  item_id: z.number().optional(),
   name: z
     .string()
     .min(1, { message: "Skill name must be at least 1 character" }),

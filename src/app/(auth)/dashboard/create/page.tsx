@@ -1,5 +1,7 @@
 import { getUser } from "@/actions/users/actions";
 import PortfolioForm from "@/features/portfolios/forms/PortfolioForm";
+import { getPortfolio } from "@/actions/portfolios/actions";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata() {
   return {
@@ -11,13 +13,11 @@ export async function generateMetadata() {
 export default async function CreatePortfolioPage() {
   const { userData } = await getUser();
 
-  /*  // Kullanıcının portfolyosu var mı kontrol ediyoruz
-  const { data: portfolios } = await getPortfolioByUserId(userData[0].id);
+  const { data: portfolios } = await getPortfolio(userData[0].id);
 
-  // Eğer kullanıcının portfolyosu varsa edit sayfasına yönlendiriyoruz
   if (portfolios && portfolios.length > 0) {
     redirect(`/dashboard/edit`);
-  } */
+  }
   return (
     <div className="container space-y-6 py-12">
       <div className="mx-auto flex flex-col items-center gap-2">

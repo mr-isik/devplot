@@ -25,18 +25,16 @@ import {
   PlusCircleIcon,
   Trash2Icon,
 } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 import {
   createProject,
   deleteProject,
   updateProject,
 } from "@/actions/projects/actions";
+import { getSafeImageUrl } from "@/lib/utils";
 
-type ProjectFormValues = z.infer<typeof projectSchema> & {
-  id?: string;
-};
+type ProjectFormValues = z.infer<typeof projectSchema>;
 
 interface ProjectsStepProps {
   portfolioId?: string;
@@ -49,9 +47,28 @@ const imageOptions: DropzoneOptions = {
   maxSize: 1024 * 1024 * 4, // 4MB
 };
 
-export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
+/**
+ * Checks if an image field is effectively empty (null, undefined, empty array, string "[]", etc.)
+ */
+function isImageEmpty(image: any): boolean {
+  if (!image) return true;
+  if (typeof image === "string") {
+    return (
+      image.trim() === "" ||
+      image === "[]" ||
+      image === "{}" ||
+      image === "null"
+    );
+  }
+  if (Array.isArray(image)) {
+    return image.length === 0;
+  }
+  return false;
+}
+
+export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
   const { control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: "projects",
   });
@@ -73,50 +90,88 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
   const resetAndOpenDialog = (index?: number) => {
     if (index !== undefined && index >= 0 && index < fields.length) {
       const project = fields[index] as unknown as ProjectFormValues;
+
+      console.log("Opening project for edit:", project);
+
+      // Correct image handling for string URLs vs expected File array
+      let imageValue;
+      if (typeof project.image === "string") {
+        // If image is a URL string (from database), handle it specially for display only
+        // We'll leave actual image upload empty to avoid validation errors
+        imageValue = [];
+      } else {
+        imageValue = isImageEmpty(project.image) ? [] : project.image;
+      }
+
+      // Ensure all required project data is set
       projectForm.reset({
-        id: project.id,
+        item_id: project.item_id,
         title: project.title || "",
         description: project.description || "",
         repo_url: project.repo_url || "",
         live_url: project.live_url || "",
-        image: project.image || [],
+        image: imageValue,
       });
+
       setEditingIndex(index);
     } else {
       projectForm.reset({
-        id: undefined,
+        item_id: undefined,
         title: "",
         description: "",
         repo_url: "",
         live_url: "",
         image: [],
       });
+
       setEditingIndex(null);
     }
+
     setIsDialogOpen(true);
   };
 
   const handleAddProject = async (data: ProjectFormValues) => {
     setIsSubmitting(true);
+
     try {
       // Edit workflow: Update existing project in database
-      if (editingIndex !== null && data.id && portfolioId) {
+      if (editingIndex !== null && data.item_id && portfolioId) {
+        console.log("Updating existing project with ID:", data.item_id);
+
+        // Get the existing project to check current image
+        const existingProject = fields[
+          editingIndex
+        ] as unknown as ProjectFormValues;
+        const currentImageIsString = typeof existingProject.image === "string";
+
+        // If the image array is empty but we had a string URL before, keep the existing image URL
+        const imageToUpdate =
+          Array.isArray(data.image) &&
+          data.image.length === 0 &&
+          currentImageIsString
+            ? existingProject.image // Keep the existing URL
+            : data.image; // Otherwise use the new image (array of files or null)
+
         const { error } = await updateProject({
-          id: data.id,
+          item_id: data.item_id,
           title: data.title,
           description: data.description,
           repo_url: data.repo_url,
           live_url: data.live_url,
-          // Image update not included for simplicity
+          image: imageToUpdate,
         });
 
         if (error) {
-          throw new Error(`Failed to update project: ${error.message}`);
+          console.error("Update project error:", error);
+          toast.error(`Failed to update project: ${error.message}`);
+          return;
         }
 
-        // Update form state
-        remove(editingIndex);
-        append(data);
+        // Update form state with correct image
+        update(editingIndex, {
+          ...data,
+          image: imageToUpdate,
+        });
         toast.success("Project updated successfully");
       }
       // Create workflow: Add new project to database
@@ -127,14 +182,16 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
         );
 
         if (error) {
-          throw new Error(`Failed to add project: ${error.message}`);
+          toast.error("Failed to add project");
         }
+
+        console.log(newProject);
 
         // Update form state with backend ID
         if (newProject && newProject[0]) {
           append({
             ...data,
-            id: newProject[0].id,
+            item_id: newProject[0].id,
           });
         } else {
           append(data);
@@ -160,7 +217,7 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
     }
   };
 
-  const handleRemoveProject = async (index: number, id?: string) => {
+  const handleRemoveProject = async (index: number, id?: number) => {
     setIsSubmitting(true);
     try {
       // If project exists in database, delete it
@@ -168,7 +225,7 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
         const { error } = await deleteProject(id);
 
         if (error) {
-          throw new Error(`Failed to delete project: ${error.message}`);
+          toast.error("Failed to delete project");
         }
         toast.success("Project removed from database");
       }
@@ -183,6 +240,11 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
       setIsSubmitting(false);
     }
   };
+
+  /* Display form errors for debugging */
+  useEffect(() => {
+    console.log(projectForm.formState.errors);
+  }, [projectForm.formState.errors]);
 
   return (
     <div className="space-y-6">
@@ -254,7 +316,7 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
                                   variant="ghost"
                                   size="icon"
                                   onClick={() =>
-                                    handleRemoveProject(index, project.id)
+                                    handleRemoveProject(index, project.item_id)
                                   }
                                   className="size-8 text-muted-foreground hover:text-destructive"
                                   disabled={isSubmitting}
@@ -265,18 +327,16 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
                             </div>
                           </div>
 
-                          {project.image && project.image.length > 0 && (
-                            <AspectRatio
-                              ratio={16 / 9}
-                              className="relative overflow-hidden rounded-md border shadow-sm"
-                            >
-                              <Image
-                                src={URL.createObjectURL(project.image[0]!)}
-                                alt={project.title}
-                                fill
-                                className="object-cover"
-                              />
-                            </AspectRatio>
+                          {!isImageEmpty(project.image) && (
+                            <div className="relative overflow-hidden rounded-md border shadow-sm">
+                              <AspectRatio ratio={16 / 9}>
+                                <img
+                                  src={getSafeImageUrl(project.image)}
+                                  alt={project.title || "Project"}
+                                  className="w-full h-full object-cover"
+                                />
+                              </AspectRatio>
+                            </div>
                           )}
 
                           <p className="text-sm text-muted-foreground">
@@ -324,7 +384,7 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
                               variant="ghost"
                               size="sm"
                               onClick={() =>
-                                handleRemoveProject(index, project.id)
+                                handleRemoveProject(index, project.item_id)
                               }
                               className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
                               disabled={isSubmitting}
@@ -388,13 +448,15 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps = {}) {
                 fieldType={FormFieldType.INPUT}
               />
 
-              <DynamicFormField
-                control={projectForm.control}
-                name="image"
-                label="Image (4MB max)"
-                fieldType={FormFieldType.FILE}
-                fileOptions={imageOptions}
-              />
+              {editingIndex === null && (
+                <DynamicFormField
+                  control={projectForm.control}
+                  name="image"
+                  label="Image (4MB max)"
+                  fieldType={FormFieldType.FILE}
+                  fileOptions={imageOptions}
+                />
+              )}
 
               <DynamicFormField
                 control={projectForm.control}
