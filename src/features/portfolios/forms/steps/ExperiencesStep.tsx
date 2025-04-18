@@ -59,6 +59,9 @@ const employmentTypeOptions = [
 function isLogoEmpty(logo: any): boolean {
   if (!logo) return true;
   if (typeof logo === "string") {
+    // If it's a valid URL or file path, it's not empty
+    if (logo.startsWith("http") || logo.startsWith("/")) return false;
+    // If it's an empty string or string representation of empty data, it's empty
     return (
       logo.trim() === "" || logo === "[]" || logo === "{}" || logo === "null"
     );

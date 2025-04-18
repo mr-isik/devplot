@@ -68,6 +68,7 @@ import {
   updatePortfolioOptions,
 } from "@/actions/portfolios/actions";
 import { toast } from "sonner";
+import Loader from "@/components/globals/Loader";
 
 // Component types
 interface ThemeCardProps {
@@ -914,12 +915,10 @@ export default function AppearanceStep({
               className="gap-2"
               size="lg"
             >
-              <SaveIcon className="h-4 w-4" />
-              {isSaving
-                ? "Saving..."
-                : hasChanges
-                  ? "Save Appearance Settings"
-                  : "No Changes to Save"}
+              <Loader state={isSaving}>
+                <SaveIcon className="h-4 w-4" />
+                Save Changes
+              </Loader>
             </Button>
           </div>
         </div>

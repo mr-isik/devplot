@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { SaveIcon } from "lucide-react";
+import Loader from "@/components/globals/Loader";
 
 interface BasicInfoStepProps {
   portfolioId?: string;
@@ -192,12 +193,10 @@ export default function BasicInfoStep({
               className="gap-2"
               size="lg"
             >
-              <SaveIcon className="h-4 w-4" />
-              {isSaving
-                ? "Saving..."
-                : hasChanges
-                  ? "Save Changes"
-                  : "No Changes to Save"}
+              <Loader state={isSaving}>
+                <SaveIcon className="h-4 w-4" />
+                Save Changes
+              </Loader>
             </Button>
           </div>
         </div>

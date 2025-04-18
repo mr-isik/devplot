@@ -41,6 +41,9 @@ import {
   RocketIcon,
   TrashIcon,
   WrenchIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CheckIcon,
 } from "lucide-react";
 
 import AppearanceStep from "./steps/AppearanceStep";
@@ -217,49 +220,94 @@ export default function EditPortfolioForm({
     }
   };
 
+  const handleStepNavigation = (direction: "next" | "prev") => {
+    const currentIndex = STEPS.findIndex((step) => step.id === activeTab);
+
+    if (direction === "next" && currentIndex < STEPS.length - 1) {
+      setActiveTab(STEPS[currentIndex + 1].id);
+    } else if (direction === "prev" && currentIndex > 0) {
+      setActiveTab(STEPS[currentIndex - 1].id);
+    }
+  };
+
+  const isFirstStep = activeTab === STEPS[0].id;
+  const isLastStep = activeTab === STEPS[STEPS.length - 1].id;
+
   return (
     <FormProvider {...form}>
       <div className="relative space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Edit Your Portfolio</CardTitle>
-            <CardDescription>
-              Update your portfolio information in the sections below
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid grid-cols-4 md:grid-cols-8 mb-6">
-                {STEPS.map((step) => (
-                  <TabsTrigger
-                    key={step.id}
-                    value={step.id}
-                    className="relative"
-                  >
-                    <span className="flex items-center">
-                      {step.icon}
-                      <span className="hidden md:inline">{step.title}</span>
-                    </span>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+        <Card className="border-transparent bg-transparent">
+          <CardContent className="pt-6">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="flex flex-col md:flex-row gap-6"
+            >
+              <div className="flex flex-col gap-4">
+                <TabsList className="flex flex-col w-full md:w-64 h-max space-y-1 p-3">
+                  {STEPS.map((step) => (
+                    <TabsTrigger
+                      key={step.id}
+                      value={step.id}
+                      className="relative justify-start h-10 md:h-11 w-full"
+                    >
+                      <span className="flex items-center">
+                        {step.icon}
+                        <span className="ml-2">{step.title}</span>
+                      </span>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
-              {STEPS.map((step) => (
-                <TabsContent key={step.id} value={step.id}>
-                  <div className="space-y-4">
-                    <div>
-                      <h2 className="text-xl font-semibold">{step.title}</h2>
-                      <p className="text-sm text-muted-foreground">
-                        {step.description}
-                      </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => handleStepNavigation("prev")}
+                    disabled={isFirstStep}
+                    className="justify-between"
+                  >
+                    <ChevronLeftIcon className="size-4" />
+                    Back
+                  </Button>
+
+                  <Button
+                    onClick={() => handleStepNavigation("next")}
+                    disabled={isLastStep}
+                    className="justify-between"
+                  >
+                    {isLastStep ? (
+                      <>
+                        <CheckIcon className="size-4" />
+                        Finish
+                      </>
+                    ) : (
+                      <>
+                        Continue
+                        <ChevronRightIcon className="size-4" />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex-1 md:pl-6">
+                {STEPS.map((step) => (
+                  <TabsContent key={step.id} value={step.id}>
+                    <div className="space-y-4">
+                      <div>
+                        <h2 className="text-xl font-semibold">{step.title}</h2>
+                        <p className="text-sm text-muted-foreground">
+                          {step.description}
+                        </p>
+                      </div>
+                      {step.component}
                     </div>
-                    {step.component}
-                  </div>
-                </TabsContent>
-              ))}
+                  </TabsContent>
+                ))}
+              </div>
             </Tabs>
           </CardContent>
-          <CardFooter className="border-t p-6 flex justify-between">
+          <CardFooter className="p-6 flex justify-between">
             <AlertDialog
               open={showDeleteConfirm}
               onOpenChange={setShowDeleteConfirm}
