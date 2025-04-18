@@ -52,7 +52,7 @@ import {
   SaveIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   getAllThemes,
@@ -354,6 +354,59 @@ export default function AppearanceStep({
   // State for saving
   const [isSaving, setIsSaving] = useState(false);
 
+  // Reference to track original values
+  const originalValues = useRef<any>(null);
+
+  // State to track if form has changes
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Initialize original values on component mount
+  useEffect(() => {
+    const options = form.getValues().options || {};
+    originalValues.current = {
+      theme: options.theme || DEFAULT_THEME_ID,
+      colorTheme: options.colorTheme || "light",
+      colors: [
+        ...(options.colors || [
+          "#FFFFFF",
+          "#F5F5F5",
+          "#E5E5E5",
+          "#000000",
+          "#3B82F6",
+        ]),
+      ],
+      font: options.font || "inter",
+    };
+  }, [form]);
+
+  // Check for changes when form values change
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      if (!originalValues.current) return;
+
+      const options = value.options || {};
+
+      // Deep compare original and current colors
+      const colorsChanged =
+        !options.colors ||
+        options.colors.length !== originalValues.current.colors.length ||
+        options.colors.some(
+          (color: string | undefined, index: number) =>
+            color !== originalValues.current.colors[index]
+        );
+
+      const changed =
+        options.theme !== originalValues.current.theme ||
+        options.colorTheme !== originalValues.current.colorTheme ||
+        options.font !== originalValues.current.font ||
+        colorsChanged;
+
+      setHasChanges(changed);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   // Mock portfolio data for preview
   const [previewData, setPreviewData] = useState<{
     portfolio: Portfolio;
@@ -613,7 +666,23 @@ export default function AppearanceStep({
         font: options.font || "inter",
       });
 
-      form.reset(form.getValues());
+      // Update original values after successful save
+      originalValues.current = {
+        theme: options.theme || DEFAULT_THEME_ID,
+        colorTheme: options.colorTheme || "light",
+        colors: [
+          ...(options.colors || [
+            "#FFFFFF",
+            "#F5F5F5",
+            "#E5E5E5",
+            "#000000",
+            "#3B82F6",
+          ]),
+        ],
+        font: options.font || "inter",
+      };
+
+      setHasChanges(false);
       toast.success("Appearance settings saved");
     } catch (error) {
       console.error("Error saving appearance settings:", error);
@@ -835,15 +904,24 @@ export default function AppearanceStep({
       </Tabs>
 
       {portfolioId && (
-        <div className="flex justify-end mt-6">
-          <Button
-            onClick={handleSaveOptions}
-            disabled={isSaving || !form.formState.isDirty}
-            className="gap-2"
-          >
-            <SaveIcon className="h-4 w-4" />
-            {isSaving ? "Saving..." : "Save Appearance Settings"}
-          </Button>
+        <div
+          className={`fixed bottom-0 left-0 right-0 z-10 border-t bg-background p-4 shadow-md transition-transform duration-300 ease-in-out ${hasChanges ? "translate-y-0" : "translate-y-full"}`}
+        >
+          <div className="container flex justify-end">
+            <Button
+              onClick={handleSaveOptions}
+              disabled={isSaving || !hasChanges}
+              className="gap-2"
+              size="lg"
+            >
+              <SaveIcon className="h-4 w-4" />
+              {isSaving
+                ? "Saving..."
+                : hasChanges
+                  ? "Save Appearance Settings"
+                  : "No Changes to Save"}
+            </Button>
+          </div>
         </div>
       )}
     </div>

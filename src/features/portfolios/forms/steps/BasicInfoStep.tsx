@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useFormContext } from "react-hook-form";
 import { updateContent } from "@/actions/contents/action";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { SaveIcon } from "lucide-react";
 
@@ -30,6 +30,43 @@ export default function BasicInfoStep({
 }: BasicInfoStepProps = {}) {
   const form = useFormContext<PortfolioFormValues>();
   const [isSaving, setIsSaving] = useState(false);
+
+  // Reference to track original values
+  const originalValues = useRef<any>(null);
+
+  // State to track if form has changes
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Initialize original values on component mount
+  useEffect(() => {
+    const content = form.getValues().content || {};
+    originalValues.current = {
+      hero_header: content.hero_header || "",
+      hero_description: content.hero_description || "",
+      about_text: content.about_text || "",
+      meta_title: content.meta_title || "",
+      meta_description: content.meta_description || "",
+    };
+  }, [form]);
+
+  // Check for changes when form values change
+  useEffect(() => {
+    const subscription = form.watch((value) => {
+      if (!originalValues.current) return;
+
+      const content = value.content || {};
+      const changed =
+        content.hero_header !== originalValues.current.hero_header ||
+        content.hero_description !== originalValues.current.hero_description ||
+        content.about_text !== originalValues.current.about_text ||
+        content.meta_title !== originalValues.current.meta_title ||
+        content.meta_description !== originalValues.current.meta_description;
+
+      setHasChanges(changed);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   const handleSave = async () => {
     if (!portfolioId) return;
@@ -50,7 +87,16 @@ export default function BasicInfoStep({
         portfolioId
       );
 
-      form.reset(form.getValues());
+      // Update original values after successful save
+      originalValues.current = {
+        hero_header: content.hero_header || "",
+        hero_description: content.hero_description || "",
+        about_text: content.about_text || "",
+        meta_title: content.meta_title || "",
+        meta_description: content.meta_description || "",
+      };
+
+      setHasChanges(false);
       toast.success("Basic info saved");
     } catch (error) {
       console.error("Error saving basic info:", error);
@@ -61,7 +107,7 @@ export default function BasicInfoStep({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card>
           <CardContent className="pt-6">
@@ -136,15 +182,24 @@ export default function BasicInfoStep({
       </div>
 
       {portfolioId && (
-        <div className="flex justify-end">
-          <Button
-            onClick={handleSave}
-            disabled={isSaving || !form.formState.isDirty}
-            className="gap-2"
-          >
-            <SaveIcon className="h-4 w-4" />
-            {isSaving ? "Saving..." : "Save Changes"}
-          </Button>
+        <div
+          className={`fixed bottom-0 left-0 right-0 z-10 border-t bg-background p-4 shadow-md transition-transform duration-300 ease-in-out ${hasChanges ? "translate-y-0" : "translate-y-full"}`}
+        >
+          <div className="container flex justify-end">
+            <Button
+              onClick={handleSave}
+              disabled={isSaving || !hasChanges}
+              className="gap-2"
+              size="lg"
+            >
+              <SaveIcon className="h-4 w-4" />
+              {isSaving
+                ? "Saving..."
+                : hasChanges
+                  ? "Save Changes"
+                  : "No Changes to Save"}
+            </Button>
+          </div>
         </div>
       )}
     </div>
