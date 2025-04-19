@@ -2,7 +2,7 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 import type { Metadata } from "next";
 import VerifyEmail from "./VerifyEmail";
 
-type Props = {
+type PageProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
@@ -13,9 +13,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function AuthConfirmPage({ searchParams }: Props) {
-  const { token_hash, type, error_code, error_message, next } =
-    await searchParams;
+export default function AuthConfirmPage({ searchParams }: PageProps) {
+  const { token_hash, type, error_code, error_message, next } = searchParams;
 
   if (!token_hash) {
     return (
@@ -30,7 +29,7 @@ export default async function AuthConfirmPage({ searchParams }: Props) {
     return (
       <div className="p-4 text-center">
         <h1 className="mb-2 text-xl font-semibold">Error Occurred</h1>
-        <p>{error_message}</p>
+        <p>{error_message as string}</p>
       </div>
     );
   }
