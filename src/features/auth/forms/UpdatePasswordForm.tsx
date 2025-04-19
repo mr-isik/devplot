@@ -18,7 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const SignUpForm = () => {
+const UpdatePasswordForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -108,4 +108,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default UpdatePasswordForm;

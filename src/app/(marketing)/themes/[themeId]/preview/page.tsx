@@ -5,10 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeProvider } from "@/features/themes/context/ThemeContext";
 import { ThemeStyleProvider } from "@/features/themes/components/ThemeStyleProvider";
-import {
-  getThemeById,
-  getDefaultTheme,
-} from "@/features/themes/registry/themeRegistry";
+import { getThemeById } from "@/features/themes/registry/themeRegistry";
 import { createThemeOptions } from "@/features/themes/services/themeService";
 import { ArrowLeft, SparklesIcon } from "lucide-react";
 import Image from "next/image";
