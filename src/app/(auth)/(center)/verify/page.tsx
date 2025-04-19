@@ -12,7 +12,6 @@ import Link from "next/link";
 import ResendButton from "./ResendButton";
 
 type Props = {
-  params: { locale: string };
   searchParams: { email: string };
 };
 
