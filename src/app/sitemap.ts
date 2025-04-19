@@ -1,12 +1,11 @@
-import type { MetadataRoute } from 'next';
-import { getBaseUrl } from '@/utils/Helpers';
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: `${getBaseUrl()}/`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: "daily",
       priority: 0.7,
     },
   ];
