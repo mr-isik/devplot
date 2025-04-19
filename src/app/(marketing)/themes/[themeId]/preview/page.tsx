@@ -16,11 +16,13 @@ import type { Project } from "@/features/projects/types";
 import type { Skill } from "@/features/skills/types";
 
 type Props = {
-  params: { themeId: string };
+  params: Promise<{ themeId: string }>;
 };
 
-export default function ThemePreviewPage({ params }: Props) {
-  const theme = getThemeById(params.themeId as any);
+export default async function ThemePreviewPage({ params }: Props) {
+  const { themeId } = await params;
+
+  const theme = getThemeById(themeId as any);
 
   // If theme not found, redirect to 404
   if (!theme) {

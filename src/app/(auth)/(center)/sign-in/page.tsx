@@ -2,10 +2,6 @@ import Logo from "@/components/globals/logo";
 import SignInForm from "@/features/auth/forms/SignInForm";
 import Image from "next/image";
 
-type ISignInPageProps = {
-  params: Promise<{ locale: string }>;
-};
-
 export async function generateMetadata() {
   return {
     title: "DevPlot | Sign In",

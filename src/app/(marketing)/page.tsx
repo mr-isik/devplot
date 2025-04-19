@@ -1,17 +1,3 @@
-type IIndexProps = {
-  params: Promise<{ locale: string }>;
-};
-
-export async function generateMetadata(props: IIndexProps) {
-  const { locale } = await props.params;
-
-  return {
-    title: "DevPlot - Developer Portfolio Builder",
-    description:
-      "Stand out in the tech industry with a professional portfolio that showcases your skills and projects - built in minutes",
-  };
-}
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -52,15 +38,19 @@ import {
   CreditCard,
   GitBranch,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import Navbar from "@/components/layout/Navbar";
 import Logo from "@/components/globals/logo";
 
-export default async function Index(props: IIndexProps) {
-  const { locale } = await props.params;
+export async function generateMetadata() {
+  return {
+    title: "DevPlot - Developer Portfolio Builder",
+    description:
+      "Stand out in the tech industry with a professional portfolio that showcases your skills and projects - built in minutes",
+  };
+}
 
+export default async function Index() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
