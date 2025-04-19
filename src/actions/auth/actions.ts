@@ -6,7 +6,6 @@ import type {
   SignUpFormValues,
 } from "@/lib/validations/auth";
 import type { EmailOtpType } from "@supabase/supabase-js";
-import { Env } from "@/lib/Env";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -64,24 +63,11 @@ export const signup = async (
   try {
     const supabase = await createClient();
 
-    const { data: user, error: userError } = await supabase
-      .from("users")
-      .select("*")
-      .eq("username", formData.username);
-
-    if (userError) {
-      return { data: null, error: { message: userError.message } };
-    }
-
-    if (user && user.length > 0) {
-      return { data: null, error: { message: "Username is already taken" } };
-    }
-
     const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
       options: {
-        emailRedirectTo: `${Env.NEXT_PUBLIC_APP_URL}/auth/confirm`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_DOMAIN}/auth/confirm`,
       },
     });
 
@@ -89,7 +75,7 @@ export const signup = async (
       return { data: null, error };
     }
 
-    const createdUser = await createUser(data.user!.id, formData.username);
+    const createdUser = await createUser(data.user!.id);
 
     if (createdUser) {
       revalidatePath("/");
@@ -167,7 +153,7 @@ export const resetPassword = async (email: string): Promise<AuthResponse> => {
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${Env.NEXT_PUBLIC_APP_URL}/change-password`,
+      redirectTo: `${process.env.NEXT_PUBLIC_DOMAIN}/change-password`,
     });
 
     if (error) {

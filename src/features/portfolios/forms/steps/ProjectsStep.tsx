@@ -32,7 +32,7 @@ import {
   deleteProject,
   updateProject,
 } from "@/actions/projects/actions";
-import { getSafeImageUrl } from "@/lib/utils";
+import Image from "next/image";
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
 
@@ -144,13 +144,21 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
         ] as unknown as ProjectFormValues;
         const currentImageIsString = typeof existingProject.image === "string";
 
-        // If the image array is empty but we had a string URL before, keep the existing image URL
-        const imageToUpdate =
-          Array.isArray(data.image) &&
-          data.image.length === 0 &&
-          currentImageIsString
-            ? existingProject.image // Keep the existing URL
-            : data.image; // Otherwise use the new image (array of files or null)
+        // Always set image to null if it's empty, otherwise keep existing or use new
+        let imageToUpdate;
+        if (Array.isArray(data.image) && data.image.length === 0) {
+          // Empty array case - check if we had a previous image
+          if (currentImageIsString && !isImageEmpty(existingProject.image)) {
+            // Keep existing non-empty image string
+            imageToUpdate = existingProject.image;
+          } else {
+            // No image before or the new upload is empty - set to null
+            imageToUpdate = null;
+          }
+        } else {
+          // New image uploaded
+          imageToUpdate = data.image;
+        }
 
         const { error } = await updateProject({
           item_id: data.item_id,
@@ -176,8 +184,14 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
       }
       // Create workflow: Add new project to database
       else if (portfolioId) {
+        // Ensure image is null if empty
+        const imageToCreate = isImageEmpty(data.image) ? null : data.image;
+
         const { data: newProject, error } = await createProject(
-          data,
+          {
+            ...data,
+            image: imageToCreate,
+          },
           portfolioId
         );
 
@@ -192,18 +206,28 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
           append({
             ...data,
             item_id: newProject[0].id,
+            image: imageToCreate,
           });
         } else {
-          append(data);
+          append({
+            ...data,
+            image: imageToCreate,
+          });
         }
         toast.success("Project added successfully");
       }
       // Only update form state (no database)
       else {
+        // Ensure image is null if empty
+        const imageToStore = isImageEmpty(data.image) ? null : data.image;
+
         if (editingIndex !== null) {
           remove(editingIndex);
         }
-        append(data);
+        append({
+          ...data,
+          image: imageToStore,
+        });
         toast.success(
           editingIndex !== null ? "Project updated" : "Project added"
         );
@@ -327,12 +351,14 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
                             </div>
                           </div>
 
-                          {!isImageEmpty(project.image) && (
+                          {project.image && project.image.length > 0 && (
                             <div className="relative overflow-hidden rounded-md border shadow-sm">
                               <AspectRatio ratio={16 / 9}>
-                                <img
-                                  src={getSafeImageUrl(project.image)}
+                                <Image
+                                  // @ts-ignore
+                                  src={project.image}
                                   alt={project.title || "Project"}
+                                  fill
                                   className="w-full h-full object-cover"
                                 />
                               </AspectRatio>

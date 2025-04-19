@@ -1,0 +1,154 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import Logo from "../globals/logo";
+
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center">
+            <Logo size={64} />
+            <span className="text-xl font-bold tracking-tight">DevPlot</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <Link href="/themes" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Themes
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/pricing" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Pricing
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/blog" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Blog
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Desktop Auth Buttons */}
+        <div className="hidden md:flex items-center gap-4">
+          <Link href="/sign-in">
+            <Button variant="ghost">Log In</Button>
+          </Link>
+          <Link href="/sign-up">
+            <Button className="bg-primary hover:bg-primary/90 shadow-sm">
+              Sign Up
+            </Button>
+          </Link>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="md:hidden">
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right">
+            <div className="grid gap-6 py-6">
+              <div className="flex items-center justify-between">
+                <Link
+                  href="/"
+                  className="flex items-center gap-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <div className="relative h-8 w-8 overflow-hidden rounded bg-primary">
+                    <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-primary-foreground">
+                      D
+                    </span>
+                  </div>
+                  <span className="text-xl font-bold tracking-tight">
+                    DevPlot
+                  </span>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close menu</span>
+                </Button>
+              </div>
+              <div className="grid gap-4">
+                <Link
+                  href="/features"
+                  className="group flex items-center justify-between rounded-lg border border-transparent px-2 py-1.5 text-foreground hover:bg-primary/10"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Features
+                </Link>
+                <Link
+                  href="/templates"
+                  className="group flex items-center justify-between rounded-lg border border-transparent px-2 py-1.5 text-foreground hover:bg-primary/10"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Templates
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="group flex items-center justify-between rounded-lg border border-transparent px-2 py-1.5 text-foreground hover:bg-primary/10"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Pricing
+                </Link>
+                <Link
+                  href="/blog"
+                  className="group flex items-center justify-between rounded-lg border border-transparent px-2 py-1.5 text-foreground hover:bg-primary/10"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Blog
+                </Link>
+              </div>
+              <div className="grid gap-2 mt-6">
+                <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                  <Button variant="outline" className="w-full">
+                    Log In
+                  </Button>
+                </Link>
+                <Link href="/auth/register" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full">Sign Up Free</Button>
+                </Link>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </header>
+  );
+};
+
+export default Navbar;

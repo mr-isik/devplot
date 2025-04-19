@@ -19,12 +19,12 @@ export default async function EditPortfolioPage() {
 
   const { data: portfolios } = await getPortfolio(userData[0].id);
 
-  if (!portfolios || portfolios.length === 0) {
+  if (!portfolios || portfolios.length <= 0) {
     redirect(`/dashboard/create`);
   }
 
-  const username = userData[0].username;
-  const { data: fullPortfolio, error } = await getFullPortfolio(username);
+  const id = userData[0].id;
+  const { data: fullPortfolio, error } = await getFullPortfolio(id);
 
   if (error || !fullPortfolio || fullPortfolio.length === 0) {
     redirect(`/dashboard/create`);

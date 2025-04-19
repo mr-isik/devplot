@@ -43,11 +43,13 @@ import { updatePortfolio } from "@/actions/portfolios/actions";
 type PublishStepProps = {
   preview?: boolean;
   portfolioId?: string;
+  userId: string;
 };
 
 export default function PublishStep({
   preview,
   portfolioId,
+  userId,
 }: PublishStepProps) {
   const form = useFormContext<PortfolioFormValues>();
   const [publishEnabled, setPublishEnabled] = useState(
@@ -126,7 +128,7 @@ export default function PublishStep({
   const handleCopyUrl = () => {
     if (!portfolioId) return;
 
-    const url = `https://devplot.com/portfolio/${portfolioId}`;
+    const url = `https://${process.env.NEXT_PUBLIC_DOMAIN}/${userId}`;
     navigator.clipboard.writeText(url);
     setIsCopied(true);
     toast.success("Portfolio URL copied to clipboard");
@@ -233,7 +235,7 @@ export default function PublishStep({
             <div className="flex items-center rounded-md border bg-muted/50 px-3 py-2">
               <span className="text-sm font-medium flex-1">
                 {portfolioId
-                  ? `https://devplot.com/portfolio/${portfolioId}`
+                  ? `https://${process.env.NEXT_PUBLIC_DOMAIN}/portfolio/${userId}`
                   : "Your URL will appear here after publishing"}
               </span>
               {portfolioId && (

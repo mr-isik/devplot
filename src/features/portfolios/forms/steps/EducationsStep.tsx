@@ -87,14 +87,28 @@ export default function EducationsStep({
   const handleAddEducation = async (data: EducationFormValues) => {
     setIsSubmitting(true);
     try {
+      const prepareDataForServer = (formData: EducationFormValues) => {
+        const serverData = { ...formData };
+
+        // Convert empty strings to undefined (which will be null in SQL)
+        if (serverData.start_date === "") {
+          // @ts-ignore - we know this is safe as the server will convert undefined to null
+          serverData.start_date = undefined;
+        }
+
+        // Convert "Present" or empty to null for end_date
+        if (serverData.end_date === "" || serverData.end_date === "Present") {
+          // @ts-ignore - we know this is safe as the server will convert undefined to null
+          serverData.end_date = undefined;
+        }
+
+        return serverData;
+      };
+
       if (editingIndex !== null && data.item_id && portfolioId) {
         const { error } = await updateEducation({
+          ...prepareDataForServer(data),
           item_id: data.item_id,
-          school: data.school,
-          degree: data.degree,
-          field: data.field,
-          start_date: data.start_date,
-          end_date: data.end_date,
         });
 
         if (error) {
@@ -105,13 +119,7 @@ export default function EducationsStep({
         toast.success("Education updated successfully");
       } else if (portfolioId) {
         const { data: newEducation, error } = await createEducation(
-          {
-            school: data.school,
-            degree: data.degree,
-            field: data.field,
-            start_date: data.start_date,
-            end_date: data.end_date,
-          },
+          prepareDataForServer(data),
           portfolioId
         );
 

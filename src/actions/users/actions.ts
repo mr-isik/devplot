@@ -1,17 +1,15 @@
-'use server';
+"use server";
 
-import type { User } from '@sentry/nextjs';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from "@/utils/supabase/server";
 
-export const createUser = async (authId: string, username: string) => {
+export const createUser = async (authId: string) => {
   const supabase = await createClient();
 
   const { data: user, error } = await supabase
-    .from('users')
+    .from("users")
     .upsert({
       auth_id: authId,
       onboarded: false,
-      username,
     })
     .select();
 
@@ -22,14 +20,17 @@ export const createUser = async (authId: string, username: string) => {
   return user;
 };
 
-export const getUser = async (): Promise<User> => {
+export const getUser = async () => {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: userData, error } = await supabase.from('users').select('*').eq('auth_id', user?.id);
+  const { data: userData, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("auth_id", user?.id);
 
   return { userData, error };
 };

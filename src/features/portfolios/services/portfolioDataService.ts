@@ -1,7 +1,7 @@
 import type { Portfolio } from "@/features/portfolios/types";
 import {
   getFullPortfolio,
-  getPortfolioMetadataWithUsername,
+  getPortfolioMetadataWithId,
 } from "@/actions/portfolios/actions";
 
 /**
@@ -9,12 +9,12 @@ import {
  * @param username - The username to fetch portfolio for
  * @returns An object containing portfolio data or error
  */
-export async function fetchPortfolioByUsername(username: string): Promise<{
+export async function fetchPortfolioById(id: number): Promise<{
   portfolio?: Portfolio;
   error?: string;
 }> {
   try {
-    const { data, error } = await getFullPortfolio(username);
+    const { data, error } = await getFullPortfolio(id);
 
     if (error || !data || data.length === 0) {
       return { error: "Portfolio not found" };
@@ -52,7 +52,7 @@ export async function fetchPortfolioByUsername(username: string): Promise<{
  * @param username - The username to fetch metadata for
  * @returns An object containing metadata or error
  */
-export async function fetchPortfolioMetadata(username: string): Promise<{
+export async function fetchPortfolioMetadata(id: number): Promise<{
   metadata?: {
     title: string;
     description: string;
@@ -60,7 +60,7 @@ export async function fetchPortfolioMetadata(username: string): Promise<{
   error?: string;
 }> {
   try {
-    const { data, error } = await getPortfolioMetadataWithUsername(username);
+    const { data, error } = await getPortfolioMetadataWithId(id);
 
     if (error || !data || data.length === 0) {
       return { error: "Portfolio metadata not found" };

@@ -23,14 +23,11 @@ export const getSignUpSchema = () =>
       confirmPassword: z.string().min(6, {
         message: "Password is required",
       }),
-      username: z.string().min(3, {
-        message: "Username is required",
-      }),
       terms: z.boolean().refine((val) => val === true, {
         message: "Terms and conditions are required",
       }),
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine((data: any) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
       path: ["confirmPassword"],
     });

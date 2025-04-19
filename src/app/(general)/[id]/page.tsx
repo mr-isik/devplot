@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  fetchPortfolioByUsername,
+  fetchPortfolioById,
   fetchPortfolioMetadata,
 } from "@/features/portfolios/services/portfolioDataService";
 import PortfolioRenderer from "@/features/themes/components/PortfolioRenderer";
@@ -10,11 +10,11 @@ import PortfolioRenderer from "@/features/themes/components/PortfolioRenderer";
 export async function generateMetadata({
   params,
 }: {
-  params: { username: string };
+  params: { id: number };
 }): Promise<Metadata> {
-  const { username } = await params;
+  const { id } = await params;
 
-  const { metadata, error } = await fetchPortfolioMetadata(username);
+  const { metadata, error } = await fetchPortfolioMetadata(id);
 
   if (error || !metadata) {
     return {
@@ -37,11 +37,11 @@ export async function generateMetadata({
 // The portfolio page component - now with clear separation of concerns:
 // 1. Data fetching is handled by the portfolioDataService
 // 2. Theme selection and rendering is handled by the PortfolioRenderer
-const PortfolioPage = async ({ params }: { params: { username: string } }) => {
-  const { username } = await params;
+const PortfolioPage = async ({ params }: { params: { id: number } }) => {
+  const { id } = await params;
 
   // Fetch portfolio data using our data service
-  const { portfolio, error } = await fetchPortfolioByUsername(username);
+  const { portfolio, error } = await fetchPortfolioById(id);
 
   // Handle errors or missing data
   if (error || !portfolio) {

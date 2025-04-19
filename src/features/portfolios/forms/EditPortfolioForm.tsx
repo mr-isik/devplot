@@ -243,8 +243,8 @@ export default function EditPortfolioForm({
               onValueChange={setActiveTab}
               className="flex flex-col md:flex-row gap-6"
             >
-              <div className="flex flex-col gap-4">
-                <TabsList className="flex flex-col w-full md:w-64 h-max space-y-1 p-3">
+              <div className="flex flex-col gap-2">
+                <TabsList className="flex flex-col w-full md:w-52 h-max space-y-1 p-3">
                   {STEPS.map((step) => (
                     <TabsTrigger
                       key={step.id}
@@ -259,7 +259,7 @@ export default function EditPortfolioForm({
                   ))}
                 </TabsList>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 w-52 gap-2 pt-4">
                   <Button
                     variant="outline"
                     onClick={() => handleStepNavigation("prev")}
@@ -290,7 +290,7 @@ export default function EditPortfolioForm({
                 </div>
               </div>
 
-              <div className="flex-1 md:pl-6">
+              <div className="flex-1 md:pl-2">
                 {STEPS.map((step) => (
                   <TabsContent key={step.id} value={step.id}>
                     <div className="space-y-4">

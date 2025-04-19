@@ -143,7 +143,13 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
       title: "Publish",
       description: "Review and publish",
       icon: <EyeIcon className="mr-2 size-4" />,
-      component: <PublishStep preview={showPreview} portfolioId={undefined} />,
+      component: (
+        <PublishStep
+          preview={showPreview}
+          portfolioId={undefined}
+          userId={userId}
+        />
+      ),
     },
   ];
 
@@ -397,6 +403,7 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
               degree: education.degree,
               field: education.field,
               start_date: education.start_date,
+              /* @ts-ignore */
               end_date:
                 education.end_date === "Present"
                   ? null

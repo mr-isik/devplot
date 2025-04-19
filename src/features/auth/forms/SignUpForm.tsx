@@ -35,7 +35,6 @@ const SignUpForm = () => {
     resolver: zodResolver(getSignUpSchema()),
     defaultValues: {
       email: "",
-      username: "",
       password: "",
       confirmPassword: "",
       terms: false,
@@ -50,7 +49,6 @@ const SignUpForm = () => {
   } = form;
 
   const watchEmail = watch("email");
-  const watchUsername = watch("username");
   const watchTerms = watch("terms");
 
   const onSubmit = async (values: SignUpFormValues) => {
@@ -82,7 +80,7 @@ const SignUpForm = () => {
 
     switch (currentStep) {
       case FormStep.ACCOUNT_INFO:
-        fieldsToValidate = ["email", "username"];
+        fieldsToValidate = ["email"];
         break;
       case FormStep.PASSWORD:
         fieldsToValidate = ["password", "confirmPassword"];
@@ -105,12 +103,7 @@ const SignUpForm = () => {
   const isNextButtonDisabled = () => {
     switch (currentStep) {
       case FormStep.ACCOUNT_INFO:
-        return (
-          !dirtyFields.email ||
-          !dirtyFields.username ||
-          !!errors.email ||
-          !!errors.username
-        );
+        return !dirtyFields.email || !!errors.email;
       case FormStep.PASSWORD:
         return (
           !dirtyFields.password ||
@@ -281,14 +274,6 @@ const SignUpForm = () => {
                     placeholder="example@email.com"
                     fieldType={FormFieldType.INPUT}
                   />
-
-                  <DynamicFormField
-                    control={form.control}
-                    name="username"
-                    label="Username"
-                    placeholder="Enter your username"
-                    fieldType={FormFieldType.INPUT}
-                  />
                 </div>
               )}
 
@@ -319,36 +304,33 @@ const SignUpForm = () => {
                       <span className="text-muted-foreground">Email</span>
                       <span className="font-medium">{watchEmail}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Username</span>
-                      <span className="font-medium">{watchUsername}</span>
-                    </div>
-                  </div>
+                    <div className="flex justify-between"></div>
 
-                  <div className="space-y-2">
-                    <DynamicFormField
-                      control={form.control}
-                      name="terms"
-                      fieldType={FormFieldType.CHECKBOX}
-                      label={
-                        <span className="text-sm">
-                          I agree to the <br />
-                          <Link
-                            href="#"
-                            className="text-primary hover:underline"
-                          >
-                            Terms of Service
-                          </Link>{" "}
-                          &{" "}
-                          <Link
-                            href="#"
-                            className="text-primary hover:underline"
-                          >
-                            Privacy Policy
-                          </Link>
-                        </span>
-                      }
-                    />
+                    <div className="space-y-2">
+                      <DynamicFormField
+                        control={form.control}
+                        name="terms"
+                        fieldType={FormFieldType.CHECKBOX}
+                        label={
+                          <span className="text-sm">
+                            I agree to the <br />
+                            <Link
+                              href="#"
+                              className="text-primary hover:underline"
+                            >
+                              Terms of Service
+                            </Link>{" "}
+                            &{" "}
+                            <Link
+                              href="#"
+                              className="text-primary hover:underline"
+                            >
+                              Privacy Policy
+                            </Link>
+                          </span>
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
               )}

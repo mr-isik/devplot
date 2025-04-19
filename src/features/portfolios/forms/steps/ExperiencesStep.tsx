@@ -30,7 +30,6 @@ import {
   deleteExperience,
   updateExperience,
 } from "@/actions/experiences/actions";
-import { cn, getSafeImageUrl } from "@/lib/utils";
 import Loader from "@/components/globals/Loader";
 
 type ExperienceFormValues = z.infer<typeof experienceSchema>;
@@ -129,18 +128,38 @@ export default function ExperiencesStep({
     setIsSubmitting(true);
 
     try {
+      // Ensure logo is null when empty
+      const logoToSend = isLogoEmpty(data.logo) ? null : data.logo;
+
+      // Function to ensure empty string dates are handled correctly
+      // This approach maintains type safety while allowing us to convert empty strings to null in the SQL
+      const prepareDataForServer = (formData: ExperienceFormValues) => {
+        const serverData = { ...formData };
+
+        // Convert empty strings to undefined (which will be null in SQL)
+        if (serverData.start_date === "") {
+          // @ts-ignore - we know this is safe as the server will convert undefined to null
+          serverData.start_date = undefined;
+        }
+
+        // Convert "Present" to null for end_date
+        if (serverData.end_date === "" || serverData.end_date === "Present") {
+          // @ts-ignore - we know this is safe as the server will convert undefined to null
+          serverData.end_date = undefined;
+        }
+
+        return {
+          ...serverData,
+          logo: logoToSend,
+        };
+      };
+
       // Edit workflow: Existing experience update with id
       if (editingIndex !== null && data.item_id && portfolioId) {
         // Database update via server action
         const { error } = await updateExperience({
+          ...prepareDataForServer(data),
           item_id: data.item_id,
-          role: data.role,
-          company: data.company,
-          employment_type: data.employment_type,
-          start_date: data.start_date,
-          end_date: data.end_date,
-          description: data.description,
-          logo: data.logo,
         });
 
         if (error) {
@@ -149,22 +168,17 @@ export default function ExperiencesStep({
 
         // Update form state
         remove(editingIndex);
-        append(data);
+        append({
+          ...data,
+          logo: logoToSend,
+        });
         toast.success("Experience updated successfully");
       }
       // Create workflow: New experience with portfolioId
       else if (portfolioId) {
         // Create via server action
         const { data: newExperience, error } = await createExperience(
-          {
-            role: data.role,
-            company: data.company,
-            employment_type: data.employment_type,
-            start_date: data.start_date,
-            end_date: data.end_date,
-            description: data.description,
-            logo: data.logo || null,
-          },
+          prepareDataForServer(data),
           portfolioId
         );
 
@@ -176,16 +190,14 @@ export default function ExperiencesStep({
         if (newExperience && newExperience[0]) {
           append({
             item_id: newExperience[0].id,
-            role: data.role,
-            company: data.company,
-            employment_type: data.employment_type,
-            start_date: data.start_date,
-            end_date: data.end_date,
-            description: data.description,
-            logo: data.logo,
+            ...data,
+            logo: logoToSend,
           });
         } else {
-          append(data);
+          append({
+            ...data,
+            logo: logoToSend,
+          });
         }
         toast.success("Experience added successfully");
       }
@@ -194,7 +206,10 @@ export default function ExperiencesStep({
         if (editingIndex !== null) {
           remove(editingIndex);
         }
-        append(data);
+        append({
+          ...data,
+          logo: logoToSend,
+        });
         toast.success(
           editingIndex !== null ? "Experience updated" : "Experience added"
         );
@@ -313,11 +328,13 @@ export default function ExperiencesStep({
 
                         <div className="flex flex-col gap-1">
                           <div className="mb-2 flex items-center gap-2">
-                            {!isLogoEmpty(experience.logo) && (
+                            {experience.logo && experience.logo.length > 0 && (
                               <div className="relative size-10 rounded-md border overflow-hidden">
-                                <img
-                                  src={getSafeImageUrl(experience.logo)}
+                                <Image
+                                  // @ts-ignore
+                                  src={experience.logo}
                                   alt={experience.company || "Company"}
+                                  fill
                                   className="w-full h-full object-cover"
                                 />
                               </div>

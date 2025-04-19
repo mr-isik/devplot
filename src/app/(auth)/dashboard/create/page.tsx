@@ -13,6 +13,10 @@ export async function generateMetadata() {
 export default async function CreatePortfolioPage() {
   const { userData } = await getUser();
 
+  if (!userData) {
+    redirect("/sign-in");
+  }
+
   const { data: portfolios } = await getPortfolio(userData[0].id);
 
   if (portfolios && portfolios.length > 0) {
