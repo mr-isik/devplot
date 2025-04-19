@@ -57,9 +57,21 @@ const SignUpForm = () => {
       const response = await signup(values);
 
       if (response.error) {
-        toast.error(response.error.message, {
-          duration: 5000,
-        });
+        if (
+          response.error.message.includes(
+            "duplicate key value violates unique constraint"
+          )
+        ) {
+          toast.error("Email already in use", {
+            description: "Please use a different email address or sign in",
+            duration: 5000,
+          });
+        } else {
+          toast.error("Sign up failed", {
+            description: response.error.message,
+            duration: 5000,
+          });
+        }
       }
 
       if (response.data) {
@@ -68,6 +80,7 @@ const SignUpForm = () => {
     } catch (error) {
       toast.error("An unexpected error occurred", {
         description: "Please try again later",
+        duration: 5000,
       });
       console.error("Sign up error:", error);
     } finally {
@@ -215,7 +228,26 @@ const SignUpForm = () => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              e.stopPropagation();
+
+              if (currentStep === FormStep.CONFIRMATION) {
+                if (!isNextButtonDisabled()) {
+                  form.handleSubmit(onSubmit)();
+                }
+              } else {
+                if (!isNextButtonDisabled()) {
+                  handleNextStep();
+                }
+              }
+            }
+          }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
