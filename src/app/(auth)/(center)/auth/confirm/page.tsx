@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import VerifyEmail from "./VerifyEmail";
 
 type PageProps = {
-  searchParams: any;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -13,8 +13,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function AuthConfirmPage({ searchParams }: PageProps) {
-  const { token_hash, type, error_code, error_message, next } = searchParams;
+export default async function AuthConfirmPage({ searchParams }: PageProps) {
+  const { token_hash, type, error_code, error_message, next } =
+    await searchParams;
 
   if (!token_hash) {
     return (

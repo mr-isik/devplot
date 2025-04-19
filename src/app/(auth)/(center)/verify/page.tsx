@@ -12,7 +12,7 @@ import Link from "next/link";
 import ResendButton from "./ResendButton";
 
 type Props = {
-  searchParams: { email: string };
+  searchParams: Promise<{ email: string }>;
 };
 
 export const metadata: Metadata = {
