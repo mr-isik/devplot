@@ -3,13 +3,10 @@ import type { Metadata } from "next";
 import VerifyEmail from "./VerifyEmail";
 
 type Props = {
-  params: { locale: string };
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export async function generateMetadata({
-  params: { locale },
-}: Props): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Verify Email",
     description: "Verify Email",
