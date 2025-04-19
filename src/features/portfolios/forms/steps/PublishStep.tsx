@@ -235,7 +235,7 @@ export default function PublishStep({
             <div className="flex items-center rounded-md border bg-muted/50 px-3 py-2">
               <span className="text-sm font-medium flex-1">
                 {portfolioId
-                  ? `https://${process.env.NEXT_PUBLIC_DOMAIN}/portfolio/${userId}`
+                  ? `https://${process.env.NEXT_PUBLIC_DOMAIN}/${userId}`
                   : "Your URL will appear here after publishing"}
               </span>
               {portfolioId && (
