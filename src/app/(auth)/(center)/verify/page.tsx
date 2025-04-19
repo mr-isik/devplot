@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckCircle2, Mail } from "lucide-react";
+import { CheckCircle2, ChevronLeft, Mail } from "lucide-react";
 import Link from "next/link";
 import ResendButton from "./ResendButton";
 
@@ -58,12 +58,15 @@ export default async function VerifyPage({ searchParams }: Props) {
 
         <CardFooter className="flex flex-col space-y-3">
           <ResendButton email={email} />
-
-          <Button variant="outline" asChild className="w-full">
-            <Link href="/sign-in">Back to Sign In</Link>
-          </Button>
         </CardFooter>
       </Card>
+      <Link
+        className="flex items-center gap-2 text-sm text-muted-foreground mt-4 justify-center"
+        href="/sign-in"
+      >
+        <ChevronLeft size={14} className="mt-0.5" />
+        Back to Sign In
+      </Link>
     </div>
   );
 }
