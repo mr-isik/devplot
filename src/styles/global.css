@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 23 38% 99%;
+    --foreground: 23 68% 1%;
+    --muted: 23 6% 91%;
+    --muted-foreground: 23 2% 31%;
+    --popover: 23 38% 99%;
+    --popover-foreground: 23 68% 1%;
+    --card: 23 38% 99%;
+    --card-foreground: 23 68% 1%;
+    --border: 23 2% 94%;
+    --input: 23 2% 94%;
+    --primary: 23 97% 46%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 23 8% 91%;
+    --secondary-foreground: 23 8% 31%;
+    --accent: 23 17% 86%;
+    --accent-foreground: 23 17% 26%;
+    --destructive: 18 94% 27%;
+    --destructive-foreground: 18 94% 87%;
+    --ring: 23 97% 46%;
+    --chart-1: 23 97% 46%;
+    --chart-2: 23 8% 91%;
+    --chart-3: 23 17% 86%;
+    --chart-4: 23 8% 94%;
+    --chart-5: 23 100% 46%;
+    --radius: 1rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 23 34% 1%;
+    --foreground: 23 16% 99%;
+    --muted: 23 6% 9%;
+    --muted-foreground: 23 2% 69%;
+    --popover: 23 34% 1%;
+    --popover-foreground: 23 16% 99%;
+    --card: 23 34% 1%;
+    --card-foreground: 23 16% 99%;
+    --border: 23 2% 13%;
+    --input: 23 2% 13%;
+    --primary: 23 97% 46%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 23 2% 20%;
+    --secondary-foreground: 23 2% 80%;
+    --accent: 23 9% 29%;
+    --accent-foreground: 23 9% 89%;
+    --destructive: 18 94% 57%;
+    --destructive-foreground: 0 0% 0%;
+    --ring: 23 97% 46%;
+    --chart-1: 23 97% 46%;
+    --chart-2: 23 2% 20%;
+    --chart-3: 23 9% 29%;
+    --chart-4: 23 2% 23%;
+    --chart-5: 23 100% 46%;
+
+    --sidebar-background: 23 34% 1%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Stylish scrollbar */
+@layer utilities {
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+
+  /* Dark mode scrollbar */
+  .dark *::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+  }
+
+  .dark *::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+}
+
+/* Mobile optimizations */
+@layer components {
+  /* Borderless cards for mobile displays */
+  @media (max-width: 640px) {
+    .mobile-borderless-card {
+      @apply border-0 shadow-none rounded-none;
+    }
+
+    .mobile-borderless-card > div:not(:last-child) {
+      @apply border-b;
+    }
+
+    .steps-container .mobile-card {
+      @apply border-0 shadow-none;
+    }
+
+    .steps-container .mobile-card-inner {
+      @apply border border-muted rounded-lg shadow-sm hover:shadow transition-all p-4;
+    }
+  }
+}
