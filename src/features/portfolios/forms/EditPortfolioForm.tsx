@@ -197,7 +197,13 @@ export default function EditPortfolioForm({
       title: "Publish",
       description: "Review and publish",
       icon: <EyeIcon className="mr-2 size-4" />,
-      component: <PublishStep preview={false} portfolioId={portfolioId} />,
+      component: (
+        <PublishStep
+          preview={false}
+          portfolioId={portfolioId}
+          userId={portfolioData.user_id}
+        />
+      ),
     },
   ];
 
