@@ -75,24 +75,29 @@ export const signup = async (
       return { data: null, error };
     }
 
-    const createdUser = await createUser(data.user!.id);
+    const userResult = await createUser(data.user!.id);
 
-    if (createdUser) {
-      revalidatePath("/");
-
-      return {
-        data: {
-          message:
-            "Successfully signed up! Please check your email to verify your account.",
-          user: data.user,
-        },
-        error: null,
-      };
+    if (userResult.error) {
+      return { data: null, error: userResult.error };
     }
 
-    return { data: null, error };
+    revalidatePath("/");
+
+    return {
+      data: {
+        message:
+          "Successfully signed up! Please check your email to verify your account.",
+        user: data.user,
+      },
+      error: null,
+    };
   } catch (error: any) {
-    return { data: null, error: { message: error.message } };
+    return {
+      data: null,
+      error: {
+        message: error.message || "An unexpected error occurred during signup",
+      },
+    };
   }
 };
 
