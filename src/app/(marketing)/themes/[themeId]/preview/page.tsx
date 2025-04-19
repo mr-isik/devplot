@@ -5,10 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ThemeProvider } from "@/features/themes/context/ThemeContext";
 import { ThemeStyleProvider } from "@/features/themes/components/ThemeStyleProvider";
-import {
-  getThemeById,
-  getDefaultTheme,
-} from "@/features/themes/registry/themeRegistry";
+import { getThemeById } from "@/features/themes/registry/themeRegistry";
 import { createThemeOptions } from "@/features/themes/services/themeService";
 import { ArrowLeft, SparklesIcon } from "lucide-react";
 import Image from "next/image";
@@ -19,11 +16,13 @@ import type { Project } from "@/features/projects/types";
 import type { Skill } from "@/features/skills/types";
 
 type Props = {
-  params: { themeId: string };
+  params: Promise<{ themeId: string }>;
 };
 
-export default function ThemePreviewPage({ params }: Props) {
-  const theme = getThemeById(params.themeId as any);
+export default async function ThemePreviewPage({ params }: Props) {
+  const { themeId } = await params;
+
+  const theme = getThemeById(themeId as any);
 
   // If theme not found, redirect to 404
   if (!theme) {

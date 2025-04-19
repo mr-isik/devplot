@@ -1,44 +1,36 @@
-import type { EmailOtpType } from '@supabase/supabase-js';
-import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
-import VerifyEmail from './VerifyEmail';
+import type { EmailOtpType } from "@supabase/supabase-js";
+import type { Metadata } from "next";
+import VerifyEmail from "./VerifyEmail";
 
-type Props = {
-  params: { locale: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+type PageProps = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ params: { locale } }: Props): Promise<Metadata> {
-  const t = await getTranslations({ locale, namespace: 'Verify' });
-
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: t('meta_title'),
-    description: t('meta_description'),
+    title: "Verify Email",
+    description: "Verify Email",
   };
 }
 
-export default async function AuthConfirmPage({ params, searchParams }: Props) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'Verify' });
-
-  const { token_hash, type, error_code, error_message, next } = await searchParams;
+export default async function AuthConfirmPage({ searchParams }: PageProps) {
+  const { token_hash, type, error_code, error_message, next } =
+    await searchParams;
 
   if (!token_hash) {
     return (
       <div className="p-4 text-center">
-        <h1 className="mb-2 text-xl font-semibold">{t('error_occurred')}</h1>
-        <p>{t('error_missing_parameters')}</p>
+        <h1 className="mb-2 text-xl font-semibold">Error Occurred</h1>
+        <p>Error Missing Parameters</p>
       </div>
     );
   }
 
-  if (error_code === 'otp_expired') {
+  if (error_code === "otp_expired") {
     return (
       <div className="p-4 text-center">
-        <h1 className="mb-2 text-xl font-semibold">
-          {t('error_occurred')}
-        </h1>
-        <p>{error_message}</p>
+        <h1 className="mb-2 text-xl font-semibold">Error Occurred</h1>
+        <p>{error_message as string}</p>
       </div>
     );
   }
@@ -49,10 +41,10 @@ export default async function AuthConfirmPage({ params, searchParams }: Props) {
       type={type as EmailOtpType}
       next={next as string}
       translations={{
-        error_occurred: t('error_occurred'),
-        unexpected_error: t('unexpected_error'),
-        verification_success: t('verification_success'),
-        verifying: t('verifying'),
+        error_occurred: "Error Occurred",
+        unexpected_error: "Unexpected Error",
+        verification_success: "Verification Success",
+        verifying: "Verifying",
       }}
     />
   );

@@ -1,17 +1,9 @@
-import UpdatePasswordForm from '@/features/auth/forms/UpdatePasswordForm';
-import { getTranslations } from 'next-intl/server';
+import UpdatePasswordForm from "@/features/auth/forms/UpdatePasswordForm";
 
-type ChangePasswordPageProps = {
-  params: Promise<{ locale: string }>;
-};
-
-export async function generateMetadata(props: ChangePasswordPageProps) {
-  const { locale } = await props.params;
-  const t = await getTranslations({ locale, namespace: 'UpdatePassword' });
-
+export async function generateMetadata() {
   return {
-    title: t('meta_title'),
-    description: t('meta_description'),
+    title: "Change Password",
+    description: "Change Password",
   };
 }
 

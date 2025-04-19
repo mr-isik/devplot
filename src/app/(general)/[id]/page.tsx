@@ -10,7 +10,7 @@ import PortfolioRenderer from "@/features/themes/components/PortfolioRenderer";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: number };
+  params: Promise<{ id: number }>;
 }): Promise<Metadata> {
   const { id } = await params;
 
@@ -37,7 +37,11 @@ export async function generateMetadata({
 // The portfolio page component - now with clear separation of concerns:
 // 1. Data fetching is handled by the portfolioDataService
 // 2. Theme selection and rendering is handled by the PortfolioRenderer
-const PortfolioPage = async ({ params }: { params: { id: number } }) => {
+const PortfolioPage = async ({
+  params,
+}: {
+  params: Promise<{ id: number }>;
+}) => {
   const { id } = await params;
 
   // Fetch portfolio data using our data service

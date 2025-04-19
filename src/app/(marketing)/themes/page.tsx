@@ -6,11 +6,7 @@ import Image from "next/image";
 import { getAllThemes } from "@/features/themes/registry/themeRegistry";
 import Link from "next/link";
 
-type Props = {
-  params: { locale: string };
-};
-
-export default async function ThemesPage({ params: { locale } }: Props) {
+export default async function ThemesPage() {
   // Get all available themes
   const themes = getAllThemes();
 
