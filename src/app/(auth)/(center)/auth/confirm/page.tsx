@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import VerifyEmail from "./VerifyEmail";
 
 type PageProps = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: any;
 };
 
 export async function generateMetadata(): Promise<Metadata> {
