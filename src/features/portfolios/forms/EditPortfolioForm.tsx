@@ -346,7 +346,11 @@ export default function EditPortfolioForm({
 
             <Button
               className="gap-1.5"
-              onClick={() => router.push(`/portfolio/${portfolioId}`)}
+              onClick={() =>
+                router.push(
+                  `${process.env.NEXT_PUBLIC_DOMAIN}/${portfolioData.user_id}`
+                )
+              }
             >
               <EyeIcon className="size-4" />
               View Portfolio
