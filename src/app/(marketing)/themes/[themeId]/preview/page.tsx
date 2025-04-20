@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +15,14 @@ import type { Skill } from "@/features/skills/types";
 
 type Props = {
   params: Promise<{ themeId: string }>;
+};
+
+export const generateMetadata = async ({ params }: Props) => {
+  const { themeId } = await params;
+
+  const theme = getThemeById(themeId as any);
+
+  return { title: theme?.name };
 };
 
 export default async function ThemePreviewPage({ params }: Props) {
@@ -63,11 +69,80 @@ export default async function ThemePreviewPage({ params }: Props) {
     is_published: true,
     contents: mockContent,
     options: [mockOption],
-    socials: [],
-    experiences: [],
-    projects: [],
-    educations: [],
-    skills: [],
+    socials: [
+      {
+        id: "preview-social-1",
+        portfolio_id: "preview",
+        platform: "Twitter",
+        url: "https://twitter.com/johndoe",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "preview-social-2",
+        portfolio_id: "preview",
+        platform: "LinkedIn",
+        url: "https://linkedin.com/in/johndoe",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "preview-social-3",
+        portfolio_id: "preview",
+        platform: "GitHub",
+        url: "https://github.com/johndoe",
+        created_at: new Date().toISOString(),
+      },
+    ],
+    experiences: [
+      {
+        id: "preview-exp-1",
+        portfolio_id: "preview",
+        role: "Software Engineer",
+        company: "Google",
+        employment_type: "Full-time",
+        description:
+          "A modern web application built with React and TypeScript.",
+        start_date: new Date().toISOString(),
+        end_date: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      },
+    ],
+    projects: [
+      {
+        id: "preview-proj-1",
+        portfolio_id: "preview",
+        title: "Project One",
+        description:
+          "A modern web application built with React and TypeScript.",
+        repo_url: "https://github.com/johndoe/project-one",
+        live_url: "https://project-one.example.com",
+        created_at: new Date().toISOString(),
+        image: "/images/projects/placeholder-1.jpg",
+      },
+    ],
+    educations: [
+      {
+        id: "preview-edu-1",
+        portfolio_id: "preview",
+        school: "University of California, Los Angeles",
+        degree: "Bachelor of Science in Computer Science",
+        field: "Computer Science",
+        start_date: new Date().toISOString(),
+        end_date: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      },
+    ],
+    skills: [
+      {
+        id: "preview-skill-1",
+        portfolio_id: "preview",
+        name: "React",
+      },
+      {
+        id: "preview-skill-2",
+        portfolio_id: "preview",
+        name: "TypeScript",
+      },
+    ],
   };
 
   const mockProjects: Project[] = [
@@ -104,7 +179,7 @@ export default async function ThemePreviewPage({ params }: Props) {
     <ThemeProvider initialOptions={themeOptions}>
       <ThemeStyleProvider>
         <div className="container mx-auto py-10">
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-8 flex gap-2 items-center justify-between flex-col md:flex-row">
             <div>
               <Link
                 href="/themes"
@@ -113,9 +188,7 @@ export default async function ThemePreviewPage({ params }: Props) {
                 <ArrowLeft className="mr-2 size-4" />
                 Back to Themes
               </Link>
-              <h1 className="text-3xl font-bold tracking-tight">
-                {theme.name} Theme
-              </h1>
+              <h1 className="text-3xl font-bold">{theme.name} Theme</h1>
               <div className="mt-2 flex items-center gap-2">
                 <p className="text-xl text-muted-foreground">
                   {theme.description}
@@ -129,40 +202,28 @@ export default async function ThemePreviewPage({ params }: Props) {
               </div>
             </div>
 
-            <Link href={`/dashboard/create?theme=${theme.id}`}>
-              <Button size="lg">Use This Theme</Button>
+            <Link
+              href={`/dashboard/create?theme=${theme.id}`}
+              className="md:w-auto w-full"
+            >
+              <Button size="lg" variant="outline">
+                Use This Theme
+              </Button>
             </Link>
           </div>
 
-          <Card className="mb-10 overflow-hidden">
-            <div className="relative h-[30rem] w-full">
-              <Image
-                src={theme.thumbnail || "/themes/placeholder-thumbnail.jpg"}
-                alt={theme.name}
-                fill
-                sizes="100vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-          </Card>
-
           <h2 className="mb-6 text-2xl font-semibold">Live Preview</h2>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="preview-container overflow-hidden rounded-lg border">
-                <ThemeComponent
-                  portfolio={mockPortfolio}
-                  projects={mockProjects}
-                  skills={mockSkills}
-                  experiences={[]}
-                  socials={[]}
-                  educations={[]}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="overflow-hidden rounded-lg -mx-5">
+            <ThemeComponent
+              portfolio={mockPortfolio}
+              projects={mockProjects}
+              skills={mockSkills}
+              experiences={mockPortfolio.experiences}
+              socials={mockPortfolio.socials}
+              educations={mockPortfolio.educations}
+            />
+          </div>
         </div>
       </ThemeStyleProvider>
     </ThemeProvider>

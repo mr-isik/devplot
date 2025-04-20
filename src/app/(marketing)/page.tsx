@@ -84,7 +84,7 @@ export default async function Index() {
 
           <div className="space-y-4 mb-8 max-w-4xl">
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-secondary dark:from-primary dark:via-primary dark:to-secondary/80 drop-shadow-sm animate-fade-in-up"
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-primary drop-shadow-sm animate-fade-in-up"
               style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
             >
               Showcase Your Code. <br /> Advance Your Career.
@@ -748,37 +748,37 @@ export default async function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full py-6 bg-black text-white">
+      <footer className="w-full py-6 bg-secondary/10 text-foreground">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="flex flex-wrap justify-center gap-6 mb-6">
-            <Link href="#" className="text-sm text-gray-400 hover:text-white">
+            <Link href="#" className="text-sm text-foreground">
               About Us
             </Link>
-            <Link href="#" className="text-sm text-gray-400 hover:text-white">
+            <Link href="#" className="text-sm text-foreground">
               Pricing
             </Link>
-            <Link href="#" className="text-sm text-gray-400 hover:text-white">
+            <Link href="#" className="text-sm text-foreground">
               FAQ
             </Link>
-            <Link href="#" className="text-sm text-gray-400 hover:text-white">
+            <Link href="#" className="text-sm text-foreground">
               Contact
             </Link>
             <Link
               href="#"
-              className="text-sm text-gray-400 hover:text-white flex items-center"
+              className="text-sm text-foreground flex items-center"
             >
               LinkedIn <ArrowRight className="h-3 w-3 ml-1" />
             </Link>
-            <Link href="#" className="text-sm text-gray-400 hover:text-white">
+            <Link href="#" className="text-sm text-foreground">
               Privacy Policy
             </Link>
           </div>
-          <div className="border-t border-gray-800 pt-2 flex justify-between items-center">
+          <div className="border-t pt-2 flex justify-between items-center">
             <div className="flex items-center">
               <Logo />
               <span className="text-sm">DevPlot</span>
             </div>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-foreground/50">
               © {new Date().getFullYear()} DevPlot. All rights reserved.
             </p>
           </div>

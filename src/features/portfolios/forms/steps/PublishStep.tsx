@@ -35,7 +35,6 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { ThemeProps } from "@/features/themes/types";
 import { usePortfolioData } from "@/features/portfolios/hooks/usePortfolioData";
 import { toast } from "sonner";
 import { updatePortfolio } from "@/actions/portfolios/actions";
