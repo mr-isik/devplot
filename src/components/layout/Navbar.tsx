@@ -104,23 +104,11 @@ const Navbar = ({ user }: NavbarProps) => {
                   className="flex items-center gap-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  <div className="relative h-8 w-8 overflow-hidden rounded bg-primary">
-                    <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-primary-foreground">
-                      D
-                    </span>
-                  </div>
+                  <Logo size={64} />
                   <span className="text-xl font-bold tracking-tight">
                     DevPlot
                   </span>
                 </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <X className="h-5 w-5" />
-                  <span className="sr-only">Close menu</span>
-                </Button>
               </div>
               <div className="grid gap-4">
                 <Link
@@ -153,13 +141,13 @@ const Navbar = ({ user }: NavbarProps) => {
                 </Link>
               </div>
               <div className="grid gap-2 mt-6">
-                <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                <Link href="/sign-in" onClick={() => setIsOpen(false)}>
                   <Button variant="outline" className="w-full">
                     Log In
                   </Button>
                 </Link>
-                <Link href="/auth/register" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full">Sign Up Free</Button>
+                <Link href="/sign-up" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full">Get Started</Button>
                 </Link>
               </div>
             </div>
