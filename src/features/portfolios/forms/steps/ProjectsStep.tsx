@@ -489,6 +489,38 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
               />
             </div>
 
+            {/* Errors */}
+            <div>
+              {projectForm.formState.errors.image && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.image.message}
+                </span>
+              )}
+              {projectForm.formState.errors.title && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.title.message}
+                </span>
+              )}
+
+              {projectForm.formState.errors.description && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.description.message}
+                </span>
+              )}
+
+              {projectForm.formState.errors.repo_url && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.repo_url.message}
+                </span>
+              )}
+
+              {projectForm.formState.errors.live_url && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.live_url.message}
+                </span>
+              )}
+            </div>
+
             <DialogFooter>
               <Button
                 type="button"
