@@ -49,10 +49,14 @@ export default async function VerifyPage({ searchParams }: Props) {
                 <CheckCircle2 className="size-4 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium">Check Inbox</p>
+                <p className="text-sm font-medium">
+                  Please check your email for a verification link.
+                </p>
               </div>
             </div>
-            <p className="pl-11 text-xs text-muted-foreground">Check Spam</p>
+            <p className="pl-11 text-xs text-muted-foreground">
+              Check Spam Folder if you don't see it in your inbox.
+            </p>
           </div>
         </CardContent>
 
