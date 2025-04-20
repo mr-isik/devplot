@@ -5,19 +5,22 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Logo from "../globals/logo";
+import { User } from "@supabase/supabase-js";
+import { UserButton } from "../globals/UserButton";
 
-const Navbar = () => {
+type NavbarProps = {
+  user: User | null;
+};
+
+const Navbar = ({ user }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -59,14 +62,30 @@ const Navbar = () => {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center gap-4">
-          <Link href="/sign-in">
-            <Button variant="ghost">Log In</Button>
-          </Link>
-          <Link href="/sign-up">
-            <Button className="bg-primary hover:bg-primary/90 shadow-sm">
-              Sign Up
-            </Button>
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2">
+              <Link href="/dashboard">
+                <Button
+                  className="bg-primary hover:bg-primary/90 shadow-sm"
+                  size="sm"
+                >
+                  Dashboard
+                </Button>
+              </Link>
+              <UserButton user={user} />
+            </div>
+          ) : (
+            <>
+              <Link href="/sign-in">
+                <Button variant="ghost">Log In</Button>
+              </Link>
+              <Link href="/sign-up">
+                <Button className="bg-primary hover:bg-primary/90 shadow-sm">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}

@@ -41,6 +41,7 @@ import {
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Logo from "@/components/globals/logo";
+import { createClient } from "@/utils/supabase/server";
 
 export async function generateMetadata() {
   return {
@@ -51,9 +52,13 @@ export async function generateMetadata() {
 }
 
 export default async function Index() {
+  const supabase = await createClient();
+
+  const { data } = await supabase.auth.getUser();
+
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar user={data.user} />
 
       {/* Hero Section */}
       <section className="w-full py-16 md:py-20 lg:py-28 bg-gradient-to-br from-primary/15 via-background to-secondary/15 dark:from-background dark:via-background/95 dark:to-primary/20 border-b border-border relative overflow-hidden">
