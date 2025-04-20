@@ -6,6 +6,11 @@ import Image from "next/image";
 import { getAllThemes } from "@/features/themes/registry/themeRegistry";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Themes",
+  description: "Choose a theme to customize your portfolio",
+};
+
 export default async function ThemesPage() {
   // Get all available themes
   const themes = getAllThemes();

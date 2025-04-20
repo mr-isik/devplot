@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,6 +15,14 @@ import type { Skill } from "@/features/skills/types";
 
 type Props = {
   params: Promise<{ themeId: string }>;
+};
+
+export const generateMetadata = async ({ params }: Props) => {
+  const { themeId } = await params;
+
+  const theme = getThemeById(themeId as any);
+
+  return { title: theme?.name };
 };
 
 export default async function ThemePreviewPage({ params }: Props) {
@@ -63,11 +69,80 @@ export default async function ThemePreviewPage({ params }: Props) {
     is_published: true,
     contents: mockContent,
     options: [mockOption],
-    socials: [],
-    experiences: [],
-    projects: [],
-    educations: [],
-    skills: [],
+    socials: [
+      {
+        id: "preview-social-1",
+        portfolio_id: "preview",
+        platform: "Twitter",
+        url: "https://twitter.com/johndoe",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "preview-social-2",
+        portfolio_id: "preview",
+        platform: "LinkedIn",
+        url: "https://linkedin.com/in/johndoe",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "preview-social-3",
+        portfolio_id: "preview",
+        platform: "GitHub",
+        url: "https://github.com/johndoe",
+        created_at: new Date().toISOString(),
+      },
+    ],
+    experiences: [
+      {
+        id: "preview-exp-1",
+        portfolio_id: "preview",
+        role: "Software Engineer",
+        company: "Google",
+        employment_type: "Full-time",
+        description:
+          "A modern web application built with React and TypeScript.",
+        start_date: new Date().toISOString(),
+        end_date: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      },
+    ],
+    projects: [
+      {
+        id: "preview-proj-1",
+        portfolio_id: "preview",
+        title: "Project One",
+        description:
+          "A modern web application built with React and TypeScript.",
+        repo_url: "https://github.com/johndoe/project-one",
+        live_url: "https://project-one.example.com",
+        created_at: new Date().toISOString(),
+        image: "/images/projects/placeholder-1.jpg",
+      },
+    ],
+    educations: [
+      {
+        id: "preview-edu-1",
+        portfolio_id: "preview",
+        school: "University of California, Los Angeles",
+        degree: "Bachelor of Science in Computer Science",
+        field: "Computer Science",
+        start_date: new Date().toISOString(),
+        end_date: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+      },
+    ],
+    skills: [
+      {
+        id: "preview-skill-1",
+        portfolio_id: "preview",
+        name: "React",
+      },
+      {
+        id: "preview-skill-2",
+        portfolio_id: "preview",
+        name: "TypeScript",
+      },
+    ],
   };
 
   const mockProjects: Project[] = [
@@ -134,19 +209,6 @@ export default async function ThemePreviewPage({ params }: Props) {
             </Link>
           </div>
 
-          <Card className="mb-10 overflow-hidden">
-            <div className="relative h-[30rem] w-full">
-              <Image
-                src={theme.thumbnail || "/themes/placeholder-thumbnail.jpg"}
-                alt={theme.name}
-                fill
-                sizes="100vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-          </Card>
-
           <h2 className="mb-6 text-2xl font-semibold">Live Preview</h2>
 
           <Card>
@@ -156,9 +218,9 @@ export default async function ThemePreviewPage({ params }: Props) {
                   portfolio={mockPortfolio}
                   projects={mockProjects}
                   skills={mockSkills}
-                  experiences={[]}
-                  socials={[]}
-                  educations={[]}
+                  experiences={mockPortfolio.experiences}
+                  socials={mockPortfolio.socials}
+                  educations={mockPortfolio.educations}
                 />
               </div>
             </CardContent>
