@@ -27,7 +27,7 @@ export function UserButton({ user }: UserButtonProps) {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="icon" className="mr-2 rounded-full">
-          <UserCircle />
+          <UserCircle size={24} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-56" align="end" sideOffset={8}>

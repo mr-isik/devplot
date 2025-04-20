@@ -17,7 +17,12 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { COMMON_SKILLS, getSkillColor, getSkillIcon } from "@/lib/skillsData";
+import {
+  COMMON_SKILLS,
+  SKILL_CATEGORIES,
+  getSkillColor,
+  getSkillIcon,
+} from "@/lib/skillsData";
 import { skillSchema } from "@/lib/validations/portfolio";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -55,13 +60,6 @@ const TOP_SKILLS = [
   "Docker",
 ];
 
-const SKILL_LEVELS = [
-  { value: "beginner", label: "Beginner" },
-  { value: "intermediate", label: "Intermediate" },
-  { value: "advanced", label: "Advanced" },
-  { value: "expert", label: "Expert" },
-];
-
 export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
   const { control } = useFormContext();
   const { fields, append, remove } = useFieldArray({
@@ -73,6 +71,7 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const skillForm = useForm<SkillFormValues>({
     resolver: zodResolver(skillSchema),
@@ -98,6 +97,7 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
     }
     setIsDialogOpen(true);
     setSearchQuery("");
+    setSelectedCategory(null);
   };
 
   // Check if a skill already exists
@@ -109,6 +109,12 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
   };
 
   const handleAddSkill = async (data: SkillFormValues) => {
+    // Prevent duplicate skills from being added
+    if (isSkillAlreadyAdded(data.name) && editingIndex === null) {
+      toast.error(`Skill "${data.name}" is already added`);
+      return;
+    }
+
     console.log("Skill data:", data);
     console.log("Portfolio ID:", portfolioId);
 
@@ -229,15 +235,27 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
     }
   };
 
-  // Filter skills based on search query
-  const filteredSkills = COMMON_SKILLS.filter((skill) =>
-    skill.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter skills based on search query and category
+  const filteredSkills = COMMON_SKILLS.filter((skill) => {
+    const matchesSearch = skill.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory
+      ? skill.category === selectedCategory
+      : true;
+    return matchesSearch && matchesCategory;
+  });
 
   // Filter top skills that haven't been added yet
   const availableTopSkills = TOP_SKILLS.filter(
     (skill) => !isSkillAlreadyAdded(skill)
   );
+
+  // Group skills by category
+  const categorizedSkills = SKILL_CATEGORIES.map((category) => ({
+    ...category,
+    skills: filteredSkills.filter((skill) => skill.category === category.id),
+  }));
 
   return (
     <div className="space-y-6">
@@ -405,7 +423,7 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
 
       {/* Dialog for adding skills */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[700px]">
           <form onSubmit={skillForm.handleSubmit(handleAddSkill)}>
             <DialogHeader>
               <DialogTitle>
@@ -419,53 +437,161 @@ export default function SkillsStep({ portfolioId }: SkillsStepProps = {}) {
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
-              {/* Search input for filtering skills */}
-              <div className="space-y-2">
-                <FormLabel>Search Skills</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="Type to search skills..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="mb-2"
-                />
-              </div>
+              {/* Search and Category Filters */}
+              <div className="flex flex-col gap-4">
+                <div className="flex-1 space-y-2">
+                  <FormLabel>Search Skills</FormLabel>
+                  <div className="relative w-full">
+                    <SearchIcon className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="text"
+                      placeholder="Type to search skills..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-9"
+                    />
+                  </div>
+                </div>
 
-              {/* Skills selection list */}
-              {filteredSkills.length > 0 ? (
-                <div className="max-h-60 overflow-y-auto rounded-md border p-2">
-                  <div className="flex flex-wrap gap-2">
-                    {filteredSkills.slice(0, 20).map((skill) => (
+                <div className="space-y-2 w-full">
+                  <FormLabel>Category</FormLabel>
+                  <div className="flex flex-wrap gap-1.5">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={
+                        selectedCategory === null ? "default" : "outline"
+                      }
+                      onClick={() => setSelectedCategory(null)}
+                      className="h-9"
+                    >
+                      All
+                    </Button>
+                    {SKILL_CATEGORIES.map((category) => (
                       <Button
-                        key={skill.name}
-                        variant="outline"
+                        key={category.id}
+                        type="button"
                         size="sm"
-                        onClick={() => {
-                          skillForm.setValue("name", skill.name);
-                          skillForm.handleSubmit(handleAddSkill)();
-                        }}
-                        className="flex h-8 items-center gap-1.5"
+                        variant={
+                          selectedCategory === category.id
+                            ? "default"
+                            : "outline"
+                        }
+                        onClick={() => setSelectedCategory(category.id)}
+                        className="h-9"
                       >
-                        <div
-                          className="flex size-4 items-center justify-center rounded-full"
-                          style={{ backgroundColor: `${skill.color}20` }}
-                        >
-                          {skill.icon &&
-                            React.createElement(skill.icon, {
-                              className: "size-3",
-                              style: { color: skill.color },
-                            })}
-                        </div>
-                        {skill.name}
+                        {React.createElement(category.icon, {
+                          className: "mr-1.5 size-3.5",
+                        })}
+                        {category.name}
                       </Button>
                     ))}
                   </div>
                 </div>
-              ) : (
-                <p className="text-center text-sm text-muted-foreground">
-                  No skills found matching your search
-                </p>
-              )}
+              </div>
+
+              {/* Skills selection list */}
+              <div className="max-h-[400px] overflow-y-auto rounded-md border p-4">
+                {searchQuery.length > 0 ? (
+                  /* Search results */
+                  filteredSkills.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {filteredSkills.map((skill) => (
+                        <Button
+                          key={skill.name}
+                          variant="outline"
+                          size="sm"
+                          disabled={isSkillAlreadyAdded(skill.name)}
+                          onClick={() => {
+                            if (isSkillAlreadyAdded(skill.name)) {
+                              toast.error(
+                                `Skill "${skill.name}" is already added`
+                              );
+                              return;
+                            }
+                            skillForm.setValue("name", skill.name);
+                            skillForm.handleSubmit(handleAddSkill)();
+                          }}
+                          className={`flex h-8 items-center gap-1.5 ${
+                            isSkillAlreadyAdded(skill.name) ? "opacity-50" : ""
+                          }`}
+                        >
+                          <div
+                            className="flex size-4 items-center justify-center rounded-full"
+                            style={{ backgroundColor: `${skill.color}20` }}
+                          >
+                            {skill.icon &&
+                              React.createElement(skill.icon, {
+                                className: "size-3",
+                                style: { color: skill.color },
+                              })}
+                          </div>
+                          {skill.name}
+                        </Button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-center text-sm text-muted-foreground">
+                      No skills found matching your search
+                    </p>
+                  )
+                ) : (
+                  /* Categorized skills */
+                  <div className="space-y-6">
+                    {categorizedSkills
+                      .filter((category) => category.skills.length > 0)
+                      .map((category) => (
+                        <div key={category.id} className="space-y-2">
+                          <h3 className="flex items-center gap-1.5 text-sm font-medium">
+                            {React.createElement(category.icon, {
+                              className: "size-4",
+                            })}
+                            {category.name}
+                          </h3>
+                          <div className="flex flex-wrap gap-2">
+                            {category.skills.map((skill) => (
+                              <Button
+                                key={skill.name}
+                                variant="outline"
+                                size="sm"
+                                disabled={isSkillAlreadyAdded(skill.name)}
+                                onClick={() => {
+                                  if (isSkillAlreadyAdded(skill.name)) {
+                                    toast.error(
+                                      `Skill "${skill.name}" is already added`
+                                    );
+                                    return;
+                                  }
+                                  skillForm.setValue("name", skill.name);
+                                  skillForm.handleSubmit(handleAddSkill)();
+                                }}
+                                className={`flex h-8 items-center gap-1.5 ${
+                                  isSkillAlreadyAdded(skill.name)
+                                    ? "opacity-50"
+                                    : ""
+                                }`}
+                              >
+                                <div
+                                  className="flex size-4 items-center justify-center rounded-full"
+                                  style={{
+                                    backgroundColor: `${skill.color}20`,
+                                  }}
+                                >
+                                  {skill.icon &&
+                                    React.createElement(skill.icon, {
+                                      className: "size-3",
+                                      style: { color: skill.color },
+                                    })}
+                                </div>
+                                {skill.name}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
 
               <FormField
                 control={skillForm.control}

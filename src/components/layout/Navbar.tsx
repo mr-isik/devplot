@@ -5,19 +5,22 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Logo from "../globals/logo";
+import { User } from "@supabase/supabase-js";
+import { UserButton } from "../globals/UserButton";
 
-const Navbar = () => {
+type NavbarProps = {
+  user: User | null;
+};
+
+const Navbar = ({ user }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -59,14 +62,30 @@ const Navbar = () => {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center gap-4">
-          <Link href="/sign-in">
-            <Button variant="ghost">Log In</Button>
-          </Link>
-          <Link href="/sign-up">
-            <Button className="bg-primary hover:bg-primary/90 shadow-sm">
-              Sign Up
-            </Button>
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2">
+              <Link href="/dashboard">
+                <Button
+                  className="bg-primary hover:bg-primary/90 shadow-sm"
+                  size="sm"
+                >
+                  Dashboard
+                </Button>
+              </Link>
+              <UserButton user={user} />
+            </div>
+          ) : (
+            <>
+              <Link href="/sign-in">
+                <Button variant="ghost">Log In</Button>
+              </Link>
+              <Link href="/sign-up">
+                <Button className="bg-primary hover:bg-primary/90 shadow-sm">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -85,23 +104,11 @@ const Navbar = () => {
                   className="flex items-center gap-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  <div className="relative h-8 w-8 overflow-hidden rounded bg-primary">
-                    <span className="absolute inset-0 flex items-center justify-center text-lg font-bold text-primary-foreground">
-                      D
-                    </span>
-                  </div>
+                  <Logo size={64} />
                   <span className="text-xl font-bold tracking-tight">
                     DevPlot
                   </span>
                 </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <X className="h-5 w-5" />
-                  <span className="sr-only">Close menu</span>
-                </Button>
               </div>
               <div className="grid gap-4">
                 <Link
@@ -134,13 +141,13 @@ const Navbar = () => {
                 </Link>
               </div>
               <div className="grid gap-2 mt-6">
-                <Link href="/auth/login" onClick={() => setIsOpen(false)}>
+                <Link href="/sign-in" onClick={() => setIsOpen(false)}>
                   <Button variant="outline" className="w-full">
                     Log In
                   </Button>
                 </Link>
-                <Link href="/auth/register" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full">Sign Up Free</Button>
+                <Link href="/sign-up" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full">Get Started</Button>
                 </Link>
               </div>
             </div>

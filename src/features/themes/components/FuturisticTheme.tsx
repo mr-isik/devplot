@@ -1181,51 +1181,6 @@ const FuturisticTheme = ({
     },
   };
 
-  // Mouse pozisyonu için state
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [cursorParticles, setCursorParticles] = useState<
-    Array<{ id: number; x: number; y: number; opacity: number }>
-  >([]);
-  const [nextParticleId, setNextParticleId] = useState(0);
-
-  // Mouse hareketini izleme
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-
-      // Belirli bir olasılıkla parçacık ekle (her hareket için değil)
-      if (Math.random() > 0.7) {
-        const newParticle = {
-          id: nextParticleId,
-          x: e.clientX,
-          y: e.clientY,
-          opacity: 0.7,
-        };
-        setCursorParticles((prev) => [...prev, newParticle]);
-        setNextParticleId((prev) => prev + 1);
-      }
-    };
-
-    // Parçacıkları temizleme (zamanla kaybolacaklar)
-    const cleanupInterval = setInterval(() => {
-      setCursorParticles((prev) =>
-        prev
-          .map((particle) => ({
-            ...particle,
-            opacity: particle.opacity - 0.02,
-          }))
-          .filter((particle) => particle.opacity > 0)
-      );
-    }, 50);
-
-    // Mouse takibini devre dışı bırakıyoruz, noktalar istenmediği için
-    // window.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      // window.removeEventListener("mousemove", handleMouseMove);
-      clearInterval(cleanupInterval);
-    };
-  }, [nextParticleId]);
-
   // Renk RGB değerlerini hesaplama fonksiyonu
   const hexToRgb = (hex: string) => {
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -1391,20 +1346,6 @@ const FuturisticTheme = ({
       </style>
 
       <div className={themeClass}>
-        {/* Cursor Particles Trail */}
-        {cursorParticles.map((particle) => (
-          <div
-            key={particle.id}
-            className="cursor-particle"
-            style={{
-              left: `${particle.x}px`,
-              top: `${particle.y}px`,
-              opacity: particle.opacity,
-              transform: `scale(${particle.opacity})`,
-            }}
-          />
-        ))}
-
         {/* Floating Particles */}
         <div className="particle particle-1"></div>
         <div className="particle particle-2"></div>
@@ -1412,7 +1353,7 @@ const FuturisticTheme = ({
         <div className="particle particle-4"></div>
         <div className="particle particle-5"></div>
 
-        <section className="section py-24">
+        <section className="section py-24" id="hero">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -1553,7 +1494,7 @@ const FuturisticTheme = ({
 
         {/* About Section */}
         {portfolio.contents.about_text && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="about">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"
@@ -1582,7 +1523,7 @@ const FuturisticTheme = ({
 
         {/* Skills Section with 3D Grid */}
         {skills && skills.length > 0 && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="skills">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"
@@ -1663,7 +1604,7 @@ const FuturisticTheme = ({
 
         {/* Education Section with Timeline */}
         {educations && educations.length > 0 && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="education">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"
@@ -1729,7 +1670,7 @@ const FuturisticTheme = ({
 
         {/* Experience Section */}
         {experiences && experiences.length > 0 && (
-          <section className="section py-20">
+          <section className="section py-20" id="experience">
             <motion.div
               className="container mx-auto px-4"
               initial={{ opacity: 0 }}
@@ -1826,7 +1767,7 @@ const FuturisticTheme = ({
 
         {/* Projects Section with 3D Hover Cards */}
         {projects && projects.length > 0 && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="projects">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"

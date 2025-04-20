@@ -91,26 +91,16 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
     if (index !== undefined && index >= 0 && index < fields.length) {
       const project = fields[index] as unknown as ProjectFormValues;
 
-      console.log("Opening project for edit:", project);
-
-      // Correct image handling for string URLs vs expected File array
-      let imageValue;
-      if (typeof project.image === "string") {
-        // If image is a URL string (from database), handle it specially for display only
-        // We'll leave actual image upload empty to avoid validation errors
-        imageValue = [];
-      } else {
-        imageValue = isImageEmpty(project.image) ? [] : project.image;
-      }
-
-      // Ensure all required project data is set
+      // When editing, keep the form values but handle image specially
+      // We set the image to an empty array in the form to avoid validation issues
+      // But we'll preserve the original image URL/path for display
       projectForm.reset({
         item_id: project.item_id,
         title: project.title || "",
         description: project.description || "",
         repo_url: project.repo_url || "",
         live_url: project.live_url || "",
-        image: imageValue,
+        image: [], // Always use empty array in form to avoid validation errors
       });
 
       setEditingIndex(index);
@@ -136,29 +126,18 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
     try {
       // Edit workflow: Update existing project in database
       if (editingIndex !== null && data.item_id && portfolioId) {
-        console.log("Updating existing project with ID:", data.item_id);
-
         // Get the existing project to check current image
         const existingProject = fields[
           editingIndex
         ] as unknown as ProjectFormValues;
-        const currentImageIsString = typeof existingProject.image === "string";
 
-        // Always set image to null if it's empty, otherwise keep existing or use new
-        let imageToUpdate;
-        if (Array.isArray(data.image) && data.image.length === 0) {
-          // Empty array case - check if we had a previous image
-          if (currentImageIsString && !isImageEmpty(existingProject.image)) {
-            // Keep existing non-empty image string
-            imageToUpdate = existingProject.image;
-          } else {
-            // No image before or the new upload is empty - set to null
-            imageToUpdate = null;
-          }
-        } else {
-          // New image uploaded
-          imageToUpdate = data.image;
-        }
+        // If form has empty image array and there was an existing image, keep the existing image
+        const imageToUpdate =
+          isImageEmpty(data.image) && !isImageEmpty(existingProject.image)
+            ? existingProject.image // Keep existing image
+            : isImageEmpty(data.image)
+              ? null // Set to null if truly empty (no previous image either)
+              : data.image; // Use new uploaded image
 
         const { error } = await updateProject({
           item_id: data.item_id,
@@ -198,8 +177,6 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
         if (error) {
           toast.error("Failed to add project");
         }
-
-        console.log(newProject);
 
         // Update form state with backend ID
         if (newProject && newProject[0]) {
@@ -351,12 +328,15 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
                             </div>
                           </div>
 
-                          {project.image && project.image.length > 0 && (
+                          {project.image && !isImageEmpty(project.image) && (
                             <div className="relative overflow-hidden rounded-md border shadow-sm">
                               <AspectRatio ratio={16 / 9}>
                                 <Image
-                                  // @ts-ignore
-                                  src={project.image}
+                                  src={
+                                    typeof project.image === "string"
+                                      ? project.image
+                                      : URL.createObjectURL(project.image[0])
+                                  }
                                   alt={project.title || "Project"}
                                   fill
                                   className="w-full h-full object-cover"
@@ -507,6 +487,38 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
                 placeholder="E.g.: https://my-project.vercel.app"
                 fieldType={FormFieldType.INPUT}
               />
+            </div>
+
+            {/* Errors */}
+            <div>
+              {projectForm.formState.errors.image && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.image.message}
+                </span>
+              )}
+              {projectForm.formState.errors.title && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.title.message}
+                </span>
+              )}
+
+              {projectForm.formState.errors.description && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.description.message}
+                </span>
+              )}
+
+              {projectForm.formState.errors.repo_url && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.repo_url.message}
+                </span>
+              )}
+
+              {projectForm.formState.errors.live_url && (
+                <span className="text-destructive">
+                  {projectForm.formState.errors.live_url.message}
+                </span>
+              )}
             </div>
 
             <DialogFooter>
