@@ -8,10 +8,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { User } from "@supabase/supabase-js";
 import { CreditCard, LifeBuoy, LogOut, Mail, UserCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function UserButton() {
+type UserButtonProps = {
+  user: User;
+};
+
+export function UserButton({ user }: UserButtonProps) {
   const router = useRouter();
   const handleSignout = async () => {
     await signout();
@@ -28,15 +33,9 @@ export function UserButton() {
       <PopoverContent className="w-56" align="end" sideOffset={8}>
         <div className="flex flex-col space-y-4">
           <div className="flex items-center gap-2 p-1">
-            <Avatar className="size-8">
-              <AvatarImage src="/avatar.png" alt="Kullanıcı Avatar" />
-              <AvatarFallback className="bg-primary/10 text-primary">
-                KA
-              </AvatarFallback>
-            </Avatar>
             <div className="flex flex-col space-y-1">
               <p className="truncate text-xs text-muted-foreground">
-                kullanici@ornek.com
+                {user.email}
               </p>
             </div>
           </div>
