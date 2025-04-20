@@ -12,9 +12,7 @@ import { Education } from "@/features/educations/types";
 import { Skill } from "@/features/skills/types";
 import { getSkillIcon, getSkillColor } from "@/lib/skillsData";
 import {
-  adjustColor,
   applyThemeCustomization,
-  colorThemes,
   fontFamilies,
 } from "../utils/themeCustomization";
 import { FaGithub } from "react-icons/fa";
@@ -426,7 +424,7 @@ const MinimalTheme = ({
 
       <div className={themeClass + ` font-${themeOptions.font} min-h-screen`}>
         {/* Hero Section */}
-        <section className="section py-24">
+        <section className="section py-24" id="hero">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -488,7 +486,7 @@ const MinimalTheme = ({
 
         {/* About Section */}
         {portfolio.contents.about_text && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="about">
             <div className="container mx-auto px-4">
               <div className="section-header">
                 <h2 className="section-title text-3xl font-bold">About Me</h2>
@@ -511,7 +509,7 @@ const MinimalTheme = ({
 
         {/* Skills Section */}
         {skills && skills.length > 0 && (
-          <section className="section">
+          <section className="alt-section section" id="skills">
             <div className="container mx-auto px-4">
               <div className="section-header">
                 <h2 className="section-title text-3xl font-bold">Skills</h2>
@@ -559,7 +557,7 @@ const MinimalTheme = ({
 
         {/* Education Section */}
         {educations && educations.length > 0 && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="education">
             <div className="container mx-auto px-4">
               <div className="section-header">
                 <h2 className="section-title text-3xl font-bold">Education</h2>
@@ -618,7 +616,7 @@ const MinimalTheme = ({
 
         {/* Experience Section */}
         {experiences && experiences.length > 0 && (
-          <section className="section">
+          <section className="alt-section section" id="experience">
             <div className="container mx-auto px-4">
               <div className="section-header">
                 <h2 className="section-title text-3xl font-bold">Experience</h2>
@@ -689,7 +687,7 @@ const MinimalTheme = ({
 
         {/* Projects Section */}
         {projects && projects.length > 0 && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="projects">
             <div className="container mx-auto px-4">
               <div className="section-header">
                 <h2 className="section-title text-3xl font-bold">Projects</h2>

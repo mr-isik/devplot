@@ -1492,15 +1492,6 @@ const ElegantTheme = ({
     },
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 },
-    },
-  };
-
   // RGB renk dönüşümleri için yardımcı fonksiyon
   const hexToRgb = (hex: string) => {
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -1699,7 +1690,10 @@ const ElegantTheme = ({
 
       <div className={themeClass}>
         {/* Hero Section with Premium Touch */}
-        <section className="section relative h-screen flex items-center justify-center min-h-[700px] overflow-hidden">
+        <section
+          className="section relative h-screen flex items-center justify-center min-h-[700px] overflow-hidden"
+          id="hero"
+        >
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-[var(--elegant-cream)] dark:bg-[var(--elegant-bg)] opacity-90"></div>
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(var(--elegant-accent-rgb),0.05)]"></div>
@@ -1890,7 +1884,7 @@ const ElegantTheme = ({
 
         {/* About Section with Elegant Design */}
         {portfolio.contents.about_text && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="about">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"
@@ -1926,7 +1920,7 @@ const ElegantTheme = ({
 
         {/* Skills Section with Animated Badges */}
         {skills && skills.length > 0 && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="skills">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"
@@ -1989,7 +1983,7 @@ const ElegantTheme = ({
 
         {/* Education Section with Elegant Cards */}
         {educations && educations.length > 0 && (
-          <section className="alt-section section">
+          <section className="alt-section section" id="education">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"
@@ -2045,7 +2039,7 @@ const ElegantTheme = ({
 
         {/* Experience Section with Elegant Timeline */}
         {experiences && experiences.length > 0 && (
-          <section className="section">
+          <section className="alt-section section" id="experience">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"
@@ -2134,7 +2128,7 @@ const ElegantTheme = ({
 
         {/* Projects Section */}
         {projects.length > 0 && (
-          <section className="section">
+          <section className="alt-section section" id="projects">
             <div className="container mx-auto px-4">
               <motion.div
                 className="section-header"
