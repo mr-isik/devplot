@@ -162,6 +162,12 @@ export const updateExperience = async (
     .from("experiences")
     .update({
       role: experience.role,
+      company: experience.company,
+      employment_type: experience.employment_type,
+      start_date: experience.start_date,
+      end_date: experience.end_date,
+      description: experience.description,
+      logo: experience.logo,
     })
     .eq("id", experience.item_id)
     .select();
@@ -170,8 +176,13 @@ export const updateExperience = async (
   return { data, error };
 };
 
-export const deleteExperience = async (item_id: number) => {
+export const deleteExperience = async (item_id: number, logo_path: string) => {
   const supabase = await createClient();
+
+  /* Delete the logo from the storage */
+  const { data: logoData, error: logoError } = await supabase.storage
+    .from("experiences")
+    .remove([`${logo_path}`]);
 
   const { data, error } = await supabase
     .from("experiences")

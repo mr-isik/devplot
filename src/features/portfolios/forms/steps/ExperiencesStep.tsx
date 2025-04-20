@@ -98,6 +98,10 @@ export default function ExperiencesStep({
   const resetAndOpenDialog = (index?: number) => {
     if (index !== undefined && index >= 0 && index < fields.length) {
       const experience = fields[index] as unknown as ExperienceFormValues;
+
+      // When editing, keep the form values but handle logo specially
+      // We set the logo to an empty array in the form to avoid validation errors
+      // But we'll preserve the original logo URL/path for display
       experienceForm.reset({
         item_id: experience.item_id,
         role: experience.role || "",
@@ -106,7 +110,7 @@ export default function ExperiencesStep({
         start_date: experience.start_date || "",
         end_date: experience.end_date || "",
         description: experience.description || "",
-        logo: isLogoEmpty(experience.logo) ? [] : experience.logo,
+        logo: [], // Always use empty array in form to avoid validation issues
       });
       setEditingIndex(index);
     } else {
@@ -128,9 +132,6 @@ export default function ExperiencesStep({
     setIsSubmitting(true);
 
     try {
-      // Ensure logo is null when empty
-      const logoToSend = isLogoEmpty(data.logo) ? null : data.logo;
-
       // Function to ensure empty string dates are handled correctly
       // This approach maintains type safety while allowing us to convert empty strings to null in the SQL
       const prepareDataForServer = (formData: ExperienceFormValues) => {
@@ -148,18 +149,29 @@ export default function ExperiencesStep({
           serverData.end_date = undefined;
         }
 
-        return {
-          ...serverData,
-          logo: logoToSend,
-        };
+        return serverData;
       };
 
       // Edit workflow: Existing experience update with id
       if (editingIndex !== null && data.item_id && portfolioId) {
+        // Get current experience to preserve logo if not changed
+        const currentExperience = fields[
+          editingIndex
+        ] as unknown as ExperienceFormValues;
+
+        // Use the existing logo if the form logo array is empty
+        const logoToUpdate =
+          isLogoEmpty(data.logo) && !isLogoEmpty(currentExperience.logo)
+            ? currentExperience.logo
+            : isLogoEmpty(data.logo)
+              ? null
+              : data.logo;
+
         // Database update via server action
         const { error } = await updateExperience({
           ...prepareDataForServer(data),
           item_id: data.item_id,
+          logo: logoToUpdate,
         });
 
         if (error) {
@@ -170,15 +182,18 @@ export default function ExperiencesStep({
         remove(editingIndex);
         append({
           ...data,
-          logo: logoToSend,
+          logo: logoToUpdate,
         });
         toast.success("Experience updated successfully");
       }
       // Create workflow: New experience with portfolioId
       else if (portfolioId) {
+        // Ensure logo is null when empty
+        const logoToSend = isLogoEmpty(data.logo) ? null : data.logo;
+
         // Create via server action
         const { data: newExperience, error } = await createExperience(
-          prepareDataForServer(data),
+          { ...prepareDataForServer(data), logo: logoToSend },
           portfolioId
         );
 
@@ -203,6 +218,9 @@ export default function ExperiencesStep({
       }
       // Create workflow: Just form state update
       else {
+        // Ensure logo is null when empty
+        const logoToSend = isLogoEmpty(data.logo) ? null : data.logo;
+
         if (editingIndex !== null) {
           remove(editingIndex);
         }
@@ -228,12 +246,16 @@ export default function ExperiencesStep({
     try {
       // If id and portfolioId exist, delete from database
       if (id && portfolioId) {
-        const { error } = await deleteExperience(id);
+        // Note: We're passing an empty string as the logo_path
+        // This will prevent errors with file deletion
+        // The server can handle this safely
+        const { error } = await deleteExperience(id, "");
 
         if (error) {
           toast.error("Failed to remove experience");
+        } else {
+          toast.success("Experience removed from database");
         }
-        toast.success("Experience removed from database");
       }
 
       // Always remove from form state
@@ -328,17 +350,23 @@ export default function ExperiencesStep({
 
                         <div className="flex flex-col gap-1">
                           <div className="mb-2 flex items-center gap-2">
-                            {experience.logo && experience.logo.length > 0 && (
-                              <div className="relative size-10 rounded-md border overflow-hidden">
-                                <Image
-                                  // @ts-ignore
-                                  src={experience.logo}
-                                  alt={experience.company || "Company"}
-                                  fill
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            )}
+                            {experience.logo &&
+                              !isLogoEmpty(experience.logo) && (
+                                <div className="relative size-10 rounded-md border overflow-hidden">
+                                  <Image
+                                    src={
+                                      typeof experience.logo === "string"
+                                        ? experience.logo
+                                        : URL.createObjectURL(
+                                            experience.logo[0]
+                                          )
+                                    }
+                                    alt={experience.company || "Company"}
+                                    fill
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              )}
                             <p className="text-base font-medium text-muted-foreground">
                               {experience.company}
                             </p>
