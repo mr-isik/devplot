@@ -84,7 +84,7 @@ export default async function Index() {
 
           <div className="space-y-4 mb-8 max-w-4xl">
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-secondary dark:from-primary dark:via-primary dark:to-secondary/80 drop-shadow-sm animate-fade-in-up"
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-primary drop-shadow-sm animate-fade-in-up"
               style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
             >
               Showcase Your Code. <br /> Advance Your Career.

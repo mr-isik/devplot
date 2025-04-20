@@ -272,12 +272,12 @@ export default function SocialsStep({ portfolioId }: SocialsStepProps = {}) {
               </div>
 
               {/* Social links grid */}
-              <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
                 {fields.map((field, index) => {
                   const social = field as unknown as SocialFormValues;
                   return (
                     <div key={field.id} className="mobile-card group relative">
-                      <div className="mobile-card-inner rounded-lg bg-card sm:bg-transparent">
+                      <div className="mobile-card-inner rounded-lg border bg-card p-3 sm:border-0 sm:p-2 sm:bg-transparent">
                         <div className="space-y-2">
                           <div className="flex items-start gap-3">
                             <div
@@ -286,7 +286,7 @@ export default function SocialsStep({ portfolioId }: SocialsStepProps = {}) {
                                 backgroundColor: `${getPlatformColor(social.platform)}20`,
                               }}
                             >
-                              {getPlatformIcon(social.platform)}
+                              {getPlatformIcon(social.platform, "size-5")}
                             </div>
 
                             <div className="min-w-0 grow">
@@ -335,13 +335,13 @@ export default function SocialsStep({ portfolioId }: SocialsStepProps = {}) {
                           </div>
 
                           {/* Mobile actions - Only visible on mobile */}
-                          <div className="mt-2 flex justify-end border-t pt-2 sm:hidden">
+                          <div className="mt-3 flex justify-end border-t pt-3 sm:hidden">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => resetAndOpenDialog(index)}
                               disabled={isSubmitting}
-                              className="h-8 px-3 text-xs"
+                              className="h-9 px-3 text-xs"
                             >
                               Edit
                             </Button>
@@ -352,9 +352,9 @@ export default function SocialsStep({ portfolioId }: SocialsStepProps = {}) {
                                 handleRemoveSocial(index, social.item_id)
                               }
                               disabled={isSubmitting}
-                              className="h-8 px-3 text-xs text-muted-foreground hover:text-destructive"
+                              className="h-9 px-3 text-xs text-muted-foreground hover:text-destructive"
                             >
-                              <Trash2Icon className="mr-1 size-3" />
+                              <Trash2Icon className="mr-1 size-3.5" />
                               Remove
                             </Button>
                           </div>
@@ -389,6 +389,20 @@ export default function SocialsStep({ portfolioId }: SocialsStepProps = {}) {
           </div>
         )}
       </div>
+
+      {/* Mobile add button sticky bar - only visible when items exist */}
+      {fields.length > 0 && (
+        <div className="fixed inset-x-0 bottom-16 flex justify-center border-t bg-background p-3 sm:hidden">
+          <Button
+            onClick={() => resetAndOpenDialog()}
+            className="gap-1.5 w-full max-w-sm"
+            size="sm"
+          >
+            <PlusCircleIcon className="size-4" />
+            Add Social Media
+          </Button>
+        </div>
+      )}
 
       {/* Dialog for adding/editing social media links */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

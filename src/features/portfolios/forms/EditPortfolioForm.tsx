@@ -241,68 +241,136 @@ export default function EditPortfolioForm({
 
   return (
     <FormProvider {...form}>
-      <div className="relative space-y-6">
-        <Card className="border-transparent bg-transparent">
-          <CardContent className="pt-6">
+      <div className="flex h-full flex-col">
+        <Card className="min-h-[calc(100vh-250px)] border-none bg-transparent sm:min-h-[600px] sm:border shadow-none">
+          <CardContent className="p-0">
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}
-              className="flex flex-col md:flex-row gap-6"
+              className="flex h-full flex-col sm:flex-row"
             >
-              <div className="flex flex-col gap-2">
-                <TabsList className="flex flex-col w-full md:w-52 h-max space-y-1 p-3">
+              {/* Mobile Tab Bar - Only visible on mobile */}
+              <div className="sticky top-0 z-10 border-b bg-background sm:hidden">
+                <div className="mb-2 flex items-center p-4">
+                  <h1 className="text-xl font-bold">Edit Portfolio</h1>
+                </div>
+                <div className="no-scrollbar overflow-x-auto px-4 pb-2">
+                  <TabsList className="inline-flex h-10 w-auto">
+                    {STEPS.map((step) => (
+                      <TabsTrigger
+                        key={step.id}
+                        value={step.id}
+                        className="h-9 whitespace-nowrap px-4"
+                      >
+                        <div className="flex items-center">
+                          {step.icon}
+                          <span className="ml-1.5">{step.title}</span>
+                        </div>
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </div>
+              </div>
+
+              {/* Desktop Sidebar - Hidden on mobile */}
+              <div className="hidden sm:block sm:min-w-[200px] sm:max-w-[250px] sm:pr-6">
+                <TabsList className="grid h-auto w-full grid-cols-1 sm:justify-start">
                   {STEPS.map((step) => (
                     <TabsTrigger
                       key={step.id}
                       value={step.id}
-                      className="relative justify-start h-10 md:h-11 w-full"
+                      className="h-auto px-4 py-3 data-[state=active]:bg-muted sm:w-full sm:justify-start"
                     >
-                      <span className="flex items-center">
+                      <div className="flex items-center">
                         {step.icon}
                         <span className="ml-2">{step.title}</span>
-                      </span>
+                      </div>
                     </TabsTrigger>
                   ))}
                 </TabsList>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 w-52 gap-2 pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => handleStepNavigation("prev")}
-                    disabled={isFirstStep}
-                    className="justify-between"
-                  >
-                    <ChevronLeftIcon className="size-4" />
-                    Back
-                  </Button>
-
-                  <Button
-                    onClick={() => handleStepNavigation("next")}
-                    disabled={isLastStep}
-                    className="justify-between"
-                  >
-                    {isLastStep ? (
-                      <>
-                        <CheckIcon className="size-4" />
-                        Finish
-                      </>
-                    ) : (
-                      <>
+                <div className="space-y-2 p-4">
+                  {activeTab !== STEPS[STEPS.length - 1].id ? (
+                    <>
+                      <Button
+                        variant="default"
+                        className="w-full"
+                        onClick={() => handleStepNavigation("next")}
+                      >
                         Continue
-                        <ChevronRightIcon className="size-4" />
-                      </>
-                    )}
-                  </Button>
+                      </Button>
+                      {!isFirstStep && (
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => handleStepNavigation("prev")}
+                        >
+                          Back
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => handleStepNavigation("prev")}
+                      >
+                        Back
+                      </Button>
+                    </>
+                  )}
+                  <AlertDialog
+                    open={showDeleteConfirm}
+                    onOpenChange={setShowDeleteConfirm}
+                  >
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="gap-1.5 mt-2 w-full text-destructive"
+                      >
+                        <TrashIcon className="size-4" />
+                        Delete Portfolio
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your portfolio and all associated data.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleDeletePortfolio}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          <Loader state={isSubmitting}>Delete</Loader>
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
 
-              <div className="flex-1 md:pl-2">
+              {/* Content Area */}
+              <div className="flex-1">
                 {STEPS.map((step) => (
-                  <TabsContent key={step.id} value={step.id}>
-                    <div className="space-y-4">
-                      <div>
-                        <h2 className="text-xl font-semibold">{step.title}</h2>
-                        <p className="text-sm text-muted-foreground">
+                  <TabsContent
+                    key={step.id}
+                    value={step.id}
+                    className="mt-0 border-0 md:p-6 sm:p-0"
+                  >
+                    <div className="space-y-6">
+                      <div className="mb-6 hidden sm:block">
+                        <h1 className="text-2xl font-bold tracking-tight">
+                          {step.title}
+                        </h1>
+                        <p className="text-muted-foreground">
                           {step.description}
                         </p>
                       </div>
@@ -313,50 +381,56 @@ export default function EditPortfolioForm({
               </div>
             </Tabs>
           </CardContent>
-          <CardFooter className="p-6 flex justify-between">
-            <AlertDialog
-              open={showDeleteConfirm}
-              onOpenChange={setShowDeleteConfirm}
-            >
-              <AlertDialogTrigger asChild>
-                <Button variant="outline" className="gap-1.5">
-                  <TrashIcon className="size-4" />
-                  Delete Portfolio
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your portfolio and all associated data.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDeletePortfolio}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    <Loader state={isSubmitting}>Delete</Loader>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-
-            <Button
-              className="gap-1.5"
-              onClick={() =>
-                router.push(
-                  `${process.env.NEXT_PUBLIC_DOMAIN}/${portfolioData.user_id}`
-                )
-              }
-            >
-              <EyeIcon className="size-4" />
-              View Portfolio
-            </Button>
-          </CardFooter>
         </Card>
+
+        {/* Mobile Bottom Action Bar - Fixed at bottom */}
+        <div className="fixed inset-x-0 bottom-0 flex justify-between border-t bg-background p-4 sm:hidden">
+          {isLastStep ? (
+            <>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => handleStepNavigation("prev")}
+              >
+                Back
+              </Button>
+              <Button
+                className="ml-2 flex-1"
+                onClick={() =>
+                  router.push(
+                    `${process.env.NEXT_PUBLIC_DOMAIN}/${portfolioData.user_id}`
+                  )
+                }
+              >
+                <EyeIcon className="mr-2 size-4" />
+                View Portfolio
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="default"
+                onClick={() => handleStepNavigation("next")}
+                className="flex-1"
+              >
+                Continue
+              </Button>
+              {!isFirstStep && (
+                <Button
+                  variant="outline"
+                  className="ml-2 flex-1"
+                  onClick={() => handleStepNavigation("prev")}
+                >
+                  Back
+                </Button>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="h-16 sm:hidden"></div>
+        {/* Extra space for social media mobile add button */}
+        {activeTab === "socials" && <div className="h-16 sm:hidden"></div>}
       </div>
     </FormProvider>
   );

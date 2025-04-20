@@ -119,11 +119,11 @@ const Navbar = ({ user }: NavbarProps) => {
                   Features
                 </Link>
                 <Link
-                  href="/templates"
+                  href="/themes"
                   className="group flex items-center justify-between rounded-lg border border-transparent px-2 py-1.5 text-foreground hover:bg-primary/10"
                   onClick={() => setIsOpen(false)}
                 >
-                  Templates
+                  Themes
                 </Link>
                 <Link
                   href="/pricing"

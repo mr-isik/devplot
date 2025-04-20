@@ -179,7 +179,7 @@ export default async function ThemePreviewPage({ params }: Props) {
     <ThemeProvider initialOptions={themeOptions}>
       <ThemeStyleProvider>
         <div className="container mx-auto py-10">
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-8 flex gap-2 items-center justify-between flex-col md:flex-row">
             <div>
               <Link
                 href="/themes"
@@ -188,9 +188,7 @@ export default async function ThemePreviewPage({ params }: Props) {
                 <ArrowLeft className="mr-2 size-4" />
                 Back to Themes
               </Link>
-              <h1 className="text-3xl font-bold tracking-tight">
-                {theme.name} Theme
-              </h1>
+              <h1 className="text-3xl font-bold">{theme.name} Theme</h1>
               <div className="mt-2 flex items-center gap-2">
                 <p className="text-xl text-muted-foreground">
                   {theme.description}
@@ -204,27 +202,28 @@ export default async function ThemePreviewPage({ params }: Props) {
               </div>
             </div>
 
-            <Link href={`/dashboard/create?theme=${theme.id}`}>
-              <Button size="lg">Use This Theme</Button>
+            <Link
+              href={`/dashboard/create?theme=${theme.id}`}
+              className="md:w-auto w-full"
+            >
+              <Button size="lg" variant="outline">
+                Use This Theme
+              </Button>
             </Link>
           </div>
 
           <h2 className="mb-6 text-2xl font-semibold">Live Preview</h2>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="preview-container overflow-hidden rounded-lg border">
-                <ThemeComponent
-                  portfolio={mockPortfolio}
-                  projects={mockProjects}
-                  skills={mockSkills}
-                  experiences={mockPortfolio.experiences}
-                  socials={mockPortfolio.socials}
-                  educations={mockPortfolio.educations}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="overflow-hidden rounded-lg -mx-5">
+            <ThemeComponent
+              portfolio={mockPortfolio}
+              projects={mockProjects}
+              skills={mockSkills}
+              experiences={mockPortfolio.experiences}
+              socials={mockPortfolio.socials}
+              educations={mockPortfolio.educations}
+            />
+          </div>
         </div>
       </ThemeStyleProvider>
     </ThemeProvider>

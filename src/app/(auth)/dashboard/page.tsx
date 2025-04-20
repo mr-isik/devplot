@@ -35,11 +35,11 @@ export default async function Dashboard() {
 
   return (
     <div className="min-h-screen ">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4">
         <AppNavigation />
 
         <div className="mt-12 space-y-8 container max-w-6xl">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <div className="flex flex-col items-start md:items-center justify-between gap-4 sm:flex-row">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">
                 Your Portfolios
