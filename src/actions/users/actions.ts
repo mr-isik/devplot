@@ -51,3 +51,11 @@ export const getUser = async () => {
 
   return { userData, error };
 };
+
+export const deleteUser = async (id: number) => {
+  const supabase = await createClient();
+
+  const { error: deleteUserError } = await supabase.auth.admin.deleteUser(id);
+
+  return { error: deleteUserError };
+};

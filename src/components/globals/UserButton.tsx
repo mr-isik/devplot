@@ -9,7 +9,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { User } from "@supabase/supabase-js";
-import { CreditCard, LifeBuoy, LogOut, Mail, UserCircle } from "lucide-react";
+import {
+  CreditCard,
+  LifeBuoy,
+  LogOut,
+  Settings,
+  UserCircle,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type UserButtonProps = {
@@ -45,9 +51,14 @@ export function UserButton({ user }: UserButtonProps) {
               <CreditCard className="mr-2 size-4" />
               <span>Manage Subscription</span>
             </Button>
-            <Button variant="ghost" size="sm" className="justify-start">
-              <Mail className="mr-2 size-4" />
-              <span>Email Settings</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="justify-start"
+              onClick={() => router.push("/dashboard/settings")}
+            >
+              <Settings className="mr-2 size-4" />
+              <span>Settings</span>
             </Button>
             <Button variant="ghost" size="sm" className="justify-start">
               <LifeBuoy className="mr-2 size-4" />
