@@ -15,62 +15,17 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import { ModeToggle } from "@/components/globals/ThemeSwitcher";
 import { redirect } from "next/navigation";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CircleUser, Bell, Shield, Trash2, ArrowLeft } from "lucide-react";
-import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+import { CircleUser, Trash2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
+import { deleteUserAccount } from "@/actions/users/actions";
 // Moved the function directly into this file
-async function deleteUserAccount() {
-  "use server";
-
-  try {
-    const supabase = await createClient();
-
-    // Get current user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return redirect("/");
-    }
-
-    // Delete user data from the users table
-    const { error: deleteUserError } = await supabase
-      .from("users")
-      .delete()
-      .eq("auth_id", user.id);
-
-    if (deleteUserError) {
-      console.error("Error deleting user data:", deleteUserError);
-      throw new Error("Failed to delete user data");
-    }
-
-    // Sign out the user
-    await supabase.auth.signOut();
-
-    // Revalidate paths
-    revalidatePath("/", "layout");
-
-    // Redirect to home
-    return redirect("/");
-  } catch (error) {
-    console.error("Error deleting user account:", error);
-    // Still redirect to home in case of error, after attempting logout
-    return redirect("/");
-  }
-}
 
 export default async function SettingsPage() {
   const { userData, error } = await getUser();
@@ -78,8 +33,6 @@ export default async function SettingsPage() {
   if (error || !userData || userData.length === 0) {
     return redirect("/");
   }
-
-  const user = userData[0];
 
   return (
     <div className="container max-w-4xl mx-auto py-10">

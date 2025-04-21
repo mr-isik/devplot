@@ -36,14 +36,12 @@ export function UserButton({ user }: UserButtonProps) {
           <UserCircle size={24} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-56" align="end" sideOffset={8}>
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center gap-2 p-1">
-            <div className="flex flex-col space-y-1">
-              <p className="truncate text-xs text-muted-foreground">
-                {user.email}
-              </p>
-            </div>
+      <PopoverContent className="w-52 p-2" align="end" sideOffset={8}>
+        <div className="flex flex-col space-y-2">
+          <div className="flex items-center gap-2 p-2">
+            <p className="truncate text-xs text-muted-foreground">
+              {user.email}
+            </p>
           </div>
           <div className="border-t border" />
           <div className="flex flex-col space-y-1">

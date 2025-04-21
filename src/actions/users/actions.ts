@@ -1,6 +1,8 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const createUser = async (authId: string) => {
   try {
@@ -52,10 +54,44 @@ export const getUser = async () => {
   return { userData, error };
 };
 
-export const deleteUser = async (id: number) => {
-  const supabase = await createClient();
+export async function deleteUserAccount() {
+  "use server";
 
-  const { error: deleteUserError } = await supabase.auth.admin.deleteUser(id);
+  try {
+    const supabase = await createClient();
 
-  return { error: deleteUserError };
-};
+    // Get current user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.error("User not found during account deletion");
+      return redirect("/");
+    }
+
+    // Delete user data from the users table
+    const { error: deleteUserError } = await supabase
+      .from("users")
+      .delete()
+      .eq("auth_id", user.id);
+
+    if (deleteUserError) {
+      console.error("Error deleting user data:", deleteUserError);
+      throw new Error("Failed to delete user data");
+    }
+
+    // Sign out the user
+    await supabase.auth.signOut();
+
+    // Revalidate paths
+    revalidatePath("/");
+
+    // Redirect to home
+    redirect("/");
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    // Still redirect to home in case of error, after attempting logout
+    redirect("/");
+  }
+}
