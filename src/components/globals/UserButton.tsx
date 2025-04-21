@@ -16,6 +16,7 @@ import {
   Settings,
   UserCircle,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type UserButtonProps = {
@@ -45,23 +46,36 @@ export function UserButton({ user }: UserButtonProps) {
           </div>
           <div className="border-t border" />
           <div className="flex flex-col space-y-1">
-            <Button variant="ghost" size="sm" className="justify-start">
-              <CreditCard className="mr-2 size-4" />
-              <span>Manage Subscription</span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start"
-              onClick={() => router.push("/dashboard/settings")}
-            >
-              <Settings className="mr-2 size-4" />
-              <span>Settings</span>
-            </Button>
-            <Button variant="ghost" size="sm" className="justify-start">
-              <LifeBuoy className="mr-2 size-4" />
-              <span>Feedback</span>
-            </Button>
+            <Link href="#" className="w-full">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start w-full"
+              >
+                <CreditCard className="mr-2 size-4" />
+                <span>Manage Subscription</span>
+              </Button>
+            </Link>
+            <Link href="/dashboard/settings" className="w-full">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start w-full"
+              >
+                <Settings className="mr-2 size-4" />
+                <span>Settings</span>
+              </Button>
+            </Link>
+            <Link href="mailto:support@get-ai-assistant.com" className="w-full">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start w-full"
+              >
+                <LifeBuoy className="mr-2 size-4" />
+                <span>Feedback</span>
+              </Button>
+            </Link>
           </div>
           <div className="border-t border" />
           <Button
