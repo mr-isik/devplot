@@ -8,7 +8,7 @@ import { createExperience } from "@/actions/experiences/actions";
 import { createOption } from "@/actions/options/actions";
 import { createPortfolio, updatePortfolio } from "@/actions/portfolios/actions";
 import { createProject } from "@/actions/projects/actions";
-import { createSkill } from "@/actions/skills/actions";
+import { addSkill } from "@/actions/skills/actions";
 import { createSocial } from "@/actions/socials/actions";
 import Loader from "@/components/globals/Loader";
 import { Button } from "@/components/ui/button";
@@ -547,7 +547,7 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
 
       if (formValues.skills.length > 0) {
         const skillPromises = formValues.skills.map((skill) => {
-          return createSkill({
+          return addSkill({
             name: skill.name,
             portfolio_id: portfolioId,
           });

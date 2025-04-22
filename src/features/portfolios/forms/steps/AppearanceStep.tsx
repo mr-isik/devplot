@@ -92,7 +92,7 @@ interface ColorEditorProps {
 
 // Added interface for AppearanceStep props
 interface AppearanceStepProps {
-  portfolioId?: string;
+  portfolioId?: number;
 }
 
 // Fonts data
@@ -418,13 +418,13 @@ export default function AppearanceStep({
     educations: Education[];
   }>({
     portfolio: {
-      id: "preview",
+      id: 21,
       user_id: "preview-user",
       created_at: new Date().toISOString(),
       is_published: true,
       contents: {
-        id: "preview-content",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         hero_header: "John Doe",
         hero_description: "Senior Frontend Developer & UX Designer",
         about_text:
@@ -434,8 +434,8 @@ export default function AppearanceStep({
       },
       options: [
         {
-          id: "preview-option",
-          portfolio_id: "preview",
+          id: 21,
+          portfolio_id: 21,
           options: JSON.stringify({
             theme: selectedThemeId,
             colorTheme: selectedColorTheme,
@@ -452,8 +452,8 @@ export default function AppearanceStep({
     },
     experiences: [
       {
-        id: "1",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         created_at: new Date().toISOString(),
         company: "Acme Inc",
         role: "Senior Frontend Developer",
@@ -465,8 +465,8 @@ export default function AppearanceStep({
         end_date: null,
       },
       {
-        id: "2",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         created_at: new Date().toISOString(),
         company: "Tech Solutions",
         role: "Frontend Developer",
@@ -480,8 +480,8 @@ export default function AppearanceStep({
     ],
     projects: [
       {
-        id: "1",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         created_at: new Date().toISOString(),
         title: "E-commerce Platform",
         description:
@@ -491,8 +491,8 @@ export default function AppearanceStep({
         live_url: "https://example.com",
       },
       {
-        id: "2",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         created_at: new Date().toISOString(),
         title: "Portfolio Website",
         description:
@@ -504,22 +504,22 @@ export default function AppearanceStep({
     ],
     socials: [
       {
-        id: "1",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         created_at: new Date().toISOString(),
         platform: "github",
         url: "https://github.com",
       },
       {
-        id: "2",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         created_at: new Date().toISOString(),
         platform: "linkedin",
         url: "https://linkedin.com",
       },
       {
-        id: "3",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         created_at: new Date().toISOString(),
         platform: "twitter",
         url: "https://twitter.com",
@@ -527,30 +527,38 @@ export default function AppearanceStep({
     ],
     skills: [
       {
-        id: "1",
-        portfolio_id: "preview",
+        id: 21,
         name: "React",
+        category: "Frontend",
+        icon_name: "react",
+        color: "#61DAFB",
       },
       {
-        id: "2",
-        portfolio_id: "preview",
+        id: 21,
         name: "TypeScript",
+        category: "Frontend",
+        icon_name: "typescript",
+        color: "#3178C6",
       },
       {
-        id: "3",
-        portfolio_id: "preview",
+        id: 21,
         name: "Next.js",
+        category: "Frontend",
+        icon_name: "nextjs",
+        color: "#000000",
       },
       {
-        id: "4",
-        portfolio_id: "preview",
+        id: 21,
         name: "Tailwind CSS",
+        category: "Frontend",
+        icon_name: "tailwindcss",
+        color: "#38BDF8",
       },
     ],
     educations: [
       {
-        id: "1",
-        portfolio_id: "preview",
+        id: 21,
+        portfolio_id: 21,
         created_at: new Date().toISOString(),
         school: "University of Technology",
         degree: "Bachelor's",
@@ -569,8 +577,8 @@ export default function AppearanceStep({
         ...prev.portfolio,
         options: [
           {
-            id: "preview-option",
-            portfolio_id: "preview",
+            id: 21,
+            portfolio_id: 21,
             options: JSON.stringify({
               theme: selectedThemeId,
               colorTheme: selectedColorTheme,

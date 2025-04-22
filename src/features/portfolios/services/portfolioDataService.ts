@@ -17,8 +17,14 @@ export async function fetchPortfolioById(id: number): Promise<{
     const { data, error } = await getFullPortfolio(id);
 
     if (error || !data || data.length === 0) {
-      return { error: "Portfolio not found" };
+      return { error: error?.message || "Portfolio not found" };
     }
+
+    const portfolioSkills = data[0].portfolio_skills;
+
+    const formattedSkills = portfolioSkills.map((skill: any) => ({
+      ...skill.details,
+    }));
 
     // Create an enhanced portfolio object with all necessary fields
     const enhancedPortfolio: Portfolio = {
@@ -37,7 +43,7 @@ export async function fetchPortfolioById(id: number): Promise<{
       socials: data[0].socials || [],
       options: data[0].options || [],
       educations: data[0].educations || [],
-      skills: data[0].skills || [],
+      skills: formattedSkills || [],
     };
 
     return { portfolio: enhancedPortfolio };

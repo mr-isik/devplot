@@ -41,7 +41,7 @@ import { updatePortfolio } from "@/actions/portfolios/actions";
 
 type PublishStepProps = {
   preview?: boolean;
-  portfolioId?: string;
+  portfolioId?: number;
   userId: string;
 };
 

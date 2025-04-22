@@ -5,7 +5,7 @@ import { Skill } from "@/features/skills/types";
 import type { Social } from "@/features/socials/types";
 
 export type Portfolio = {
-  id: string;
+  id: number;
   user_id: string;
   created_at: string;
   contents: Content;
@@ -19,14 +19,14 @@ export type Portfolio = {
 };
 
 export type Option = {
-  id: string;
-  portfolio_id: string;
+  id: number;
+  portfolio_id: number;
   options: string;
 };
 
 export type Content = {
-  id: string;
-  portfolio_id: string;
+  id: number;
+  portfolio_id: number;
   hero_header: string;
   hero_description: string;
   meta_title: string;

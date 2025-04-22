@@ -158,6 +158,7 @@ export const skillSchema = z.object({
     .string()
     .min(1, { message: "Skill name must be at least 1 character" }),
   portfolio_id: z.string().optional(),
+  portfolio_skill_id: z.number().optional(),
 });
 
 // Schema for multiple skills

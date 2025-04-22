@@ -57,13 +57,19 @@ import SocialsStep from "./steps/SocialsStep";
 import Loader from "@/components/globals/Loader";
 
 interface EditPortfolioFormProps {
-  portfolioData: any; // Replace with proper type
-  portfolioId: string;
+  portfolio: any;
+  id: number;
+  skillsData?: {
+    allSkills: any[] | null;
+    categories: any[] | null;
+    portfolioSkills: any[] | null;
+  };
 }
 
 export default function EditPortfolioForm({
-  portfolioData,
-  portfolioId,
+  portfolio: portfolioData,
+  id: portfolioId,
+  skillsData,
 }: EditPortfolioFormProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("basics");
@@ -129,9 +135,11 @@ export default function EditPortfolioForm({
           item_id: project.id,
         })) || [],
       skills:
-        (portfolioData.skills || []).map((skill: any) => ({
-          ...skill,
-          item_id: skill.id,
+        skillsData?.portfolioSkills?.map((skill: any) => ({
+          name: skill.skills.name,
+          category: skill.skills.category,
+          icon_name: skill.skills.icon_name,
+          item_id: skill.skill_id,
         })) || [],
       socials:
         (portfolioData.socials || []).map((social: any) => ({
@@ -183,7 +191,13 @@ export default function EditPortfolioForm({
       title: "Skills",
       description: "Showcase your expertise",
       icon: <WrenchIcon className="mr-2 size-4" />,
-      component: <SkillsStep portfolioId={portfolioId} />,
+      component: (
+        <SkillsStep
+          portfolioId={portfolioId}
+          skillsData={skillsData?.allSkills}
+          categoriesData={skillsData?.categories}
+        />
+      ),
     },
     {
       id: "socials",

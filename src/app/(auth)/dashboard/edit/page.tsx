@@ -1,4 +1,9 @@
 import { getFullPortfolio, getPortfolio } from "@/actions/portfolios/actions";
+import {
+  getPortfolioSkills,
+  getSkillCategories,
+  getSkills,
+} from "@/actions/skills/actions";
 import { getUser } from "@/actions/users/actions";
 import EditPortfolioForm from "@/features/portfolios/forms/EditPortfolioForm";
 import { redirect } from "next/navigation";
@@ -14,13 +19,7 @@ export default async function EditPortfolioPage() {
   const { userData } = await getUser();
 
   if (!userData || userData.length === 0) {
-    redirect("/login");
-  }
-
-  const { data: portfolios } = await getPortfolio(userData[0].id);
-
-  if (!portfolios || portfolios.length <= 0) {
-    redirect(`/dashboard/create`);
+    redirect("/sign-in");
   }
 
   const id = userData[0].id;
@@ -30,6 +29,23 @@ export default async function EditPortfolioPage() {
     redirect(`/dashboard/create`);
   }
 
+  // Fetch all skill-related data in parallel using Promise.all
+  const [
+    { data: skillsResponse, error: skillsError },
+    { data: categoriesResponse, error: categoriesError },
+    { data: portfolioSkillsResponse, error: portfolioSkillsError },
+  ] = await Promise.all([
+    getSkills(),
+    getSkillCategories(),
+    getPortfolioSkills(fullPortfolio[0].id),
+  ]);
+
+  const skillsData = {
+    allSkills: skillsResponse,
+    categories: categoriesResponse,
+    portfolioSkills: portfolioSkillsResponse,
+  };
+
   return (
     <div className="container space-y-6 py-12">
       <div className="mx-auto flex flex-col items-center gap-2">
@@ -38,8 +54,9 @@ export default async function EditPortfolioPage() {
       </div>
 
       <EditPortfolioForm
-        portfolioData={fullPortfolio[0]}
-        portfolioId={portfolios[0].id}
+        portfolio={fullPortfolio[0]}
+        id={fullPortfolio[0].id}
+        skillsData={skillsData}
       />
     </div>
   );

@@ -37,7 +37,7 @@ import Image from "next/image";
 type ProjectFormValues = z.infer<typeof projectSchema>;
 
 interface ProjectsStepProps {
-  portfolioId?: string;
+  portfolioId?: number;
 }
 
 const imageOptions: DropzoneOptions = {
@@ -241,11 +241,6 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
       setIsSubmitting(false);
     }
   };
-
-  /* Display form errors for debugging */
-  useEffect(() => {
-    console.log(projectForm.formState.errors);
-  }, [projectForm.formState.errors]);
 
   return (
     <div className="space-y-6">

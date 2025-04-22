@@ -1,5 +1,14 @@
 export type Skill = {
-  id: string;
+  id: number;
   name: string;
-  portfolio_id: string;
+  category: string;
+  icon_name: string;
+  color: string;
+};
+
+export type SkillCategory = {
+  id: number;
+  slug: string;
+  name: string;
+  icon_name: string;
 };

@@ -1,6 +1,6 @@
 import { getUser } from "@/actions/users/actions";
 import PortfolioForm from "@/features/portfolios/forms/PortfolioForm";
-import { getPortfolio } from "@/actions/portfolios/actions";
+import { getPortfolio, getPortfolios } from "@/actions/portfolios/actions";
 import { redirect } from "next/navigation";
 
 export async function generateMetadata() {
@@ -17,7 +17,7 @@ export default async function CreatePortfolioPage() {
     redirect("/sign-in");
   }
 
-  const { data: portfolios } = await getPortfolio(userData[0].id);
+  const { data: portfolios } = await getPortfolios(userData[0].id);
 
   if (portfolios && portfolios.length > 0) {
     redirect(`/dashboard/edit`);

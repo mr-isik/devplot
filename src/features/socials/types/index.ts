@@ -1,6 +1,6 @@
 export type Social = {
-  id: string;
-  portfolio_id: string;
+  id: number;
+  portfolio_id: number;
   platform: string;
   url: string;
   created_at: string;

@@ -1,6 +1,6 @@
 export type Experience = {
-  id: string;
-  portfolio_id: string;
+  id: number;
+  portfolio_id: number;
   role: string;
   company: string;
   employment_type?: string;

@@ -1,6 +1,6 @@
 export type Project = {
-  id: string;
-  portfolio_id: string;
+  id: number;
+  portfolio_id: number;
   title: string;
   description: string;
   repo_url: string | null;

@@ -35,7 +35,7 @@ import Loader from "@/components/globals/Loader";
 type ExperienceFormValues = z.infer<typeof experienceSchema>;
 
 interface ExperiencesStepProps {
-  portfolioId?: string;
+  portfolioId?: number;
 }
 
 const logoOptions: DropzoneOptions = {

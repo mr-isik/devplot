@@ -66,7 +66,19 @@ export const getFullPortfolio = async (id: number) => {
   const { data: portfolio, error: portfolioError } = await supabase
     .from("portfolios")
     .select(
-      "*, contents(*), experiences(*), educations(*), projects(*), skills(*), socials(*), options(*)"
+      `*, 
+      contents(*), 
+      experiences(*), 
+      educations(*), 
+      projects(*),
+      portfolio_skills(
+        id,
+        portfolio_id,
+        skill_id,
+        details:skills(*)
+      ), 
+      socials(*),
+      options(*)`
     )
     .eq("user_id", id);
 
@@ -90,7 +102,7 @@ export const updatePortfolio = async (portfolio: Partial<Portfolio>) => {
 };
 
 export const updatePortfolioOptions = async (
-  portfolioId: string,
+  portfolioId: number,
   optionsData: {
     theme: string;
     colorTheme: string;
@@ -137,7 +149,7 @@ export const updatePortfolioOptions = async (
   return { data, error };
 };
 
-export const deletePortfolio = async (id: string) => {
+export const deletePortfolio = async (id: number) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase

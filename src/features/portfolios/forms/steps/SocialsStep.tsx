@@ -57,7 +57,7 @@ type SocialFormValues = z.infer<typeof socialSchema> & {
 };
 
 interface SocialsStepProps {
-  portfolioId?: string;
+  portfolioId?: number;
 }
 
 const SOCIAL_PLATFORMS = [
@@ -167,11 +167,13 @@ export default function SocialsStep({ portfolioId }: SocialsStepProps = {}) {
       }
       // Create workflow: Add new social to database
       else if (portfolioId) {
-        const { data: newSocial, error } = await createSocial({
-          platform: data.platform,
-          url: data.url,
-          portfolio_id: portfolioId,
-        });
+        const { data: newSocial, error } = await createSocial(
+          {
+            platform: data.platform,
+            url: data.url,
+          },
+          portfolioId
+        );
 
         if (error) {
           throw new Error(`Failed to add social link: ${error.message}`);

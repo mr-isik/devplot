@@ -21,7 +21,7 @@ export const getExperiences = async (
 
 export const createExperience = async (
   experience: z.infer<typeof experienceSchema>,
-  portfolioId: string
+  portfolioId: number
 ) => {
   const supabase = await createClient();
 
