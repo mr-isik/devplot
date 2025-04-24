@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const createEducation = async (
   education: z.infer<typeof educationSchema>,
-  portfolioId: string
+  portfolioId: number
 ) => {
   const supabase = await createClient();
 

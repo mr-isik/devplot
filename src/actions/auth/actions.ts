@@ -17,6 +17,20 @@ export const signin = async (
   try {
     const supabase = await createClient();
 
+    /* Check if user exists in the database */
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", formData.email);
+
+    if (userError) {
+      return { data: null, error: userError };
+    }
+
+    if (!user || user.length === 0) {
+      return { data: null, error: { message: "User not found" } };
+    }
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,

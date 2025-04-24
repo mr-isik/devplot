@@ -35,7 +35,7 @@ export const getContent = async (portfolioId: string) => {
 
 export const updateContent = async (
   content: Partial<Content>,
-  portfolioId: string
+  portfolioId: number
 ) => {
   const supabase = await createClient();
 

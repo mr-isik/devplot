@@ -23,7 +23,7 @@ import { SaveIcon } from "lucide-react";
 import Loader from "@/components/globals/Loader";
 
 interface BasicInfoStepProps {
-  portfolioId?: string;
+  portfolioId?: number;
 }
 
 export default function BasicInfoStep({

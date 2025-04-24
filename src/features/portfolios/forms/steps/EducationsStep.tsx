@@ -32,7 +32,7 @@ import Loader from "@/components/globals/Loader";
 type EducationFormValues = z.infer<typeof educationSchema>;
 
 interface EducationsStepProps {
-  portfolioId?: string;
+  portfolioId?: number;
 }
 
 export default function EducationsStep({

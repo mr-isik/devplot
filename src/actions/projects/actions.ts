@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 
 export const createProject = async (
   project: z.infer<typeof projectSchema>,
-  portfolioId: string
+  portfolioId: number
 ) => {
   const supabase = await createClient();
 

@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export const getSocials = async (
-  portfolioId: string
+  portfolioId: number
 ): Promise<{ data: Social[] | null; error: any }> => {
   const supabase = await createClient();
 
@@ -19,12 +19,18 @@ export const getSocials = async (
   return { data, error };
 };
 
-export const createSocial = async (social: Partial<Social>) => {
+export const createSocial = async (
+  social: z.infer<typeof socialSchema>,
+  portfolioId: number
+) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("socials")
-    .insert(social)
+    .insert({
+      ...social,
+      portfolio_id: portfolioId,
+    })
     .select();
 
   revalidatePath("/");

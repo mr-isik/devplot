@@ -96,15 +96,19 @@ export type SkillData = {
 };
 
 export const SKILL_CATEGORIES = [
-  { id: "programming-language", name: "Programming Languages", icon: CodeIcon },
-  { id: "frontend", name: "Frontend Development", icon: LayoutIcon },
-  { id: "backend", name: "Backend Development", icon: ServerIcon },
-  { id: "database", name: "Databases", icon: DatabaseIcon },
-  { id: "mobile", name: "Mobile Development", icon: SmartphoneIcon },
-  { id: "devops", name: "DevOps & Cloud", icon: CloudIcon },
-  { id: "ai-ml", name: "AI & Machine Learning", icon: BrainIcon },
-  { id: "soft-skill", name: "Soft Skills", icon: UsersIcon },
-  { id: "tool", name: "Tools & Platforms", icon: SettingsIcon },
+  {
+    slug: "programming-language",
+    name: "Programming Languages",
+    icon: CodeIcon,
+  },
+  { slug: "frontend", name: "Frontend Development", icon: LayoutIcon },
+  { slug: "backend", name: "Backend Development", icon: ServerIcon },
+  { slug: "database", name: "Databases", icon: DatabaseIcon },
+  { slug: "mobile", name: "Mobile Development", icon: SmartphoneIcon },
+  { slug: "devops", name: "DevOps & Cloud", icon: CloudIcon },
+  { slug: "ai-ml", name: "AI & Machine Learning", icon: BrainIcon },
+  { slug: "soft-skill", name: "Soft Skills", icon: UsersIcon },
+  { slug: "tool", name: "Tools & Platforms", icon: SettingsIcon },
 ];
 
 export const COMMON_SKILLS: SkillData[] = [

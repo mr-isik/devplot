@@ -1,6 +1,6 @@
 export type Education = {
-  id: string;
-  portfolio_id: string;
+  id: number;
+  portfolio_id: number;
   school: string;
   degree: string;
   field: string;
