@@ -43,8 +43,8 @@ export default async function ThemePreviewPage({ params }: Props) {
 
   // Create mock content data
   const mockContent: Content = {
-    id: "preview-content",
-    portfolio_id: "preview",
+    id: 1,
+    portfolio_id: 1,
     hero_header: "John Doe",
     hero_description: "Full Stack Developer",
     meta_title: "John Doe - Developer Portfolio",
@@ -56,14 +56,14 @@ export default async function ThemePreviewPage({ params }: Props) {
 
   // Create mock option
   const mockOption: Option = {
-    id: "preview-option",
-    portfolio_id: "preview",
+    id: 1,
+    portfolio_id: 1,
     options: JSON.stringify(themeOptions),
   };
 
   // Create mock portfolio data
   const mockPortfolio: Portfolio = {
-    id: "preview",
+    id: 1,
     user_id: "preview-user",
     created_at: new Date().toISOString(),
     is_published: true,
@@ -71,22 +71,22 @@ export default async function ThemePreviewPage({ params }: Props) {
     options: [mockOption],
     socials: [
       {
-        id: "preview-social-1",
-        portfolio_id: "preview",
+        id: 1,
+        portfolio_id: 1,
         platform: "Twitter",
         url: "https://twitter.com/johndoe",
         created_at: new Date().toISOString(),
       },
       {
-        id: "preview-social-2",
-        portfolio_id: "preview",
+        id: 2,
+        portfolio_id: 1,
         platform: "LinkedIn",
         url: "https://linkedin.com/in/johndoe",
         created_at: new Date().toISOString(),
       },
       {
-        id: "preview-social-3",
-        portfolio_id: "preview",
+        id: 3,
+        portfolio_id: 1,
         platform: "GitHub",
         url: "https://github.com/johndoe",
         created_at: new Date().toISOString(),
@@ -94,8 +94,8 @@ export default async function ThemePreviewPage({ params }: Props) {
     ],
     experiences: [
       {
-        id: "preview-exp-1",
-        portfolio_id: "preview",
+        id: 1,
+        portfolio_id: 1,
         role: "Software Engineer",
         company: "Google",
         employment_type: "Full-time",
@@ -108,8 +108,8 @@ export default async function ThemePreviewPage({ params }: Props) {
     ],
     projects: [
       {
-        id: "preview-proj-1",
-        portfolio_id: "preview",
+        id: 1,
+        portfolio_id: 1,
         title: "Project One",
         description:
           "A modern web application built with React and TypeScript.",
@@ -121,8 +121,8 @@ export default async function ThemePreviewPage({ params }: Props) {
     ],
     educations: [
       {
-        id: "preview-edu-1",
-        portfolio_id: "preview",
+        id: 1,
+        portfolio_id: 1,
         school: "University of California, Los Angeles",
         degree: "Bachelor of Science in Computer Science",
         field: "Computer Science",
@@ -133,22 +133,26 @@ export default async function ThemePreviewPage({ params }: Props) {
     ],
     skills: [
       {
-        id: "preview-skill-1",
-        portfolio_id: "preview",
+        id: 1,
         name: "React",
+        category: "frontend",
+        icon_name: "react",
+        color: "#61DAFB",
       },
       {
-        id: "preview-skill-2",
-        portfolio_id: "preview",
+        id: 2,
         name: "TypeScript",
+        category: "frontend",
+        icon_name: "typescript",
+        color: "#3178C6",
       },
     ],
   };
 
   const mockProjects: Project[] = [
     {
-      id: "preview-proj-1",
-      portfolio_id: "preview",
+      id: 1,
+      portfolio_id: 1,
       title: "Project One",
       description: "A modern web application built with React and TypeScript.",
       repo_url: "https://github.com/johndoe/project-one",
@@ -157,8 +161,8 @@ export default async function ThemePreviewPage({ params }: Props) {
       image: "/images/projects/placeholder-1.jpg",
     },
     {
-      id: "preview-proj-2",
-      portfolio_id: "preview",
+      id: 2,
+      portfolio_id: 1,
       title: "Project Two",
       description: "Mobile application developed with React Native.",
       repo_url: null,
@@ -169,10 +173,34 @@ export default async function ThemePreviewPage({ params }: Props) {
   ];
 
   const mockSkills: Skill[] = [
-    { id: "preview-skill-1", name: "React", portfolio_id: "preview" },
-    { id: "preview-skill-2", name: "TypeScript", portfolio_id: "preview" },
-    { id: "preview-skill-3", name: "Node.js", portfolio_id: "preview" },
-    { id: "preview-skill-4", name: "Next.js", portfolio_id: "preview" },
+    {
+      id: 1,
+      name: "React",
+      category: "frontend",
+      icon_name: "react",
+      color: "#61DAFB",
+    },
+    {
+      id: 2,
+      name: "TypeScript",
+      category: "frontend",
+      icon_name: "typescript",
+      color: "#3178C6",
+    },
+    {
+      id: 3,
+      name: "Node.js",
+      category: "backend",
+      icon_name: "nodejs",
+      color: "#339933",
+    },
+    {
+      id: 4,
+      name: "Next.js",
+      category: "frontend",
+      icon_name: "nextjs",
+      color: "#000000",
+    },
   ];
 
   return (

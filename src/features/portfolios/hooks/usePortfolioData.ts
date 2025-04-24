@@ -25,8 +25,8 @@ export function usePortfolioData(form: UseFormReturn<PortfolioFormValues>) {
 
   // Format portfolio data for preview
   const portfolioContent: Content = {
-    id: "preview-content",
-    portfolio_id: "preview",
+    id: 1,
+    portfolio_id: 1,
     hero_header: formValues.content?.hero_header || "Portfolio Title",
     hero_description:
       formValues.content?.hero_description || "Frontend Developer",
@@ -36,14 +36,14 @@ export function usePortfolioData(form: UseFormReturn<PortfolioFormValues>) {
   };
 
   const portfolioOption: Option = {
-    id: "preview-option",
-    portfolio_id: "preview",
+    id: 1,
+    portfolio_id: 1,
     options: JSON.stringify(themeOptions),
   };
 
   // Format portfolio data for preview
   const portfolio: Portfolio = {
-    id: "preview",
+    id: 1,
     user_id: "preview-user",
     created_at: new Date().toISOString(),
     is_published: formValues.portfolio?.is_published || false,
@@ -59,8 +59,8 @@ export function usePortfolioData(form: UseFormReturn<PortfolioFormValues>) {
   // Format experiences data
   const experiences: Experience[] = (formValues.experiences || []).map(
     (exp, index) => ({
-      id: `preview-exp-${index}`,
-      portfolio_id: "preview",
+      id: index + 1,
+      portfolio_id: 1,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       company: exp.company || "",
@@ -83,8 +83,8 @@ export function usePortfolioData(form: UseFormReturn<PortfolioFormValues>) {
   // Format projects data
   const projects: Project[] = (formValues.projects || []).map(
     (proj, index) => ({
-      id: `preview-proj-${index}`,
-      portfolio_id: "preview",
+      id: index + 1,
+      portfolio_id: 1,
       created_at: new Date().toISOString(),
       title: proj.title || "",
       description: proj.description || "",
@@ -96,8 +96,8 @@ export function usePortfolioData(form: UseFormReturn<PortfolioFormValues>) {
 
   // Format socials data
   const socials: Social[] = (formValues.socials || []).map((social, index) => ({
-    id: `preview-social-${index}`,
-    portfolio_id: "preview",
+    id: index + 1,
+    portfolio_id: 1,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     platform: social.platform || "github",
@@ -106,17 +106,20 @@ export function usePortfolioData(form: UseFormReturn<PortfolioFormValues>) {
 
   // Format skills data
   const skills: Skill[] = (formValues.skills || []).map((skill, index) => ({
-    id: `preview-skill-${index}`,
-    portfolio_id: "preview",
+    id: index + 1,
+    portfolio_id: 1,
     created_at: new Date().toISOString(),
     name: skill.name || "",
+    category: "other",
+    icon_name: "code",
+    color: "#718096",
   }));
 
   // Format educations data
   const educations: Education[] = (formValues.educations || []).map(
     (edu, index) => ({
-      id: `preview-edu-${index}`,
-      portfolio_id: "preview",
+      id: index + 1,
+      portfolio_id: 1,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       school: edu.school || "",

@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface DeletePortfolioDialogProps {
-  portfolioId: string;
+  portfolioId: number;
 }
 
 export function DeletePortfolioDialog({

@@ -547,10 +547,7 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
 
       if (formValues.skills.length > 0) {
         const skillPromises = formValues.skills.map((skill) => {
-          return addSkill({
-            name: skill.name,
-            portfolio_id: portfolioId,
-          });
+          return addSkill(skill.item_id!, portfolioId);
         });
 
         const skillResults = await Promise.allSettled(skillPromises);
@@ -568,11 +565,13 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
 
       if (formValues.socials.length > 0) {
         const socialPromises = formValues.socials.map((social) => {
-          return createSocial({
-            platform: social.platform,
-            url: social.url,
-            portfolio_id: portfolioId,
-          });
+          return createSocial(
+            {
+              platform: social.platform,
+              url: social.url,
+            },
+            portfolioId
+          );
         });
 
         const socialResults = await Promise.allSettled(socialPromises);
