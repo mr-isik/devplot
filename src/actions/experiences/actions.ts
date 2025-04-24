@@ -179,16 +179,22 @@ export const updateExperience = async (
 export const deleteExperience = async (item_id: number, logo_path: string) => {
   const supabase = await createClient();
 
-  /* Delete the logo from the storage */
-  const { data: logoData, error: logoError } = await supabase.storage
-    .from("experiences")
-    .remove([`${logo_path}`]);
-
-  const { data, error } = await supabase
+  const { data, error: experienceError } = await supabase
     .from("experiences")
     .delete()
     .eq("id", item_id);
 
+  if (experienceError) {
+    console.error("Error deleting experience:", experienceError);
+    return {
+      data: null,
+      error: experienceError,
+    };
+  }
+
+  /* Delete the logo from the storage */
+  await supabase.storage.from("experiences").remove([`${logo_path}`]);
+
   revalidatePath("/");
-  return { data, error };
+  return { data, error: null };
 };
