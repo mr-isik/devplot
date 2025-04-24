@@ -553,7 +553,7 @@ export default function SkillsStep({
       {/* Dialog for adding skills */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[700px]">
-          <form onSubmit={skillForm.handleSubmit(handleAddSkill)}>
+          <div>
             <DialogHeader>
               <DialogTitle>
                 {editingIndex !== null ? "Edit Skill" : "Add Skill"}
@@ -856,7 +856,7 @@ export default function SkillsStep({
                 Cancel
               </Button>
             </DialogFooter>
-          </form>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
