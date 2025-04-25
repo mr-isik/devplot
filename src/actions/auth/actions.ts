@@ -85,11 +85,11 @@ export const signup = async (
       },
     });
 
-    if (error) {
+    if (error || !data.user) {
       return { data: null, error };
     }
 
-    const userResult = await createUser(data.user!.id);
+    const userResult = await createUser(data.user.id, data.user.email!);
 
     if (userResult.error) {
       return { data: null, error: userResult.error };
