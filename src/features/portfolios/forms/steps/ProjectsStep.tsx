@@ -223,7 +223,9 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
     try {
       // If project exists in database, delete it
       if (id && portfolioId) {
-        const { error } = await deleteProject(id);
+        const project = fields[index] as unknown as ProjectFormValues;
+        const imageToDelete = project.image?.[0];
+        const { error } = await deleteProject(id, imageToDelete);
 
         if (error) {
           toast.error("Failed to delete project");
