@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export const createUser = async (authId: string) => {
+export const createUser = async (authId: string, email: string) => {
   try {
     const supabase = await createClient();
 
@@ -12,7 +12,7 @@ export const createUser = async (authId: string) => {
       .from("users")
       .upsert({
         auth_id: authId,
-        onboarded: false,
+        email: email,
       })
       .select();
 
@@ -83,6 +83,8 @@ export async function deleteUserAccount() {
 
     // Sign out the user
     await supabase.auth.signOut();
+
+    await supabase.auth.admin.deleteUser(user.id);
 
     // Revalidate paths
     revalidatePath("/");

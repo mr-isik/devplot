@@ -166,15 +166,24 @@ export const updateProject = async (project: z.infer<typeof projectSchema>) => {
   return { data, error };
 };
 
-export const deleteProject = async (id: number) => {
+export const deleteProject = async (id: number, image_path: string) => {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  const { data, error: projectError } = await supabase
     .from("projects")
     .delete()
-    .eq("id", id)
-    .select();
+    .eq("id", id);
+
+  if (projectError) {
+    console.error("Error deleting project:", projectError);
+    return {
+      data: null,
+      error: projectError,
+    };
+  }
+
+  await supabase.storage.from("projects").remove([`${image_path}`]);
 
   revalidatePath("/");
-  return { data, error };
+  return { data, error: null };
 };
