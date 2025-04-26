@@ -5,6 +5,8 @@ import { z } from "zod";
 // Schema for main portfolio information
 export const portfolioSchema = z.object({
   is_published: z.boolean().default(false),
+  subdomain: z.string().nullable(),
+  custom_domain: z.string().nullable(),
 });
 
 // Schema for theme and appearance settings

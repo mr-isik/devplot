@@ -1,12 +1,11 @@
 import { Education } from "@/features/educations/types";
 import type { Experience } from "@/features/experiences/types";
 import { Project } from "@/features/projects/types";
-import { Skill } from "@/features/skills/types";
 import type { Social } from "@/features/socials/types";
 
 export type Portfolio = {
   id: number;
-  user_id: string;
+  tenant_id: number;
   created_at: string;
   contents: Content;
   options: Option[];
@@ -15,7 +14,6 @@ export type Portfolio = {
   projects: Project[];
   is_published: boolean;
   educations: Education[];
-  skills: Skill[];
 };
 
 export type Option = {

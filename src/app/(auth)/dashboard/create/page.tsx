@@ -2,6 +2,7 @@ import { getUser } from "@/actions/users/actions";
 import PortfolioForm from "@/features/portfolios/forms/PortfolioForm";
 import { getPortfolio, getPortfolios } from "@/actions/portfolios/actions";
 import { redirect } from "next/navigation";
+import { createTenant, getTenant } from "@/actions/tenants/actions";
 
 export async function generateMetadata() {
   return {
@@ -17,7 +18,29 @@ export default async function CreatePortfolioPage() {
     redirect("/sign-in");
   }
 
-  const { data: portfolios } = await getPortfolios(userData[0].id);
+  const { data: tenants, error: tenantError } = await getTenant(userData[0].id);
+
+  if (tenantError) {
+    console.error("Tenant retrieval error:", tenantError);
+    redirect("/dashboard");
+  }
+
+  let tenantId = tenants[0]?.id;
+
+  if (tenants.length === 0) {
+    const { data: tenantData, error: tenantError } = await createTenant(
+      userData[0].id
+    );
+
+    if (tenantError) {
+      console.error("Tenant creation error:", tenantError);
+      redirect("/dashboard");
+    }
+
+    /* @ts-ignore */
+    tenantId = tenantData?.id;
+  }
+  const { data: portfolios } = await getPortfolios(tenantId);
 
   if (portfolios && portfolios.length > 0) {
     redirect(`/dashboard/edit`);
@@ -32,7 +55,7 @@ export default async function CreatePortfolioPage() {
       </div>
 
       <div className="h-[calc(100vh-250px)]">
-        <PortfolioForm userId={userData[0].id} />
+        <PortfolioForm tenantId={tenantId} />
       </div>
     </div>
   );

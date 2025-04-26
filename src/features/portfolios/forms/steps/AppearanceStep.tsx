@@ -410,7 +410,7 @@ export default function AppearanceStep({
 
   // Mock portfolio data for preview
   const [previewData, setPreviewData] = useState<{
-    portfolio: Portfolio;
+    portfolio: any;
     experiences: Experience[];
     projects: Project[];
     socials: Social[];
