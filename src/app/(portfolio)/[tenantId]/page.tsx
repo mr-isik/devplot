@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  fetchPortfolioById,
-  fetchPortfolioMetadata,
+  fetchPortfolioMetadataWithTenantId,
+  fetchPortfolioWithTenantId,
 } from "@/features/portfolios/services/portfolioDataService";
 import PortfolioRenderer from "@/features/themes/components/PortfolioRenderer";
 
@@ -10,11 +10,12 @@ import PortfolioRenderer from "@/features/themes/components/PortfolioRenderer";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: number }>;
+  params: { tenantId: number };
 }): Promise<Metadata> {
-  const { id } = await params;
+  const tenantId = params.tenantId;
 
-  const { metadata, error } = await fetchPortfolioMetadata(id);
+  const { metadata, error } =
+    await fetchPortfolioMetadataWithTenantId(tenantId);
 
   if (error || !metadata) {
     return {
@@ -37,15 +38,11 @@ export async function generateMetadata({
 // The portfolio page component - now with clear separation of concerns:
 // 1. Data fetching is handled by the portfolioDataService
 // 2. Theme selection and rendering is handled by the PortfolioRenderer
-const PortfolioPage = async ({
-  params,
-}: {
-  params: Promise<{ id: number }>;
-}) => {
-  const { id } = await params;
+const PortfolioPage = async ({ params }: { params: { tenantId: number } }) => {
+  const tenantId = params.tenantId;
 
   // Fetch portfolio data using our data service
-  const { portfolio, error } = await fetchPortfolioById(id);
+  const { portfolio, error } = await fetchPortfolioWithTenantId(tenantId);
 
   // Handle errors or missing data
   if (error || !portfolio) {

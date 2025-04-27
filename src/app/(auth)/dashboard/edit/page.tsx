@@ -36,7 +36,6 @@ export default async function EditPortfolioPage() {
     redirect(`/dashboard/create`);
   }
 
-  // Fetch all skill-related data in parallel using Promise.all
   const [
     { data: skillsResponse },
     { data: categoriesResponse },

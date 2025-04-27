@@ -49,4 +49,6 @@ export async function updateSession(request: NextRequest) {
     const dashboardUrl = new URL(`/dashboard`, request.url);
     return NextResponse.redirect(dashboardUrl);
   }
+
+  return supabaseResponse;
 }

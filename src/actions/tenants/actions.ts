@@ -74,3 +74,21 @@ export const deleteTenant = async (tenant_id: number) => {
 
   return { data: null, error: null };
 };
+
+export const checkDomain = async (domain: string) => {
+  const supabase = await createClient();
+
+  const { data: tenant, error: tenantError } = await supabase
+    .from("tenants")
+    .select("*")
+    .or(`domain.eq.${domain},subdomain.eq.${domain}`)
+    .single();
+
+  if (tenant) return { data: tenant };
+
+  return {
+    error: {
+      message: tenantError?.message || "Domain or subdomain is not exist",
+    },
+  };
+};
