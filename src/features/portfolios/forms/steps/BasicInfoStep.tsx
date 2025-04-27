@@ -120,6 +120,8 @@ export default function BasicInfoStep({
                 placeholder="E.g.: John Doe - Frontend Developer"
                 fieldType={FormFieldType.INPUT}
                 description="Enter the main title of your portfolio. Usually your name and title."
+                id="hero-title"
+                aria-describedby="hero-title-description"
               />
 
               <DynamicFormField
@@ -129,6 +131,8 @@ export default function BasicInfoStep({
                 placeholder="E.g.: Frontend Developer with 5+ years of experience building user-focused interfaces"
                 fieldType={FormFieldType.TEXTAREA}
                 description="Enter a brief description that introduces you."
+                id="short-description"
+                aria-describedby="short-description-description"
               />
 
               <FormField
@@ -141,10 +145,12 @@ export default function BasicInfoStep({
                       <Textarea
                         placeholder="Describe yourself, your skills, and your experiences in detail."
                         className="min-h-[200px] resize-y"
+                        id="about-me-text"
+                        aria-describedby="about-me-text-description"
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
+                    <FormDescription id="about-me-text-description">
                       This text will be displayed in the "About Me" section. You
                       can describe yourself, your skills, and career goals.
                     </FormDescription>
@@ -167,6 +173,8 @@ export default function BasicInfoStep({
                 placeholder="E.g.: John Doe | Frontend Developer & UI Designer"
                 fieldType={FormFieldType.INPUT}
                 description="This title will be used in search engines and browser tabs."
+                id="seo-title"
+                aria-describedby="seo-title-description"
               />
 
               <DynamicFormField
@@ -176,6 +184,8 @@ export default function BasicInfoStep({
                 placeholder="E.g.: Professional portfolio of John Doe, a frontend developer specializing in React and UI design."
                 fieldType={FormFieldType.TEXTAREA}
                 description="A brief description of your portfolio that will appear in search engine results."
+                id="seo-description"
+                aria-describedby="seo-description-description"
               />
             </div>
           </CardContent>

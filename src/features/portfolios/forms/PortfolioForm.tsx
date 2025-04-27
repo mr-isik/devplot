@@ -26,7 +26,7 @@ import {
   RocketIcon,
   WrenchIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import AppearanceStep from "./steps/AppearanceStep";
@@ -37,6 +37,7 @@ import ProjectsStep from "./steps/ProjectsStep";
 import PublishStep from "./steps/PublishStep";
 import SkillsStep from "./steps/SkillsStep";
 import SocialsStep from "./steps/SocialsStep";
+import { updateTenant } from "@/actions/tenants/actions";
 
 // Helper function to validate media files
 function validateMediaFiles(
@@ -80,10 +81,10 @@ function validateMediaFiles(
 }
 
 type PortfolioFormProps = {
-  userId: string;
+  tenantId: number;
 };
 
-export default function PortfolioForm({ userId }: PortfolioFormProps) {
+export default function PortfolioForm({ tenantId }: PortfolioFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [activeTab, setActiveTab] = useState("basics");
@@ -147,7 +148,7 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
         <PublishStep
           preview={showPreview}
           portfolioId={undefined}
-          userId={userId}
+          tenantId={tenantId}
         />
       ),
     },
@@ -156,6 +157,8 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
   const defaultValues: z.infer<typeof portfolioFormSchema> = {
     portfolio: {
       is_published: false,
+      subdomain: null,
+      custom_domain: null,
     },
     options: {
       theme: "minimal",
@@ -188,6 +191,33 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
     const formValues = form.getValues();
 
     try {
+      // Validate entire form before submission
+      const isValid = await form.trigger();
+      if (!isValid) {
+        // Find which section has errors
+        const errors = form.formState.errors;
+        let errorStep = "";
+
+        if (errors.content) errorStep = "Basic Information";
+        else if (errors.options) errorStep = "Appearance";
+        else if (errors.experiences) errorStep = "Experiences";
+        else if (errors.educations) errorStep = "Educations";
+        else if (errors.projects) errorStep = "Projects";
+        else if (errors.skills) errorStep = "Skills";
+        else if (errors.socials) errorStep = "Socials";
+        else if (errors.portfolio) errorStep = "Portfolio Settings";
+
+        toast.error(
+          `Cannot create portfolio with errors in ${errorStep || "some sections"}`,
+          {
+            description: "Please review and fix all errors before publishing",
+            duration: 5000,
+          }
+        );
+        setIsSubmitting(false);
+        return false;
+      }
+
       const { valid: validExperienceLogos, errorMessages: expErrors } =
         validateMediaFiles(
           formValues.experiences,
@@ -223,11 +253,30 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
         return false;
       }
 
-      const { data: portfolioData, error: portfolioError } =
-        await createPortfolio({
-          user_id: userId,
-          is_published: formValues.portfolio.is_published,
+      // Check if user has set either a subdomain or custom_domain
+      const hasSubdomain = !!formValues.portfolio.subdomain?.trim();
+      const hasCustomDomain = !!formValues.portfolio.custom_domain?.trim();
+
+      if (!hasSubdomain && !hasCustomDomain) {
+        toast.error("Domain configuration required", {
+          description:
+            "Please set up either a subdomain or custom domain in the Publish step before creating your portfolio.",
+          duration: 5000,
         });
+
+        // Navigate to publish step
+        setActiveTab("publish");
+        setIsSubmitting(false);
+        return false;
+      }
+
+      const { data: portfolioData, error: portfolioError } =
+        await createPortfolio(
+          {
+            is_published: formValues.portfolio.is_published,
+          },
+          tenantId
+        );
 
       if (portfolioError) {
         throw new Error(
@@ -587,6 +636,19 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
         }
       }
 
+      const { error: tenantError } = await updateTenant(tenantId, {
+        subdomain: formValues.portfolio.subdomain,
+        custom_domain: formValues.portfolio.custom_domain,
+      });
+
+      if (tenantError) {
+        console.error("Error updating tenant:", tenantError);
+        toast.error("Failed to update tenant", {
+          description: tenantError?.message || "Unexpected error occurred",
+        });
+        return false;
+      }
+
       await updatePortfolio({
         id: portfolioId,
         is_published: formValues.portfolio.is_published,
@@ -609,10 +671,39 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
   const handleStepComplete = async (stepId: string) => {
     try {
       let isValid = false;
+      let validationErrors: { step: string; fields: string[] } | null = null;
 
       switch (stepId) {
         case "basics":
           isValid = await form.trigger(["content", "portfolio"]);
+          if (!isValid) {
+            const errors = form.formState.errors;
+            const errorFields = Object.keys(errors.content || {}).filter(
+              (key) => (errors.content as any)?.[key]
+            );
+
+            if (errorFields.length > 0) {
+              validationErrors = {
+                step: "Basic Information",
+                fields: errorFields.map((field) => {
+                  switch (field) {
+                    case "hero_header":
+                      return "Hero Title";
+                    case "hero_description":
+                      return "Short Description";
+                    case "about_text":
+                      return "About Me Text";
+                    case "meta_title":
+                      return "SEO Title";
+                    case "meta_description":
+                      return "SEO Description";
+                    default:
+                      return field;
+                  }
+                }),
+              };
+            }
+          }
           break;
         case "appearance":
           isValid = await form.trigger("options");
@@ -634,15 +725,58 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
           break;
         case "publish":
           isValid = await form.trigger();
+          if (!isValid) {
+            // Check which section has errors
+            const errors = form.formState.errors;
+            let errorStep = "";
+
+            if (errors.content) errorStep = "Basic Information";
+            else if (errors.options) errorStep = "Appearance";
+            else if (errors.experiences) errorStep = "Experiences";
+            else if (errors.educations) errorStep = "Educations";
+            else if (errors.projects) errorStep = "Projects";
+            else if (errors.skills) errorStep = "Skills";
+            else if (errors.socials) errorStep = "Socials";
+            else if (errors.portfolio) errorStep = "Portfolio Settings";
+
+            validationErrors = {
+              step: errorStep || "Unknown",
+              fields: ["Please review this section before publishing"],
+            };
+          }
           break;
         default:
           isValid = true;
       }
 
       if (!isValid) {
-        toast.error("Please fill in all required fields correctly", {
-          description: "Fix the errors before continuing",
-        });
+        if (validationErrors) {
+          toast.error(`Please fix the errors in ${validationErrors.step}`, {
+            description: (
+              <ul className="mt-2 list-disc pl-4 text-sm">
+                {validationErrors.fields.map((field, i) => (
+                  <li key={i}>{field}</li>
+                ))}
+              </ul>
+            ),
+            duration: 5000,
+          });
+
+          // If we're in the basics step, scroll to the first error field
+          if (stepId === "basics" && validationErrors.fields.length > 0) {
+            const fieldName = validationErrors.fields[0];
+            const elementId = fieldName.toLowerCase().replace(/\s+/g, "-");
+            const element = document.getElementById(elementId);
+            if (element) {
+              element.scrollIntoView({ behavior: "smooth", block: "center" });
+              element.focus();
+            }
+          }
+        } else {
+          toast.error("Please fill in all required fields correctly", {
+            description: "Fix the errors before continuing",
+          });
+        }
         return;
       }
 
@@ -662,11 +796,6 @@ export default function PortfolioForm({ userId }: PortfolioFormProps) {
       console.error("Form validation error:", err);
       toast.error("Please fill in all required fields");
     }
-  };
-
-  const _togglePreview = () => {
-    setShowPreview(true);
-    setActiveTab("publish");
   };
 
   return (

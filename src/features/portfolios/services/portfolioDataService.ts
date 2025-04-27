@@ -5,16 +5,16 @@ import {
 } from "@/actions/portfolios/actions";
 
 /**
- * Fetches a portfolio by username
- * @param username - The username to fetch portfolio for
+ * Fetches a portfolio by tenantId
+ * @param tenantId - The tenantId to fetch portfolio for
  * @returns An object containing portfolio data or error
  */
-export async function fetchPortfolioById(id: number): Promise<{
+export async function fetchPortfolioWithTenantId(tenantId: number): Promise<{
   portfolio?: Portfolio;
   error?: string;
 }> {
   try {
-    const { data, error } = await getFullPortfolio(id);
+    const { data, error } = await getFullPortfolio(tenantId);
 
     if (error || !data || data.length === 0) {
       return { error: error?.message || "Portfolio not found" };
@@ -30,7 +30,7 @@ export async function fetchPortfolioById(id: number): Promise<{
     const enhancedPortfolio: Portfolio = {
       // Core portfolio data
       id: data[0].id,
-      user_id: data[0].user_id,
+      tenant_id: data[0].tenant_id,
       created_at: data[0].created_at,
 
       // Content data
@@ -55,10 +55,12 @@ export async function fetchPortfolioById(id: number): Promise<{
 
 /**
  * Fetches portfolio metadata for generating page metadata
- * @param username - The username to fetch metadata for
+ * @param tenantId - The tenantId to fetch metadata for
  * @returns An object containing metadata or error
  */
-export async function fetchPortfolioMetadata(id: number): Promise<{
+export async function fetchPortfolioMetadataWithTenantId(
+  tenantId: number
+): Promise<{
   metadata?: {
     title: string;
     description: string;
@@ -66,13 +68,12 @@ export async function fetchPortfolioMetadata(id: number): Promise<{
   error?: string;
 }> {
   try {
-    const { data, error } = await getPortfolioMetadataWithId(id);
+    const { data, error } = await getPortfolioMetadataWithId(tenantId);
 
     if (error || !data || data.length === 0) {
       return { error: "Portfolio metadata not found" };
     }
 
-    // The contents property in the response may contain metadata information
     const portfolioData = data[0];
     const contents = portfolioData.contents as {
       meta_title?: string;

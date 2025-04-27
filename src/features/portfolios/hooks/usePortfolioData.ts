@@ -44,7 +44,7 @@ export function usePortfolioData(form: UseFormReturn<PortfolioFormValues>) {
   // Format portfolio data for preview
   const portfolio: Portfolio = {
     id: 1,
-    user_id: "preview-user",
+    tenant_id: 1,
     created_at: new Date().toISOString(),
     is_published: formValues.portfolio?.is_published || false,
     contents: portfolioContent,

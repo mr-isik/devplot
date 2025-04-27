@@ -64,7 +64,7 @@ export default async function ThemePreviewPage({ params }: Props) {
   // Create mock portfolio data
   const mockPortfolio: Portfolio = {
     id: 1,
-    user_id: "preview-user",
+    tenant_id: 1,
     created_at: new Date().toISOString(),
     is_published: true,
     contents: mockContent,

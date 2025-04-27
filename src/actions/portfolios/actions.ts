@@ -1,15 +1,23 @@
 "use server";
 
 import type { Portfolio } from "@/features/portfolios/types";
+import { portfolioSchema } from "@/lib/validations/portfolio";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
-export const createPortfolio = async (portfolio: Partial<Portfolio>) => {
+export const createPortfolio = async (
+  portfolio: { is_published: boolean },
+  tenantId: number
+) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("portfolios")
-    .insert(portfolio)
+    .insert({
+      is_published: portfolio.is_published,
+      tenant_id: tenantId,
+    })
     .select();
 
   revalidatePath("/");
@@ -17,36 +25,36 @@ export const createPortfolio = async (portfolio: Partial<Portfolio>) => {
 };
 
 export const getPortfolio = async (
-  userId: string
+  tenantId: number
 ): Promise<{ data: Portfolio[] | null; error: any }> => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("portfolios")
     .select("*")
-    .eq("user_id", userId);
+    .eq("tenant_id", tenantId);
 
   return { data, error };
 };
 
-export const getPortfolios = async (userId: number) => {
+export const getPortfolios = async (tenantId: number) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("portfolios")
     .select("* , contents(meta_title, meta_description)")
-    .eq("user_id", userId);
+    .eq("tenant_id", tenantId);
 
   return { data, error };
 };
 
-export const getPortfolioMetadataWithId = async (id: number) => {
+export const getPortfolioMetadataWithId = async (tenantId: number) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("portfolios")
     .select("contents(meta_title, meta_description)")
-    .eq("user_id", id);
+    .eq("tenant_id", tenantId);
 
   if (error) {
     return { data: null, error };
@@ -59,7 +67,7 @@ export const getPortfolioMetadataWithId = async (id: number) => {
   return { data, error: null };
 };
 
-export const getFullPortfolio = async (id: number) => {
+export const getFullPortfolio = async (tenantId: number) => {
   const supabase = await createClient();
 
   /* Fetch portfolio from user id */
@@ -80,7 +88,7 @@ export const getFullPortfolio = async (id: number) => {
       socials(*),
       options(*)`
     )
-    .eq("user_id", id);
+    .eq("tenant_id", tenantId);
 
   if (portfolioError) {
     return { data: null, error: portfolioError };

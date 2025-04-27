@@ -1,12 +1,12 @@
 import { Education } from "@/features/educations/types";
 import type { Experience } from "@/features/experiences/types";
 import { Project } from "@/features/projects/types";
-import { Skill } from "@/features/skills/types";
 import type { Social } from "@/features/socials/types";
+import { Skill } from "@/features/skills/types";
 
 export type Portfolio = {
   id: number;
-  user_id: string;
+  tenant_id: number;
   created_at: string;
   contents: Content;
   options: Option[];

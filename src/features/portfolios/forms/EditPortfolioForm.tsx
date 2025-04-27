@@ -22,14 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { deletePortfolio } from "@/actions/portfolios/actions";
 import {
   BriefcaseIcon,
@@ -41,9 +34,6 @@ import {
   RocketIcon,
   TrashIcon,
   WrenchIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CheckIcon,
 } from "lucide-react";
 
 import AppearanceStep from "./steps/AppearanceStep";
@@ -215,7 +205,7 @@ export default function EditPortfolioForm({
         <PublishStep
           preview={false}
           portfolioId={portfolioId}
-          userId={portfolioData.user_id}
+          tenantId={portfolioData.tenant_id}
         />
       ),
     },
@@ -412,7 +402,7 @@ export default function EditPortfolioForm({
                 className="ml-2 flex-1"
                 onClick={() =>
                   router.push(
-                    `${process.env.NEXT_PUBLIC_DOMAIN}/${portfolioData.user_id}`
+                    `${process.env.NEXT_PUBLIC_DOMAIN}/${portfolioData.tenant_id}`
                   )
                 }
               >

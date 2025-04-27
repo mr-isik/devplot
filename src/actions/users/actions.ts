@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { createTenant } from "../tenants/actions";
 
 export const createUser = async (authId: string, email: string) => {
   try {
@@ -30,6 +31,14 @@ export const createUser = async (authId: string, email: string) => {
 
       console.error("User creation error:", error);
       return { error: { message: "Failed to create user profile" } };
+    }
+
+    /* Create tenant if not exists */
+    const { error: tenantError } = await createTenant(user[0].id);
+
+    if (tenantError) {
+      console.error("Tenant creation error:", tenantError);
+      return { error: { message: "Failed to create tenant" } };
     }
 
     return { data: user, error: null };

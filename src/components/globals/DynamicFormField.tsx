@@ -1,6 +1,6 @@
-import type { DropzoneOptions } from 'react-dropzone';
-import type { Control } from 'react-hook-form';
-import { Checkbox } from '@/components/ui/checkbox';
+import type { DropzoneOptions } from "react-dropzone";
+import type { Control } from "react-hook-form";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   FormControl,
   FormDescription,
@@ -8,34 +8,39 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
-import { Upload } from 'lucide-react';
-import { Button } from '../ui/button';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { Upload } from "lucide-react";
+import { Button } from "../ui/button";
 
-import { DatetimePicker } from '../ui/date-time-picker';
-import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from '../ui/file-upload';
+import { DatetimePicker } from "../ui/date-time-picker";
+import {
+  FileInput,
+  FileUploader,
+  FileUploaderContent,
+  FileUploaderItem,
+} from "../ui/file-upload";
 import {
   Select,
   SelectContent,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import { Switch } from '../ui/switch';
+} from "../ui/select";
+import { Switch } from "../ui/switch";
 
 export enum FormFieldType {
-  INPUT = 'input',
-  PASSWORD = 'password',
-  NUMBER = 'number',
-  TEXTAREA = 'textarea',
-  CHECKBOX = 'checkbox',
-  SWITCH = 'switch',
-  SELECT = 'select',
-  DATE = 'date',
-  SKELETON = 'skeleton',
-  FILE = 'file',
+  INPUT = "input",
+  PASSWORD = "password",
+  NUMBER = "number",
+  TEXTAREA = "textarea",
+  CHECKBOX = "checkbox",
+  SWITCH = "switch",
+  SELECT = "select",
+  DATE = "date",
+  SKELETON = "skeleton",
+  FILE = "file",
 }
 
 export type CustomProps = {
@@ -58,6 +63,8 @@ export type CustomProps = {
   options?: Array<{ value: string; label: string }>;
   fileOptions?: DropzoneOptions;
   description?: string;
+  id?: string;
+  "aria-describedby"?: string;
 };
 
 const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
@@ -69,6 +76,8 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             placeholder={props.placeholder}
             {...field}
             className={cn(props.className)}
+            id={props.id}
+            aria-describedby={props["aria-describedby"]}
           />
         </FormControl>
       );
@@ -80,6 +89,8 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             placeholder={props.placeholder}
             {...field}
             className={cn(props.className)}
+            id={props.id}
+            aria-describedby={props["aria-describedby"]}
           />
         </FormControl>
       );
@@ -93,6 +104,8 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             placeholder={props.placeholder}
             {...field}
             className={cn(props.className)}
+            id={props.id}
+            aria-describedby={props["aria-describedby"]}
           />
         </FormControl>
       );
@@ -104,6 +117,8 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             {...field}
             disabled={props.disabled}
             className={cn(props.className)}
+            id={props.id}
+            aria-describedby={props["aria-describedby"]}
           />
         </FormControl>
       );
@@ -141,9 +156,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
                 />
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
-              {props.children}
-            </SelectContent>
+            <SelectContent>{props.children}</SelectContent>
           </Select>
         </FormControl>
       );
@@ -166,13 +179,10 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
           <DatetimePicker
             value={field.value ? new Date(field.value) : undefined}
             onChange={(date) => {
-              const dateValue = date ? date.toISOString() : '';
+              const dateValue = date ? date.toISOString() : "";
               field.onChange(dateValue);
             }}
-            format={[
-              ['months', 'days', 'years'],
-              [],
-            ]}
+            format={[["months", "days", "years"], []]}
             className={cn(props.className)}
           />
         </FormControl>
@@ -183,11 +193,13 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
           <FileUploader
             value={field.value}
             onValueChange={field.onChange}
-            dropzoneOptions={props.fileOptions ?? {
-              accept: { 'image/*': ['.jpg', '.jpeg', '.png', '.gif'] },
-              maxFiles: 1,
-              multiple: false,
-            }}
+            dropzoneOptions={
+              props.fileOptions ?? {
+                accept: { "image/*": [".jpg", ".jpeg", ".png", ".gif"] },
+                maxFiles: 1,
+                multiple: false,
+              }
+            }
             orientation="horizontal"
           >
             <FileInput className="border-2 border-dashed border-muted-foreground/20 bg-secondary/40 p-2">
@@ -197,13 +209,15 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
               </Button>
             </FileInput>
             <FileUploaderContent>
-              {
-                field.value?.map((file: File, index: number) => (
-                  <FileUploaderItem key={index} index={index} className="w-full px-2 py-1 active:scale-100">
-                    {file.name}
-                  </FileUploaderItem>
-                ))
-              }
+              {field.value?.map((file: File, index: number) => (
+                <FileUploaderItem
+                  key={index}
+                  index={index}
+                  className="w-full px-2 py-1 active:scale-100"
+                >
+                  {file.name}
+                </FileUploaderItem>
+              ))}
             </FileUploaderContent>
           </FileUploader>
         </FormControl>
@@ -214,7 +228,12 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
 };
 
 const DynamicFormField = (props: CustomProps) => {
-  const { control, name, label } = props;
+  const { control, name, label, id, description } = props;
+
+  // Generate a description id for aria-describedby if not provided
+  const descriptionId =
+    props["aria-describedby"] ||
+    (id && description ? `${id}-description` : undefined);
 
   return (
     <FormField
@@ -223,12 +242,19 @@ const DynamicFormField = (props: CustomProps) => {
       render={({ field }) => (
         <FormItem>
           {props.fieldType !== FormFieldType.CHECKBOX && label && (
-            <FormLabel className="block">{label}</FormLabel>
+            <FormLabel className="block" htmlFor={id}>
+              {label}
+            </FormLabel>
           )}
-          <RenderInput field={field} props={props} />
+          <RenderInput
+            field={field}
+            props={{ ...props, "aria-describedby": descriptionId }}
+          />
 
           {props.description && (
-            <FormDescription>{props.description}</FormDescription>
+            <FormDescription id={descriptionId}>
+              {props.description}
+            </FormDescription>
           )}
 
           <FormMessage />
