@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 const protectedRoutes = ["/dashboard", "/profile", "/settings", "/logout"];
+const authRoutes = ["/sign-in", "/sign-up", "/verify", "/auth/confirm"];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -44,5 +45,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(signInUrl);
   }
 
-  return supabaseResponse;
+  if (user && authRoutes.includes(request.nextUrl.pathname)) {
+    const dashboardUrl = new URL(`/dashboard`, request.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
 }

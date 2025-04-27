@@ -4,6 +4,7 @@ import {
   getSkillCategories,
   getSkills,
 } from "@/actions/skills/actions";
+import { getTenant } from "@/actions/tenants/actions";
 import { getUser } from "@/actions/users/actions";
 import EditPortfolioForm from "@/features/portfolios/forms/EditPortfolioForm";
 import { redirect } from "next/navigation";
@@ -22,7 +23,13 @@ export default async function EditPortfolioPage() {
     redirect("/sign-in");
   }
 
-  const id = userData[0].id;
+  const { data: tenants, error: tenantError } = await getTenant(userData[0].id);
+
+  if (tenantError) {
+    console.error("Tenant retrieval error:", tenantError);
+    redirect("/dashboard");
+  }
+  const id = tenants[0].id;
   const { data: fullPortfolio, error } = await getFullPortfolio(id);
 
   if (error || !fullPortfolio || fullPortfolio.length === 0) {
@@ -31,9 +38,9 @@ export default async function EditPortfolioPage() {
 
   // Fetch all skill-related data in parallel using Promise.all
   const [
-    { data: skillsResponse, error: skillsError },
-    { data: categoriesResponse, error: categoriesError },
-    { data: portfolioSkillsResponse, error: portfolioSkillsError },
+    { data: skillsResponse },
+    { data: categoriesResponse },
+    { data: portfolioSkillsResponse },
   ] = await Promise.all([
     getSkills(),
     getSkillCategories(),
