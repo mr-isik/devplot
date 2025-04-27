@@ -79,8 +79,8 @@ type PublishStepProps = {
   preview?: boolean;
   portfolioId?: number;
   tenantId: number;
-  subdomain: string;
-  domain: string;
+  subdomain?: string;
+  domain?: string;
 };
 
 export default function PublishStep({
@@ -99,8 +99,8 @@ export default function PublishStep({
   const [activeUrlTab, setActiveUrlTab] = useState<string>("subdomain");
 
   // Domain state
-  const [subDomain, setSubdomain] = useState<string>(subdomain);
-  const [customDomain, setCustomDomain] = useState<string>(domain);
+  const [subDomain, setSubdomain] = useState<string>(subdomain || "");
+  const [customDomain, setCustomDomain] = useState<string>(domain || "");
   const [isUpdatingDomain, setIsUpdatingDomain] = useState(false);
   const [isValidatingSubdomain, setIsValidatingSubdomain] = useState(false);
   const [isValidatingCustomDomain, setIsValidatingCustomDomain] =
@@ -390,7 +390,7 @@ export default function PublishStep({
 
         // Update tenant data
         const { error } = await updateTenant(tenantId, {
-          subdomain: subdomain,
+          subdomain: subdomain || null,
           custom_domain: customDomain,
         });
 
