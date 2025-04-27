@@ -636,26 +636,17 @@ export default function PortfolioForm({ tenantId }: PortfolioFormProps) {
         }
       }
 
-      if (formValues.portfolio.subdomain) {
-        const { error: tenantError } = await updateTenant(tenantId, {
-          subdomain: formValues.portfolio.subdomain || null,
-          custom_domain: null,
+      const { error: tenantError } = await updateTenant(tenantId, {
+        subdomain: formValues.portfolio.subdomain,
+        custom_domain: formValues.portfolio.custom_domain,
+      });
+
+      if (tenantError) {
+        console.error("Error updating tenant:", tenantError);
+        toast.error("Failed to update tenant", {
+          description: tenantError?.message || "Unexpected error occurred",
         });
-
-        if (tenantError) {
-          console.error("Error updating tenant:", tenantError);
-        }
-      }
-
-      if (formValues.portfolio.custom_domain) {
-        const { error: tenantError } = await updateTenant(tenantId, {
-          custom_domain: formValues.portfolio.custom_domain || null,
-          subdomain: null,
-        });
-
-        if (tenantError) {
-          console.error("Error updating tenant:", tenantError);
-        }
+        return false;
       }
 
       await updatePortfolio({

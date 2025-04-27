@@ -1,4 +1,7 @@
+"use server";
+
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export const createTenant = async (user_id: number) => {
   const supabase = await createClient();
@@ -34,26 +37,26 @@ export const getTenant = async (user_id: number) => {
 };
 
 export const updateTenant = async (
-  tenant_id: number,
-  data: { custom_domain: string | null; subdomain: string | null }
+  tenantId: number,
+  body: {
+    custom_domain: string | null;
+    subdomain: string | null;
+  }
 ) => {
   const supabase = await createClient();
 
-  const { data: tenant, error: tenantError } = await supabase
+  const { data, error } = await supabase
     .from("tenants")
     .update({
-      custom_domain: data.custom_domain,
-      subdomain: data.subdomain,
+      domain: body.custom_domain,
+      subdomain: body.subdomain,
     })
-    .eq("id", tenant_id)
+    .eq("id", tenantId)
     .select();
 
-  if (tenantError) {
-    console.error("Tenant update error:", tenantError);
-    return { error: { message: "Failed to update tenant" } };
-  }
+  revalidatePath("/");
 
-  return { data: tenant, error: null };
+  return { data, error };
 };
 
 export const deleteTenant = async (tenant_id: number) => {

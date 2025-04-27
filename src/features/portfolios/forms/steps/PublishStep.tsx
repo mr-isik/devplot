@@ -386,21 +386,9 @@ export default function PublishStep({
 
         // Update tenant data
         const { error } = await updateTenant(tenantId, {
-          subdomain: subdomain || null,
-          custom_domain: customDomain || null,
+          subdomain: subdomain,
+          custom_domain: customDomain,
         });
-
-        console.log(
-          "updateTenant payload",
-          JSON.stringify({
-            subdomain: subdomain || null,
-            custom_domain: customDomain || null,
-          }),
-          {
-            subdomain: subdomain || null,
-            custom_domain: customDomain || null,
-          }
-        );
 
         if (error) {
           throw new Error(`Failed to update domain settings: ${error.message}`);
