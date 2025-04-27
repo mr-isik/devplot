@@ -7,16 +7,16 @@ import {
 import PortfolioRenderer from "@/features/themes/components/PortfolioRenderer";
 
 type Props = {
-  params: { tenantId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ tenantId: string }>;
 };
 
 // Generate metadata for the portfolio page
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const tenantId = parseInt(params.tenantId);
+  const tenantId = (await params).tenantId;
 
-  const { metadata, error } =
-    await fetchPortfolioMetadataWithTenantId(tenantId);
+  const { metadata, error } = await fetchPortfolioMetadataWithTenantId(
+    parseInt(tenantId)
+  );
 
   if (error || !metadata) {
     return {
@@ -40,10 +40,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 // 1. Data fetching is handled by the portfolioDataService
 // 2. Theme selection and rendering is handled by the PortfolioRenderer
 const PortfolioPage = async ({ params }: Props) => {
-  const tenantId = parseInt(params.tenantId);
+  const tenantId = (await params).tenantId;
 
   // Fetch portfolio data using our data service
-  const { portfolio, error } = await fetchPortfolioWithTenantId(tenantId);
+  const { portfolio, error } = await fetchPortfolioWithTenantId(
+    parseInt(tenantId)
+  );
 
   // Handle errors or missing data
   if (error || !portfolio) {
