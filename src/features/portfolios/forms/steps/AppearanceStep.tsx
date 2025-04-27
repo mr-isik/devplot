@@ -419,7 +419,7 @@ export default function AppearanceStep({
   }>({
     portfolio: {
       id: 21,
-      user_id: "preview-user",
+      tenant_id: 1,
       created_at: new Date().toISOString(),
       is_published: true,
       contents: {
@@ -792,9 +792,9 @@ export default function AppearanceStep({
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {themes.map((theme) => (
+                {themes.map((theme, index) => (
                   <ThemeCard
-                    key={theme.id}
+                    key={index}
                     theme={theme}
                     isSelected={selectedThemeId === theme.id}
                     onSelect={() => handleThemeSelect(theme)}
@@ -832,9 +832,9 @@ export default function AppearanceStep({
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                {colorThemes.map((theme) => (
+                {colorThemes.map((theme, index) => (
                   <ColorOption
-                    key={theme.id}
+                    key={index}
                     id={theme.id}
                     name={theme.name}
                     colors={theme.colors}
