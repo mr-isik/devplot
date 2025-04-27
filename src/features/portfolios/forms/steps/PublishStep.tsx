@@ -79,12 +79,16 @@ type PublishStepProps = {
   preview?: boolean;
   portfolioId?: number;
   tenantId: number;
+  subdomain: string;
+  domain: string;
 };
 
 export default function PublishStep({
   preview,
   portfolioId,
   tenantId,
+  subdomain,
+  domain,
 }: PublishStepProps) {
   const form = useFormContext<PortfolioFormValues>();
   const [publishEnabled, setPublishEnabled] = useState(
@@ -95,8 +99,8 @@ export default function PublishStep({
   const [activeUrlTab, setActiveUrlTab] = useState<string>("subdomain");
 
   // Domain state
-  const [subdomain, setSubdomain] = useState<string>("");
-  const [customDomain, setCustomDomain] = useState<string>("");
+  const [subDomain, setSubdomain] = useState<string>(subdomain);
+  const [customDomain, setCustomDomain] = useState<string>(domain);
   const [isUpdatingDomain, setIsUpdatingDomain] = useState(false);
   const [isValidatingSubdomain, setIsValidatingSubdomain] = useState(false);
   const [isValidatingCustomDomain, setIsValidatingCustomDomain] =

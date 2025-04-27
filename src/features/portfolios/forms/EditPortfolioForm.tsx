@@ -54,12 +54,16 @@ interface EditPortfolioFormProps {
     categories: any[] | null;
     portfolioSkills: any[] | null;
   };
+  subdomain: string;
+  domain: string;
 }
 
 export default function EditPortfolioForm({
   portfolio: portfolioData,
   id: portfolioId,
   skillsData,
+  subdomain,
+  domain,
 }: EditPortfolioFormProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("basics");
@@ -95,6 +99,8 @@ export default function EditPortfolioForm({
     defaultValues: {
       portfolio: {
         is_published: portfolioData.is_published || false,
+        subdomain: subdomain,
+        custom_domain: domain,
       },
       options: {
         theme: parsedOptions.theme,
@@ -206,6 +212,8 @@ export default function EditPortfolioForm({
           preview={false}
           portfolioId={portfolioId}
           tenantId={portfolioData.tenant_id}
+          subdomain={subdomain}
+          domain={domain}
         />
       ),
     },
