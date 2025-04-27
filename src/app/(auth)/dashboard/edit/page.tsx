@@ -63,6 +63,8 @@ export default async function EditPortfolioPage() {
         portfolio={fullPortfolio[0]}
         id={fullPortfolio[0].id}
         skillsData={skillsData}
+        subdomain={tenants[0].subdomain}
+        domain={tenants[0].domain}
       />
     </div>
   );

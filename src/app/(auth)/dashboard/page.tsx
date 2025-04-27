@@ -1,4 +1,5 @@
 import { getPortfolios } from "@/actions/portfolios/actions";
+import { getTenant } from "@/actions/tenants/actions";
 import { getUser } from "@/actions/users/actions";
 import { AppNavigation } from "@/components/layout/AppNavigation";
 import { DeletePortfolioDialog } from "@/components/portfolios/DeletePortfolioDialog";
@@ -30,8 +31,18 @@ export default async function Dashboard() {
     redirect("/sign-in");
   }
 
+  /* get tenant */
+
+  const { data: tenantData, error: tenantError } = await getTenant(
+    userData[0].id
+  );
+
+  if (tenantError) {
+    redirect("/sign-in");
+  }
+
   // Get user's portfolios
-  const { data: portfolios, error } = await getPortfolios(userData[0].id);
+  const { data: portfolios, error } = await getPortfolios(tenantData[0].id);
 
   return (
     <div className="min-h-screen ">
