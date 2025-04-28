@@ -36,7 +36,7 @@ export default async function SignInPage() {
           </blockquote>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center p-8">
+      <div className="flex flex-col items-center justify-center p-4 md:p-8 w-full">
         <div className="relative z-20 flex items-center text-lg font-medium">
           <Logo size={64} />
         </div>

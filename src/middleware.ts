@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
 
   const host = request.headers.get("host") || "";
 
-  if (host === process.env.NEXT_PUBLIC_DOMAIN) {
+  if (host === process.env.NEXT_PUBLIC_DOMAIN || host === "localhost:3000") {
     return supabaseResponse;
   }
 
