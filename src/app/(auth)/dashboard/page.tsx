@@ -62,7 +62,7 @@ export default async function Dashboard() {
 
             <Link href="/dashboard/create">
               <Button size="lg" className="w-full sm:w-auto">
-                <Plus className="mr-2" />
+                <Plus />
                 Create Portfolio
               </Button>
             </Link>
@@ -140,7 +140,7 @@ export default async function Dashboard() {
                     <div className="flex space-x-2">
                       <Link href="/dashboard/edit">
                         <Button variant="outline" size="sm">
-                          <Edit className="mr-2 h-4 w-4" />
+                          <Edit />
                           Edit
                         </Button>
                       </Link>
@@ -149,7 +149,7 @@ export default async function Dashboard() {
                     <Link href={`/${userData?.[0]?.id}`} target="_blank">
                       <Button size="sm" variant="soft" className="gap-1">
                         View
-                        <ArrowUpRight className="h-4 w-4" />
+                        <ArrowUpRight />
                       </Button>
                     </Link>
                   </CardFooter>
