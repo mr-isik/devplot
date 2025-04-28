@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -79,7 +78,7 @@ export default async function Index() {
         <div className="container px-4 md:px-6 mx-auto flex flex-col items-center text-center z-10 relative">
           <Badge className="mb-4 text-sm px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-primary/20 animate-fade-in">
             <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-            Developer-First Portfolio Platform
+            Create Your Portfolio in 15 Minutes
           </Badge>
 
           <div className="space-y-4 mb-8 max-w-4xl">
@@ -87,15 +86,16 @@ export default async function Index() {
               className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-primary drop-shadow-sm animate-fade-in-up"
               style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
             >
-              Showcase Your Code. <br /> Advance Your Career.
+              From Code to Career: <br /> Your Portfolio, Your Way
             </h1>
             <p className="max-w-[700px] text-lg md:text-xl text-foreground/90 dark:text-foreground/90 mx-auto animate-fade-in-up animation-delay-100">
-              Build a professional developer portfolio in minutes, not weeks.
+              Stop spending weeks building a portfolio. DevPlot helps you create
+              a stunning developer portfolio in minutes.
               <span className="font-semibold text-primary">
                 {" "}
-                Stand out from the crowd
+                Get noticed by top tech companies
               </span>{" "}
-              and land your dream job.
+              and land your dream job faster.
             </p>
           </div>
 
@@ -115,69 +115,23 @@ export default async function Index() {
                 size="lg"
                 className="border-primary/30 hover:bg-primary/10 hover:text-primary hover:border-primary/60 transition-all w-full"
               >
-                View Themes <Eye className="h-4 w-4 ml-2" />
+                Browse Themes <Eye className="h-4 w-4 ml-2" />
               </Button>
             </Link>
           </div>
 
-          <div className="relative w-full max-w-5xl mx-auto rounded-xl overflow-hidden animate-fade-in-up animation-delay-300">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-secondary rounded-xl blur-sm opacity-70 animate-pulse-slow"></div>
-            <div className="aspect-[16/9] w-full relative bg-card dark:bg-card/80 rounded-xl overflow-hidden border-2 border-border/50 shadow-2xl backdrop-blur-sm">
-              <Tabs defaultValue="portfolio1" className="w-full h-full">
-                <TabsList className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-background/90 backdrop-blur-sm border border-border/50 shadow-md">
-                  <TabsTrigger value="portfolio1">Modern</TabsTrigger>
-                  <TabsTrigger value="portfolio2">Classic</TabsTrigger>
-                  <TabsTrigger value="portfolio3">Minimal</TabsTrigger>
-                </TabsList>
-                <TabsContent value="portfolio1" className="w-full h-full">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex flex-col items-center justify-center space-y-4 p-8 w-full text-center">
-                      <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center animate-bounce-slow">
-                        <Code className="h-8 w-8 text-primary" />
-                      </div>
-                      <h3 className="text-2xl font-bold">
-                        Modern Portfolio Preview
-                      </h3>
-                      <p className="text-muted-foreground max-w-md">
-                        Interactive preview will be displayed here. Choose a
-                        template to start.
-                      </p>
-                    </div>
-                  </div>
-                </TabsContent>
-                <TabsContent value="portfolio2" className="w-full h-full">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex flex-col items-center justify-center space-y-4 p-8 w-full text-center">
-                      <div className="h-16 w-16 rounded-full bg-secondary/20 flex items-center justify-center animate-bounce-slow">
-                        <Github className="h-8 w-8 text-secondary" />
-                      </div>
-                      <h3 className="text-2xl font-bold">
-                        Classic Portfolio Preview
-                      </h3>
-                      <p className="text-muted-foreground max-w-md">
-                        Interactive preview will be displayed here. Choose a
-                        template to start.
-                      </p>
-                    </div>
-                  </div>
-                </TabsContent>
-                <TabsContent value="portfolio3" className="w-full h-full">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="flex flex-col items-center justify-center space-y-4 p-8 w-full text-center">
-                      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center animate-bounce-slow">
-                        <PaintBucket className="h-8 w-8 text-primary" />
-                      </div>
-                      <h3 className="text-2xl font-bold">
-                        Minimal Portfolio Preview
-                      </h3>
-                      <p className="text-muted-foreground max-w-md">
-                        Interactive preview will be displayed here. Choose a
-                        template to start.
-                      </p>
-                    </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
+          <div className="flex items-center justify-center gap-8 mb-8 text-sm text-muted-foreground animate-fade-in-up animation-delay-300">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-primary" />
+              <span>Supports all devices</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-primary" />
+              <span>14-day free trial</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-primary" />
+              <span>Cancel anytime</span>
             </div>
           </div>
 
@@ -217,8 +171,8 @@ export default async function Index() {
               Why Every Developer Needs a Portfolio
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              In today's competitive tech industry, your code repository isn't
-              enough. Here's why a portfolio is your most powerful career tool:
+              In today's competitive tech industry, your GitHub profile alone
+              isn't enough. Here's why a portfolio is your secret weapon:
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -227,13 +181,13 @@ export default async function Index() {
                 <div className="bg-primary/10 rounded-full h-14 w-14 flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
                   <Trophy className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
                 </div>
-                <CardTitle>Stand Out From Competition</CardTitle>
+                <CardTitle>3x More Interview Calls</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  With thousands of developers applying for the same positions,
-                  a portfolio showcases what makes you unique and helps you get
-                  noticed by recruiters.
+                  Developers with portfolios receive 3x more interview calls
+                  than those without. Stand out from the crowd and get noticed
+                  by top tech companies.
                 </p>
               </CardContent>
               <CardFooter>
@@ -248,7 +202,7 @@ export default async function Index() {
                 <div className="bg-primary/10 rounded-full h-14 w-14 flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
                   <Github className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
                 </div>
-                <CardTitle>Showcase Beyond GitHub</CardTitle>
+                <CardTitle>Beyond Code Repository</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
@@ -285,6 +239,34 @@ export default async function Index() {
                 </div>
               </CardFooter>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Theme Preview Section */}
+      <section className="w-full py-16 md:py-24 bg-background dark:bg-background">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 text-sm px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-primary/20">
+              Beautiful Themes
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+              Choose Your Perfect Portfolio Theme
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
+              Explore our collection of professionally designed themes. Each
+              theme is crafted to showcase your skills and projects in the best
+              possible way.
+            </p>
+            <Link href="/themes" className="inline-flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary/30 hover:bg-primary/10 hover:text-primary hover:border-primary/60 transition-all w-full"
+              >
+                Browse Themes <Eye className="h-4 w-4 ml-2" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -532,7 +514,8 @@ export default async function Index() {
           </h2>
           <p className="text-lg text-primary-foreground/90 max-w-3xl mx-auto mb-8">
             Join thousands of developers who are getting noticed, landing
-            interviews, and advancing their careers with DevPlot.
+            interviews, and advancing their careers with DevPlot. Create your
+            portfolio in minutes, not weeks.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/sign-up" className="flex items-center gap-2">
@@ -541,7 +524,7 @@ export default async function Index() {
                 variant="secondary"
                 className="bg-white text-primary hover:bg-white/90 shadow-lg shadow-black/10 border-none font-medium hover:scale-105 transition-transform w-full"
               >
-                Create Your Portfolio
+                Start Free Trial
                 <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -558,27 +541,25 @@ export default async function Index() {
 
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
-              <p className="text-xl font-bold">Seamless</p>
+              <p className="text-xl font-bold">15 Minutes</p>
+              <p className="text-xs text-primary-foreground/80">Setup Time</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
+              <p className="text-xl font-bold">12+ Themes</p>
               <p className="text-xs text-primary-foreground/80">
-                GitHub Integration
+                Professional Designs
               </p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
-              <p className="text-xl font-bold">Responsive</p>
+              <p className="text-xl font-bold">3x More</p>
               <p className="text-xs text-primary-foreground/80">
-                Mobile-First Design
+                Interview Calls
               </p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
-              <p className="text-xl font-bold">Optimized</p>
+              <p className="text-xl font-bold">Free Trial</p>
               <p className="text-xs text-primary-foreground/80">
-                SEO Performance
-              </p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
-              <p className="text-xl font-bold">Secure</p>
-              <p className="text-xs text-primary-foreground/80">
-                Data Protection
+                No Credit Card
               </p>
             </div>
           </div>

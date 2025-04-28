@@ -8,5 +8,9 @@ export async function generateMetadata() {
 }
 
 export default function ResetPasswordPage() {
-  return <ResetPasswordForm />;
+  return (
+    <div className="container mx-auto max-w-md">
+      <ResetPasswordForm />
+    </div>
+  );
 }

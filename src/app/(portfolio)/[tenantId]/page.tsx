@@ -48,7 +48,7 @@ const PortfolioPage = async ({ params }: Props) => {
   );
 
   // Handle errors or missing data
-  if (error || !portfolio) {
+  if (error || !portfolio || !portfolio.is_published) {
     return notFound();
   }
 

@@ -29,7 +29,7 @@ const Navbar = ({ user }: NavbarProps) => {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center">
             <Logo size={64} />
-            <span className="text-xl font-bold tracking-tight">DevPlot</span>
+            <span className="text-xl font-bold tracking-tight">Cannot</span>
           </Link>
 
           {/* Desktop Navigation */}

@@ -49,7 +49,7 @@ export function DeletePortfolioDialog({
           size="sm"
           className="text-destructive hover:bg-destructive/10 hover:text-destructive"
         >
-          <Trash className="mr-2 h-4 w-4" />
+          <Trash />
           Delete
         </Button>
       </AlertDialogTrigger>
