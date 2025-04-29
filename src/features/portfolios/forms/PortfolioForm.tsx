@@ -833,40 +833,66 @@ export default function PortfolioForm({ tenantId }: PortfolioFormProps) {
 
               {/* Desktop Sidebar - Hidden on mobile */}
               <div className="hidden sm:block sm:min-w-[200px] sm:max-w-[250px] sm:pr-6">
-                <TabsList className="grid h-auto w-full grid-cols-1 sm:justify-start">
-                  {STEPS.map((step) => (
-                    <TabsTrigger
-                      key={step.id}
-                      value={step.id}
-                      className="h-auto px-4 py-3 data-[state=active]:bg-muted sm:w-full sm:justify-start"
-                    >
-                      <div className="flex items-center">
-                        {step.icon}
-                        <span className="ml-2">{step.title}</span>
-                      </div>
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
+                <div className="flex flex-col sticky top-2">
+                  <TabsList className="grid h-auto w-full grid-cols-1 sm:justify-start">
+                    {STEPS.map((step) => (
+                      <TabsTrigger
+                        key={step.id}
+                        value={step.id}
+                        className="h-auto px-4 py-3 data-[state=active]:bg-muted sm:w-full sm:justify-start"
+                      >
+                        <div className="flex items-center">
+                          {step.icon}
+                          <span className="ml-2">{step.title}</span>
+                        </div>
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
 
-                <div className="p-4">
-                  {(() => {
-                    const activeTabIndex = STEPS.findIndex(
-                      (step) => step.id === activeTab
-                    );
+                  <div className="p-4">
+                    {(() => {
+                      const activeTabIndex = STEPS.findIndex(
+                        (step) => step.id === activeTab
+                      );
 
-                    if (activeTabIndex < STEPS.length - 1) {
-                      return (
-                        <>
-                          <Button
-                            variant="default"
-                            className="mb-2 w-full"
-                            onClick={() => handleStepComplete(activeTab)}
-                            disabled={isSubmitting}
-                          >
-                            <Loader state={isSubmitting}>Continue</Loader>
-                          </Button>
+                      if (activeTabIndex < STEPS.length - 1) {
+                        return (
+                          <>
+                            <Button
+                              variant="default"
+                              className="mb-2 w-full"
+                              onClick={() => handleStepComplete(activeTab)}
+                              disabled={isSubmitting}
+                            >
+                              <Loader state={isSubmitting}>Continue</Loader>
+                            </Button>
 
-                          {activeTabIndex > 1 && (
+                            {activeTabIndex > 1 && (
+                              <Button
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => {
+                                  const prevStep = STEPS[activeTabIndex - 1];
+                                  if (prevStep) {
+                                    setActiveTab(prevStep.id);
+                                  }
+                                }}
+                              >
+                                Back
+                              </Button>
+                            )}
+                          </>
+                        );
+                      } else {
+                        return (
+                          <>
+                            <Button
+                              className="mb-2 w-full"
+                              onClick={() => handleSubmitPortfolio()}
+                              disabled={isSubmitting}
+                            >
+                              <Loader state={isSubmitting}>Create</Loader>
+                            </Button>
                             <Button
                               variant="outline"
                               className="w-full"
@@ -879,35 +905,11 @@ export default function PortfolioForm({ tenantId }: PortfolioFormProps) {
                             >
                               Back
                             </Button>
-                          )}
-                        </>
-                      );
-                    } else {
-                      return (
-                        <>
-                          <Button
-                            className="mb-2 w-full"
-                            onClick={() => handleSubmitPortfolio()}
-                            disabled={isSubmitting}
-                          >
-                            <Loader state={isSubmitting}>Create</Loader>
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="w-full"
-                            onClick={() => {
-                              const prevStep = STEPS[activeTabIndex - 1];
-                              if (prevStep) {
-                                setActiveTab(prevStep.id);
-                              }
-                            }}
-                          >
-                            Back
-                          </Button>
-                        </>
-                      );
-                    }
-                  })()}
+                          </>
+                        );
+                      }
+                    })()}
+                  </div>
                 </div>
               </div>
 
