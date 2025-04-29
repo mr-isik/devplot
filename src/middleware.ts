@@ -5,6 +5,8 @@ import { checkDomain } from "./actions/tenants/actions";
 export async function middleware(request: NextRequest) {
   const supabaseResponse = await updateSession(request);
 
+  return supabaseResponse;
+
   const host = request.headers.get("host") || "";
 
   if (host === process.env.NEXT_PUBLIC_DOMAIN || host === "localhost:3000") {
