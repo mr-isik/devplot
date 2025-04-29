@@ -54,16 +54,10 @@ export async function updateSession(request: NextRequest) {
   const host = request.headers.get("host") || "";
 
   if (host === process.env.NEXT_PUBLIC_DOMAIN || host === "localhost:3000") {
-    return supabaseResponse;
+    return NextResponse.next();
   }
 
   const isDomainExist = await checkDomain(host);
-
-  if (isDomainExist.error) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/`;
-    return NextResponse.redirect(url);
-  }
 
   /* @ts-ignore */
   const tenantId = isDomainExist.id;
