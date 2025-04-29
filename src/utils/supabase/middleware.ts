@@ -65,11 +65,10 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  const tenantId = isDomainExist.data.id;
+  /* @ts-ignore */
+  const tenantId = isDomainExist.id;
 
   const url = request.nextUrl.clone();
   url.pathname = `/${tenantId}${url.pathname}`;
   return NextResponse.rewrite(url);
-
-  return supabaseResponse;
 }

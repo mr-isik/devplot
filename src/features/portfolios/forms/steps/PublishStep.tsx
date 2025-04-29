@@ -47,7 +47,7 @@ import { useFormContext } from "react-hook-form";
 import { usePortfolioData } from "@/features/portfolios/hooks/usePortfolioData";
 import { toast } from "sonner";
 import { updatePortfolio } from "@/actions/portfolios/actions";
-import { updateTenant } from "@/actions/tenants/actions";
+import { checkDomain, updateTenant } from "@/actions/tenants/actions";
 import * as z from "zod";
 import { debounce } from "lodash";
 
@@ -259,10 +259,16 @@ export default function PublishStep({
     }
   };
 
-  const validateCustomDomain = (value: string): boolean => {
+  const validateCustomDomain = async (value: string): Promise<boolean> => {
     try {
       domainSchema.shape.customDomain.parse(value);
       setCustomDomainError(null);
+      const { data: isDomainExist } = await checkDomain(value);
+      console.log(isDomainExist.id, tenantId);
+      if (isDomainExist && isDomainExist.id !== tenantId) {
+        setCustomDomainError("This domain is already taken");
+        return false;
+      }
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -322,7 +328,7 @@ export default function PublishStep({
         //   return false;
         // }
 
-        const isValid = validateCustomDomain(value);
+        const isValid = await validateCustomDomain(value);
 
         if (isValid) {
           // Update form values
