@@ -188,6 +188,14 @@ export default function BasicInfoStep({
                 id="seo-description"
                 aria-describedby="seo-description-description"
               />
+
+              <DynamicFormField
+                control={form.control}
+                name="content.favicon"
+                label="Favicon"
+                fieldType={FormFieldType.FILE}
+                description="Upload a favicon for your portfolio."
+              />
             </div>
           </CardContent>
         </Card>
