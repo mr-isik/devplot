@@ -64,6 +64,7 @@ export async function fetchPortfolioMetadataWithTenantId(
   metadata?: {
     title: string;
     description: string;
+    favicon: string;
   };
   error?: string;
 }> {
@@ -78,12 +79,14 @@ export async function fetchPortfolioMetadataWithTenantId(
     const contents = portfolioData.contents as {
       meta_title?: string;
       meta_description?: string;
+      favicon?: string;
     };
 
     return {
       metadata: {
         title: contents.meta_title || "Portfolio",
         description: contents.meta_description || "Professional portfolio",
+        favicon: contents.favicon || "",
       },
     };
   } catch (error) {
