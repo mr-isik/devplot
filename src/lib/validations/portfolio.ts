@@ -35,6 +35,26 @@ export const contentSchema = z.object({
   about_text: z
     .string()
     .min(20, { message: "About text must be at least 20 characters" }),
+  favicon: z
+    .array(
+      z
+        .any()
+        .refine(
+          (file) =>
+            file instanceof File ||
+            (typeof file === "object" && file !== null && "size" in file),
+          { message: "Expected a valid file" }
+        )
+        .refine(
+          (file) => {
+            const fileSize =
+              file instanceof File ? file.size : (file as any).size;
+            return fileSize <= 1024 * 1024;
+          },
+          { message: "Favicon must be less than 1MB" }
+        )
+    )
+    .nullable(),
 });
 
 // Schema for experience information

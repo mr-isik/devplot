@@ -451,15 +451,13 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
                 fieldType={FormFieldType.INPUT}
               />
 
-              {editingIndex === null && (
-                <DynamicFormField
-                  control={projectForm.control}
-                  name="image"
-                  label="Image (4MB max)"
-                  fieldType={FormFieldType.FILE}
-                  fileOptions={imageOptions}
-                />
-              )}
+              <DynamicFormField
+                control={projectForm.control}
+                name="image"
+                label="Image (4MB max)"
+                fieldType={FormFieldType.FILE}
+                fileOptions={imageOptions}
+              />
 
               <DynamicFormField
                 control={projectForm.control}

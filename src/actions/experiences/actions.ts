@@ -158,6 +158,49 @@ export const updateExperience = async (
 
   const supabase = await createClient();
 
+  if (experience.logo && experience.logo.length > 0) {
+    const { error } = await supabase.storage
+      .from("experiences")
+      .upload(experience.logo[0], experience.logo[0]!, {
+        upsert: true,
+      });
+
+    if (error) {
+      console.error("Storage upload error:", error);
+      return {
+        data: null,
+        error: {
+          ...error,
+          message: `Storage upload failed: ${error.message}`,
+        },
+      };
+    }
+
+    const { data: logoData } = supabase.storage
+      .from("experiences")
+      .getPublicUrl(experience.logo[0]);
+
+    experience.logo[0] = logoData.publicUrl;
+
+    const { data, error: updateError } = await supabase
+      .from("experiences")
+      .update({
+        role: experience.role,
+        company: experience.company,
+        employment_type: experience.employment_type,
+        start_date: experience.start_date,
+        end_date: experience.end_date,
+        description: experience.description,
+        logo: experience.logo,
+      })
+      .eq("id", experience.item_id)
+      .select();
+
+    revalidatePath("/");
+
+    return { data, error: updateError };
+  }
+
   const { data, error } = await supabase
     .from("experiences")
     .update({
