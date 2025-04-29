@@ -172,6 +172,7 @@ export default function PortfolioForm({ tenantId }: PortfolioFormProps) {
       meta_title: "",
       meta_description: "",
       about_text: "",
+      favicon: null,
     },
     experiences: [],
     educations: [],
