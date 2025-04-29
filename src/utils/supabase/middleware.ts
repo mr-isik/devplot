@@ -1,3 +1,4 @@
+import { checkDomain } from "@/actions/tenants/actions";
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -49,6 +50,26 @@ export async function updateSession(request: NextRequest) {
     const dashboardUrl = new URL(`/dashboard`, request.url);
     return NextResponse.redirect(dashboardUrl);
   }
+
+  const host = request.headers.get("host") || "";
+
+  if (host === process.env.NEXT_PUBLIC_DOMAIN || host === "localhost:3000") {
+    return supabaseResponse;
+  }
+
+  const isDomainExist = await checkDomain(host);
+
+  if (isDomainExist.error) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/`;
+    return NextResponse.redirect(url);
+  }
+
+  const tenantId = isDomainExist.data.id;
+
+  const url = request.nextUrl.clone();
+  url.pathname = `/${tenantId}${url.pathname}`;
+  return NextResponse.rewrite(url);
 
   return supabaseResponse;
 }
