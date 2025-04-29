@@ -84,6 +84,7 @@ export default function BasicInfoStep({
           about_text: content.about_text || "",
           meta_title: content.meta_title || "",
           meta_description: content.meta_description || "",
+          favicon: content.favicon,
         },
         portfolioId
       );
