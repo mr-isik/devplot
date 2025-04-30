@@ -483,15 +483,13 @@ export default function ExperiencesStep({
                 fieldType={FormFieldType.INPUT}
               />
 
-              {editingIndex === null && (
-                <DynamicFormField
-                  control={experienceForm.control}
-                  name="logo"
-                  label="Logo (1MB max)"
-                  fieldType={FormFieldType.FILE}
-                  fileOptions={logoOptions}
-                />
-              )}
+              <DynamicFormField
+                control={experienceForm.control}
+                name="logo"
+                label="Logo (1MB max)"
+                fieldType={FormFieldType.FILE}
+                fileOptions={logoOptions}
+              />
 
               <DynamicFormField
                 control={experienceForm.control}

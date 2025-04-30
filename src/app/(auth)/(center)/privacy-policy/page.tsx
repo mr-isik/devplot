@@ -35,6 +35,10 @@ export default function PrivacyPolicyPage() {
               <li>Contact information</li>
               <li>Usage statistics and preferences</li>
               <li>
+                Education, work experience, project informations, skills,
+                personal informations
+              </li>
+              <li>
                 Technical data (IP address, browser information, device
                 information)
               </li>

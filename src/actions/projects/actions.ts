@@ -150,6 +150,46 @@ export const updateProject = async (project: z.infer<typeof projectSchema>) => {
 
   const supabase = await createClient();
 
+  if (project.image && project.image.length > 0) {
+    const { error: uploadError } = await supabase.storage
+      .from("projects")
+      .upload(project.image[0], project.image[0]!, {
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error("Project image upload error:", uploadError);
+      return {
+        data: null,
+        error: {
+          ...uploadError,
+          message: `Storage upload failed: ${uploadError.message}`,
+        },
+      };
+    }
+
+    const { data: imageData } = supabase.storage
+      .from("projects")
+      .getPublicUrl(project.image[0]);
+
+    project.image[0] = imageData.publicUrl;
+
+    const { data, error: updateError } = await supabase
+      .from("projects")
+      .update({
+        title: project.title,
+        description: project.description,
+        repo_url: project.repo_url,
+        live_url: project.live_url,
+        image: project.image,
+      })
+      .eq("id", project.item_id)
+      .select();
+
+    revalidatePath("/");
+    return { data, error: updateError };
+  }
+
   const { data, error } = await supabase
     .from("projects")
     .update({

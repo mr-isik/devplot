@@ -84,11 +84,5 @@ export const checkDomain = async (domain: string) => {
     .or(`domain.eq.${domain},subdomain.eq.${domain}`)
     .single();
 
-  if (tenant) return { data: tenant };
-
-  return {
-    error: {
-      message: tenantError?.message || "Domain or subdomain is not exist",
-    },
-  };
+  return { data: tenant, error: tenantError };
 };

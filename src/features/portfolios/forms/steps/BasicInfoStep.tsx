@@ -84,6 +84,7 @@ export default function BasicInfoStep({
           about_text: content.about_text || "",
           meta_title: content.meta_title || "",
           meta_description: content.meta_description || "",
+          favicon: content.favicon,
         },
         portfolioId
       );
@@ -186,6 +187,14 @@ export default function BasicInfoStep({
                 description="A brief description of your portfolio that will appear in search engine results."
                 id="seo-description"
                 aria-describedby="seo-description-description"
+              />
+
+              <DynamicFormField
+                control={form.control}
+                name="content.favicon"
+                label="Favicon"
+                fieldType={FormFieldType.FILE}
+                description="Upload a favicon for your portfolio."
               />
             </div>
           </CardContent>
