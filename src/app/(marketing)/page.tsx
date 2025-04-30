@@ -106,7 +106,7 @@ export default async function Index() {
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all group hover:scale-105 w-full"
               >
                 Start Building
-                <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link href="/themes" className="flex items-center gap-2">
@@ -115,7 +115,7 @@ export default async function Index() {
                 size="lg"
                 className="border-primary/30 hover:bg-primary/10 hover:text-primary hover:border-primary/60 transition-all w-full"
               >
-                Browse Themes <Eye className="h-4 w-4 ml-2" />
+                Browse Themes <Eye className="h-4 w-4" />
               </Button>
             </Link>
           </div>
