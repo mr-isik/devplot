@@ -78,11 +78,41 @@ export const deleteTenant = async (tenant_id: number) => {
 export const checkDomain = async (domain: string) => {
   const supabase = await createClient();
 
-  const { data: tenant, error: tenantError } = await supabase
+  const {
+    data: foundTenantWithSubDomain,
+    error: foundTenantWithSubdomainError,
+  } = await supabase
     .from("tenants")
     .select("*")
-    .or(`domain.eq.${domain},subdomain.eq.${domain}`)
+    .eq("subdomain", domain)
     .single();
 
-  return { data: tenant, error: tenantError };
+  const { data: foundTenantWithDomain, error: foundTenantWithDomainError } =
+    await supabase.from("tenants").select("*").eq("domain", domain).single();
+
+  if (foundTenantWithSubdomainError) {
+    console.error("Tenant retrieval error:", foundTenantWithSubdomainError);
+    return {
+      data: null,
+      error: { message: "Failed to retrieve tenant" },
+    };
+  }
+
+  if (foundTenantWithDomainError) {
+    console.error("Tenant retrieval error:", foundTenantWithDomainError);
+    return {
+      data: null,
+      error: { message: "Failed to retrieve tenant" },
+    };
+  }
+
+  if (foundTenantWithSubDomain) {
+    return { data: foundTenantWithSubDomain, error: null };
+  }
+
+  if (foundTenantWithDomain) {
+    return { data: foundTenantWithDomain, error: null };
+  }
+
+  return { data: null, error: null };
 };
