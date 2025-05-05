@@ -3,6 +3,9 @@ import PortfolioForm from "@/features/portfolios/forms/PortfolioForm";
 import { getPortfolio, getPortfolios } from "@/actions/portfolios/actions";
 import { redirect } from "next/navigation";
 import { createTenant, getTenant } from "@/actions/tenants/actions";
+import { getSkills } from "@/actions/skills/actions";
+import { getSkillCategories } from "@/actions/skills/actions";
+import { getPortfolioSkills } from "@/actions/skills/actions";
 
 export async function generateMetadata() {
   return {
@@ -45,6 +48,15 @@ export default async function CreatePortfolioPage() {
   if (portfolios && portfolios.length > 0) {
     redirect(`/dashboard/edit`);
   }
+
+  const [{ data: skillsResponse }, { data: categoriesResponse }] =
+    await Promise.all([getSkills(), getSkillCategories()]);
+
+  const skillsData = {
+    allSkills: skillsResponse,
+    categories: categoriesResponse,
+    portfolioSkills: [],
+  };
   return (
     <div className="container space-y-6 py-12">
       <div className="mx-auto flex flex-col items-center gap-2">
@@ -55,7 +67,7 @@ export default async function CreatePortfolioPage() {
       </div>
 
       <div className="h-[calc(100vh-250px)]">
-        <PortfolioForm tenantId={tenantId} />
+        <PortfolioForm tenantId={tenantId} skillsData={skillsData} />
       </div>
     </div>
   );
