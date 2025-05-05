@@ -80,8 +80,13 @@ export async function updateSession(request: NextRequest) {
     const isDomainExist = await checkDomain(host);
     console.log("🏢 Domain check result:", isDomainExist);
 
-    /* @ts-ignore */
-    const tenantId = isDomainExist.id;
+    if (isDomainExist.error || !isDomainExist.data) {
+      console.log("🚫 Domain does not exist - redirecting to home");
+      const homeUrl = new URL(`/`, request.url);
+      return NextResponse.redirect(homeUrl);
+    }
+
+    const tenantId = isDomainExist.data.id;
     console.log("🏢 Tenant ID:", tenantId);
 
     const url = request.nextUrl.clone();
