@@ -12,10 +12,14 @@ export const createContent = async (
 ) => {
   const supabase = await createClient();
 
+  console.log("content", content);
+
   if (content.favicon && content.favicon.length > 0) {
+    const favicon_path = new Date().getTime().toString();
+
     const { error: uploadError } = await supabase.storage
       .from("contents")
-      .upload(content.favicon[0], content.favicon[0]!, {
+      .upload(favicon_path, content.favicon[0], {
         upsert: true,
       });
 
@@ -32,7 +36,7 @@ export const createContent = async (
 
     const { data: faviconData } = supabase.storage
       .from("contents")
-      .getPublicUrl(content.favicon[0]);
+      .getPublicUrl(favicon_path);
 
     content.favicon[0] = faviconData.publicUrl;
 

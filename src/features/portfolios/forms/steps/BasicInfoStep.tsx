@@ -136,28 +136,15 @@ export default function BasicInfoStep({
                 aria-describedby="short-description-description"
               />
 
-              <FormField
+              <DynamicFormField
                 control={form.control}
                 name="content.about_text"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>About Me Text</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Describe yourself, your skills, and your experiences in detail."
-                        className="min-h-[200px] resize-y"
-                        id="about-me-text"
-                        aria-describedby="about-me-text-description"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription id="about-me-text-description">
-                      This text will be displayed in the "About Me" section. You
-                      can describe yourself, your skills, and career goals.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="About Me Text"
+                placeholder="Describe yourself, your skills, and your experiences in detail."
+                fieldType={FormFieldType.TEXTAREA}
+                description="This text will be displayed in the 'About Me' section."
+                id="about-me-text"
+                aria-describedby="about-me-text-description"
               />
             </div>
           </CardContent>
