@@ -82,9 +82,13 @@ function validateMediaFiles(
 
 type PortfolioFormProps = {
   tenantId: number;
+  skillsData: any;
 };
 
-export default function PortfolioForm({ tenantId }: PortfolioFormProps) {
+export default function PortfolioForm({
+  tenantId,
+  skillsData,
+}: PortfolioFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [activeTab, setActiveTab] = useState("basics");
@@ -130,7 +134,12 @@ export default function PortfolioForm({ tenantId }: PortfolioFormProps) {
       title: "Skills",
       description: "Showcase your expertise",
       icon: <WrenchIcon className="mr-2 size-4" />,
-      component: <SkillsStep />,
+      component: (
+        <SkillsStep
+          skillsData={skillsData.allSkills}
+          categoriesData={skillsData.categories}
+        />
+      ),
     },
     {
       id: "socials",
