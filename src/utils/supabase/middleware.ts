@@ -21,11 +21,9 @@ export async function updateSession(request: NextRequest) {
       cookies: {
         getAll() {
           const cookies = request.cookies.getAll();
-          console.log("🍪 Current cookies:", cookies);
           return cookies;
         },
         setAll(cookiesToSet) {
-          console.log("🍪 Setting cookies:", cookiesToSet);
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
@@ -43,12 +41,6 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  console.log("👤 User session:", user ? "Authenticated" : "Not authenticated");
-  if (user) {
-    console.log("👤 User ID:", user.id);
-    console.log("📧 User email:", user.email);
-  }
 
   if (
     !user &&
@@ -72,14 +64,17 @@ export async function updateSession(request: NextRequest) {
   console.log("🏠 Checking host:", host);
   console.log("🌐 Expected domain:", process.env.NEXT_PUBLIC_DOMAIN);
 
-  if (host === process.env.NEXT_PUBLIC_DOMAIN || host === "localhost:3000") {
+  if (
+    host === `www.${process.env.NEXT_PUBLIC_DOMAIN}` ||
+    host === "localhost:3000"
+  ) {
     console.log("✅ Valid host - proceeding");
     return NextResponse.next();
   }
 
   if (
     request.nextUrl.pathname === "/" &&
-    host !== process.env.NEXT_PUBLIC_DOMAIN
+    host !== `www.${process.env.NEXT_PUBLIC_DOMAIN}`
   ) {
     console.log("🔍 Checking domain existence for:", host);
     const isDomainExist = await checkDomain(host);
