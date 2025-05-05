@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "@/providers";
-import { Inter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "@/styles/global.css";
 
 // Initialize the Inter font
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
 });
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" className={dmSans.variable} suppressHydrationWarning>
       <body>
         <Providers>
           {props.children}

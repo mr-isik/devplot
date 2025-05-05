@@ -81,8 +81,8 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname === "/" &&
     host !== process.env.NEXT_PUBLIC_DOMAIN
   ) {
-    console.log("🔍 Checking domain existence for:", host);
-    const isDomainExist = await checkDomain(host);
+    console.log("🔍 Checking domain existence for:", host.split(".")[0]);
+    const isDomainExist = await checkDomain(host.split(".")[0]);
     console.log("🏢 Domain check result:", isDomainExist);
 
     /* @ts-ignore */
