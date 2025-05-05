@@ -98,8 +98,15 @@ export default function PublishStep({
   const [isCopied, setIsCopied] = useState(false);
   const [activeUrlTab, setActiveUrlTab] = useState<string>("subdomain");
 
+  // Extract the user-input part from the full subdomain
+  const initialUserInputSubdomain = subdomain
+    ? subdomain.replace(`.${process.env.NEXT_PUBLIC_DOMAIN}`, "")
+    : "";
+
   // Domain state
-  const [subDomain, setSubdomain] = useState<string>(subdomain || "");
+  const [userInputSubdomain, setUserInputSubdomain] = useState<string>(
+    initialUserInputSubdomain
+  );
   const [customDomain, setCustomDomain] = useState<string>(domain || "");
   const [isUpdatingDomain, setIsUpdatingDomain] = useState(false);
   const [isValidatingSubdomain, setIsValidatingSubdomain] = useState(false);
@@ -123,6 +130,10 @@ export default function PublishStep({
   const colorTheme = form.getValues().options?.colorTheme || "light";
   const font = form.getValues().options?.font || "inter";
 
+  const fullSubdomain = userInputSubdomain
+    ? `${userInputSubdomain}.${process.env.NEXT_PUBLIC_DOMAIN}`
+    : null;
+
   // Effect to automatically open the preview if preview prop is true
   useEffect(() => {
     if (preview) {
@@ -136,21 +147,26 @@ export default function PublishStep({
       if (!tenantId) return;
 
       try {
-        // This would be replaced with an actual fetch from your API
-        // For now, we're just simulating this part as we don't have the fetch function
-
         // Get values from portfolio schema if they exist
         const portfolioValues = form.getValues().portfolio;
-        const initialSubdomain = portfolioValues.subdomain || "";
+        const initialFullSubdomain = portfolioValues.subdomain || "";
         const initialCustomDomain = portfolioValues.custom_domain || "";
 
-        // Set initial values
-        setSubdomain(initialSubdomain);
+        // Extract user input part from full subdomain
+        const initialUserInput = initialFullSubdomain
+          ? initialFullSubdomain.replace(
+              `.${process.env.NEXT_PUBLIC_DOMAIN}`,
+              ""
+            )
+          : "";
+
+        // Set initial values for state
+        setUserInputSubdomain(initialUserInput);
         setCustomDomain(initialCustomDomain);
 
         // Validate initial values if present
-        if (initialSubdomain) {
-          validateSubdomain(initialSubdomain);
+        if (initialUserInput) {
+          validateSubdomain(initialUserInput);
         }
 
         if (initialCustomDomain) {
@@ -162,7 +178,8 @@ export default function PublishStep({
     };
 
     fetchTenantData();
-  }, [tenantId, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenantId, form.getValues /* Re-run if form values change externally */]);
 
   const updatePublishState = async (checked: boolean) => {
     setPublishEnabled(checked);
@@ -218,18 +235,18 @@ export default function PublishStep({
 
     switch (activeUrlTab) {
       case "subdomain":
-        if (subdomain) {
-          url = `https://${subdomain}.${process.env.NEXT_PUBLIC_DOMAIN}`;
+        if (fullSubdomain && !subdomainError) {
+          url = `https://${fullSubdomain}`;
         } else {
-          toast.error("No subdomain configured");
+          toast.error("No valid subdomain configured");
           return;
         }
         break;
       case "custom":
-        if (customDomain) {
+        if (customDomain && !customDomainError) {
           url = `https://${customDomain}`;
         } else {
-          toast.error("No custom domain configured");
+          toast.error("No valid custom domain configured");
           return;
         }
         break;
@@ -278,25 +295,38 @@ export default function PublishStep({
     }
   };
 
-  // Debounced validation for subdomain
+  // Debounced validation for subdomain user input
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSubdomainValidation = useCallback(
     debounce(async (value: string) => {
       setIsValidatingSubdomain(true);
+      const constructedFullSubdomain = value
+        ? `${value}.${process.env.NEXT_PUBLIC_DOMAIN}`
+        : null;
 
       try {
-        // TODO: Add API call to check if subdomain is available
-        // const { available } = await checkSubdomainAvailability(value);
-        // if (!available) {
-        //   setSubdomainError("This subdomain is already taken");
-        //   return false;
+        // TODO: Add API call to check if subdomain is available (using constructedFullSubdomain)
+        // Example:
+        // if (constructedFullSubdomain) {
+        //   const { available } = await checkSubdomainAvailability(constructedFullSubdomain);
+        //   if (!available) {
+        //     setSubdomainError("This subdomain is already taken");
+        //     setIsValidatingSubdomain(false);
+        //     return false;
+        //   }
         // }
 
-        const isValid = validateSubdomain(value);
+        const isValid = validateSubdomain(value); // Validate only the user input part
 
         if (isValid) {
-          // Update form values
-          form.setValue("portfolio.subdomain", value, {
+          // Update form value with the *full* subdomain
+          form.setValue("portfolio.subdomain", constructedFullSubdomain, {
+            shouldDirty: true,
+            shouldValidate: true, // Trigger RHF validation if needed
+          });
+        } else {
+          // Clear form value if validation fails
+          form.setValue("portfolio.subdomain", null, {
             shouldDirty: true,
             shouldValidate: true,
           });
@@ -306,12 +336,17 @@ export default function PublishStep({
       } catch (error) {
         console.error("Error validating subdomain:", error);
         setSubdomainError("Error validating subdomain");
+        // Clear form value on error
+        form.setValue("portfolio.subdomain", null, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
         return false;
       } finally {
         setIsValidatingSubdomain(false);
       }
     }, 500),
-    []
+    [form] // Add form dependency
   );
 
   // Debounced validation for custom domain
@@ -352,8 +387,9 @@ export default function PublishStep({
 
   const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
-    setSubdomain(value);
+    setUserInputSubdomain(value); // Store only the user input part
     setIsValidatingSubdomain(true);
+    setSubdomainError(null); // Clear previous errors on new input
     debouncedSubdomainValidation(value);
   };
 
@@ -370,51 +406,89 @@ export default function PublishStep({
       return;
     }
 
-    // Validate inputs
-    const isSubdomainValid = subdomain
-      ? await debouncedSubdomainValidation.flush()
-      : true;
-    const isCustomDomainValid = customDomain
-      ? await debouncedCustomDomainValidation.flush()
-      : true;
+    setIsUpdatingDomain(true); // Start loading indicator early
 
-    if (!isSubdomainValid || !isCustomDomainValid) {
-      return;
-    }
+    try {
+      // Ensure debounced validations complete before checking states
+      if (userInputSubdomain) {
+        await debouncedSubdomainValidation.flush();
+      }
+      if (customDomain) {
+        await debouncedCustomDomainValidation.flush();
+      }
 
-    setIsUpdatingDomain(true);
+      // Wait briefly for potential state updates triggered by flush
+      // This helps mitigate timing issues with async state updates
+      await new Promise((resolve) => setTimeout(resolve, 150));
 
-    if (portfolioId) {
-      try {
-        // Update the portfolio values first
-        form.setValue("portfolio.subdomain", subdomain || null, {
+      // Now check the error states populated by the validators
+      if (subdomainError || customDomainError) {
+        if (subdomainError) {
+          toast.error(`Subdomain error: ${subdomainError}`);
+        } else if (customDomainError) {
+          // Use the specific error message from the state
+          toast.error(`Custom domain error: ${customDomainError}`);
+        }
+        setIsUpdatingDomain(false); // Stop loading indicator
+        return; // Stop execution
+      }
+
+      // Proceed with saving if no errors in state
+      const finalFullSubdomain = userInputSubdomain
+        ? `${userInputSubdomain}.${process.env.NEXT_PUBLIC_DOMAIN}`
+        : null;
+      const finalCustomDomain = customDomain || null;
+
+      // Ensure at least one domain is set if required by application logic
+      // (Add this check if necessary based on your requirements)
+      // if (!finalFullSubdomain && !finalCustomDomain) {
+      //   toast.error("Please configure either a subdomain or a custom domain.");
+      //   setIsUpdatingDomain(false);
+      //   return;
+      // }
+
+      if (portfolioId) {
+        // Explicitly set the final values in the form state before saving
+        form.setValue("portfolio.subdomain", finalFullSubdomain, {
           shouldDirty: true,
         });
-        form.setValue("portfolio.custom_domain", customDomain || null, {
+        form.setValue("portfolio.custom_domain", finalCustomDomain, {
           shouldDirty: true,
         });
 
-        // Update tenant data
+        // Update tenant data with final values
         const { error } = await updateTenant(tenantId, {
-          subdomain: subdomain || null,
-          custom_domain: customDomain,
+          subdomain: finalFullSubdomain,
+          custom_domain: finalCustomDomain,
         });
 
         if (error) {
           throw new Error(`Failed to update domain settings: ${error.message}`);
         }
 
-        // Save the form to persist portfolio values
+        // Reset the form with the latest values to mark as clean
         const formData = form.getValues();
-        form.reset({ ...formData });
+        form.reset({ ...formData }); // Ensure form state reflects saved state
 
         toast.success("Domain settings updated successfully");
-      } catch (error) {
-        console.error("Error updating domain settings:", error);
-        toast.error("Failed to update domain settings");
-      } finally {
-        setIsUpdatingDomain(false);
+      } else {
+        // Handle case where portfolioId is not yet available (e.g., creation)
+        form.setValue("portfolio.subdomain", finalFullSubdomain, {
+          shouldDirty: true,
+        });
+        form.setValue("portfolio.custom_domain", finalCustomDomain, {
+          shouldDirty: true,
+        });
+        toast.info(
+          "Domain settings updated locally. Save the portfolio to persist changes."
+        );
       }
+    } catch (error) {
+      // Catch errors from updateTenant or other unexpected issues
+      console.error("Error saving domain settings:", error);
+      toast.error("Failed to save domain settings. Please try again.");
+    } finally {
+      setIsUpdatingDomain(false); // Ensure loading indicator stops
     }
   };
 
@@ -547,7 +621,7 @@ export default function PublishStep({
                           <FormLabel>Subdomain</FormLabel>
                           <div className="flex items-center">
                             <Input
-                              value={subdomain}
+                              value={userInputSubdomain}
                               onChange={handleSubdomainChange}
                               placeholder="your-subdomain"
                               className="rounded-r-none"
@@ -573,16 +647,18 @@ export default function PublishStep({
                     />
 
                     <div className="flex items-center mt-2">
-                      {subdomain && !subdomainError ? (
+                      {userInputSubdomain && !subdomainError ? (
                         <div className="flex items-center rounded-md border bg-muted/50 px-3 py-2 flex-1">
                           <span className="text-sm font-medium">
-                            https://{subdomain}.{process.env.NEXT_PUBLIC_DOMAIN}
+                            https://{userInputSubdomain}.
+                            {process.env.NEXT_PUBLIC_DOMAIN}
                           </span>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={handleCopyUrl}
                             className="ml-2"
+                            disabled={!fullSubdomain}
                           >
                             {isCopied ? (
                               <CheckIcon className="size-4" />
@@ -599,19 +675,17 @@ export default function PublishStep({
                     </div>
                   </div>
 
-                  {portfolioId && (
-                    <Button
-                      onClick={saveDomainSettings}
-                      disabled={
-                        isUpdatingDomain ||
-                        isValidatingSubdomain ||
-                        !!subdomainError ||
-                        subdomain === ""
-                      }
-                    >
-                      {isUpdatingDomain ? "Saving..." : "Save Subdomain"}
-                    </Button>
-                  )}
+                  <Button
+                    onClick={saveDomainSettings}
+                    disabled={
+                      isUpdatingDomain ||
+                      isValidatingSubdomain ||
+                      !!subdomainError ||
+                      !userInputSubdomain
+                    }
+                  >
+                    {isUpdatingDomain ? "Saving..." : "Save Subdomain"}
+                  </Button>
                 </div>
               </TabsContent>
 
@@ -656,6 +730,7 @@ export default function PublishStep({
                             size="sm"
                             onClick={handleCopyUrl}
                             className="ml-2"
+                            disabled={!customDomain}
                           >
                             {isCopied ? (
                               <CheckIcon className="size-4" />
@@ -673,19 +748,17 @@ export default function PublishStep({
                   </div>
 
                   <div className="space-y-2">
-                    {portfolioId && (
-                      <Button
-                        onClick={saveDomainSettings}
-                        disabled={
-                          isUpdatingDomain ||
-                          isValidatingCustomDomain ||
-                          !!customDomainError ||
-                          customDomain === ""
-                        }
-                      >
-                        {isUpdatingDomain ? "Saving..." : "Save Custom Domain"}
-                      </Button>
-                    )}
+                    <Button
+                      onClick={saveDomainSettings}
+                      disabled={
+                        isUpdatingDomain ||
+                        isValidatingCustomDomain ||
+                        !!customDomainError ||
+                        !customDomain
+                      }
+                    >
+                      {isUpdatingDomain ? "Saving..." : "Save Custom Domain"}
+                    </Button>
 
                     <div className="p-3 border rounded-md bg-amber-50 dark:bg-amber-950/30 mt-4">
                       <h4 className="text-sm font-medium mb-2 flex items-center">

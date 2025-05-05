@@ -285,7 +285,7 @@ export default function EditPortfolioForm({
               </div>
 
               {/* Desktop Sidebar - Hidden on mobile */}
-              <div className="hidden sm:block sm:min-w-[200px] sm:max-w-[250px] sm:pr-6">
+              <div className="hidden sm:block sm:min-w-[200px] sm:max-w-[250px] sm:pr-6 sticky top-2">
                 <TabsList className="grid h-auto w-full grid-cols-1 sm:justify-start">
                   {STEPS.map((step) => (
                     <TabsTrigger
