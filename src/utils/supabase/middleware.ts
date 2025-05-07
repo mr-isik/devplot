@@ -83,6 +83,7 @@ export async function updateSession(request: NextRequest) {
     if (isDomainExist.error || !isDomainExist.data) {
       console.log("🚫 Domain does not exist - redirecting to home");
       const homeUrl = new URL(`/`, request.url);
+      homeUrl.host = `www.${process.env.NEXT_PUBLIC_DOMAIN}`;
       return NextResponse.redirect(homeUrl);
     }
 

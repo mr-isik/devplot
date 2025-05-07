@@ -36,11 +36,19 @@ import {
   Shield,
   CreditCard,
   GitBranch,
+  Clock,
+  MessageSquare,
+  Palette,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
-import Logo from "@/components/globals/logo";
 import { createClient } from "@/utils/supabase/server";
+import { Hero } from "@/components/landing/EnhancedHero";
+import { FeatureShowcase } from "@/components/landing/FeatureShowcase";
+import { PricingSection } from "@/components/landing/PricingSection";
+import { UsageStats } from "@/components/landing/UsageStats";
+import { Footer } from "@/components/layout/Footer";
+import Image from "next/image";
 
 export async function generateMetadata() {
   return {
@@ -60,711 +68,515 @@ export default async function Index() {
       <Navbar user={data.user} />
 
       {/* Hero Section */}
-      <section className="w-full py-16 md:py-20 lg:py-28 bg-gradient-to-br from-primary/15 via-background to-secondary/15 dark:from-background dark:via-background/95 dark:to-primary/20 border-b border-border relative overflow-hidden">
-        {/* Animated Background Grid */}
-        <div
-          className="absolute inset-0 bg-grid-small-black/[0.2] dark:bg-grid-small-white/[0.2]"
-          style={{
-            maskImage:
-              "radial-gradient(circle at center, black, transparent 80%)",
-          }}
-        />
+      <Hero />
 
-        {/* Floating Elements (Decorative) */}
-        <div className="absolute hidden md:block w-24 h-24 bg-primary/10 rounded-full -top-12 left-1/4 blur-xl animate-float-slow"></div>
-        <div className="absolute hidden md:block w-32 h-32 bg-secondary/10 rounded-full -bottom-16 right-1/4 blur-xl animate-float-medium"></div>
-        <div className="absolute hidden md:block w-20 h-20 bg-primary/20 rounded-full top-40 right-[10%] blur-lg animate-float-fast"></div>
+      {/* Feature Showcase Section */}
+      <FeatureShowcase />
 
-        <div className="container px-4 md:px-6 mx-auto flex flex-col items-center text-center z-10 relative">
-          <Badge className="mb-4 text-sm px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-primary/20 animate-fade-in">
-            <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-            Create Your Portfolio in 15 Minutes
-          </Badge>
+      {/* Usage Statistics TODO: Add this back in later*/}
+      {/* <UsageStats /> */}
 
-          <div className="space-y-4 mb-8 max-w-4xl">
-            <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-primary drop-shadow-sm animate-fade-in-up"
-              style={{ textShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
-            >
-              From Code to Career: <br /> Your Portfolio, Your Way
-            </h1>
-            <p className="max-w-[700px] text-lg md:text-xl text-foreground/90 dark:text-foreground/90 mx-auto animate-fade-in-up animation-delay-100">
-              Stop spending weeks building a portfolio. DevPlot helps you create
-              a stunning developer portfolio in minutes.
-              <span className="font-semibold text-primary">
-                {" "}
-                Get noticed by top tech companies
-              </span>{" "}
-              and land your dream job faster.
-            </p>
-          </div>
+      {/* Why You Need a Portfolio Section */}
+      <section className="w-full py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-small-black/[0.03] dark:bg-grid-small-white/[0.03]"></div>
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-accent/10 to-transparent rounded-full filter blur-3xl opacity-50"></div>
+        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-primary/10 to-transparent rounded-full filter blur-3xl opacity-50"></div>
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-fade-in-up animation-delay-200">
-            <Link href="/sign-up" className="flex items-center gap-2">
-              <Button
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all group hover:scale-105 w-full"
-              >
-                Start Building
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/themes" className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-primary/30 hover:bg-primary/10 hover:text-primary hover:border-primary/60 transition-all w-full"
-              >
-                Browse Themes <Eye className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-
-          <div className="flex items-center justify-center gap-8 mb-8 text-sm text-muted-foreground animate-fade-in-up animation-delay-300">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-primary" />
-              <span>Supports all devices</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-primary" />
-              <span>14-day free trial</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-primary" />
-              <span>Cancel anytime</span>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 mt-12 animate-fade-in-up animation-delay-400">
-            <div className="flex flex-col items-center">
-              <p className="text-3xl font-bold text-primary">3000+</p>
-              <p className="text-sm text-muted-foreground">
-                Portfolios Created
-              </p>
-            </div>
-            <div className="hidden md:block h-10 border-l border-border"></div>
-            <div className="flex flex-col items-center">
-              <p className="text-3xl font-bold text-primary">89%</p>
-              <p className="text-sm text-muted-foreground">
-                Improved Job Success
-              </p>
-            </div>
-            <div className="hidden md:block h-10 border-l border-border"></div>
-            <div className="flex flex-col items-center">
-              <p className="text-3xl font-bold text-primary">12+</p>
-              <p className="text-sm text-muted-foreground">
-                Beautiful Templates
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Need a Portfolio Section */}
-      <section className="w-full py-16 md:py-24 bg-background dark:bg-background">
         <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 text-sm px-3 py-1 rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 transition-colors border-secondary/20">
-              Career Boost
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Why Every Developer Needs a Portfolio
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <Badge className="mb-4 px-3 py-1 text-sm">Why Portfolio?</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Why employers value{" "}
+              <span className="text-primary">portfolios</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              In today's competitive tech industry, your GitHub profile alone
-              isn't enough. Here's why a portfolio is your secret weapon:
+            <p className="text-lg text-foreground/80 mb-8">
+              A strong portfolio is the most effective way to stand out in the
+              coding world and land your dream job.
             </p>
+            <div className="h-1 w-20 bg-gradient-to-r from-primary to-accent mx-auto rounded"></div>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="border-border/40 bg-card hover:shadow-lg hover:shadow-primary/5 transition-all hover:-translate-y-1 hover:border-primary/20 group">
+            <Card className="glass dark:glass-dark backdrop-blur-sm border border-border/40 card-hover animate-fade-in">
               <CardHeader>
-                <div className="bg-primary/10 rounded-full h-14 w-14 flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
-                  <Trophy className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
+                <div className="size-12 flex items-center justify-center mb-4 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 border border-border/30">
+                  <Trophy className="h-6 w-6 text-primary" />
                 </div>
-                <CardTitle>3x More Interview Calls</CardTitle>
+                <CardTitle>Stronger Than Words</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
-                  Developers with portfolios receive 3x more interview calls
-                  than those without. Stand out from the crowd and get noticed
-                  by top tech companies.
+                <p className="text-foreground/80">
+                  Your resume lists your skills, but your portfolio proves them.
+                  Show tangible experience through real projects.
                 </p>
               </CardContent>
-              <CardFooter>
-                <div className="flex items-center text-xs text-muted-foreground gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>85% of hiring managers check portfolios</span>
-                </div>
-              </CardFooter>
             </Card>
-            <Card className="border-border/40 bg-card hover:shadow-lg hover:shadow-primary/5 transition-all hover:-translate-y-1 hover:border-primary/20 group">
+
+            <Card className="glass dark:glass-dark backdrop-blur-sm border border-border/40 card-hover animate-fade-in animation-delay-100">
               <CardHeader>
-                <div className="bg-primary/10 rounded-full h-14 w-14 flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
-                  <Github className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
+                <div className="size-12 flex items-center justify-center mb-4 rounded-lg bg-gradient-to-br from-accent/10 to-accent/5 border border-border/30">
+                  <Star className="h-6 w-6 text-accent" />
                 </div>
-                <CardTitle>Beyond Code Repository</CardTitle>
+                <CardTitle>Stand Out from Competition</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
-                  GitHub shows code, but doesn't tell your story. A portfolio
-                  highlights your problem-solving approach, project context, and
-                  the impact of your work.
+                <p className="text-foreground/80">
+                  A portfolio showcasing your technical skills helps you rise
+                  above dozens of other candidates applying for the same
+                  position.
                 </p>
               </CardContent>
-              <CardFooter>
-                <div className="flex items-center text-xs text-muted-foreground gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>Context matters more than code alone</span>
-                </div>
-              </CardFooter>
             </Card>
-            <Card className="border-border/40 bg-card hover:shadow-lg hover:shadow-primary/5 transition-all hover:-translate-y-1 hover:border-primary/20 group">
+
+            <Card className="glass dark:glass-dark backdrop-blur-sm border border-border/40 card-hover animate-fade-in animation-delay-200">
               <CardHeader>
-                <div className="bg-primary/10 rounded-full h-14 w-14 flex items-center justify-center mb-2 group-hover:bg-primary/20 transition-colors">
-                  <Linkedin className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
+                <div className="size-12 flex items-center justify-center mb-4 rounded-lg bg-gradient-to-br from-chart-5/10 to-chart-5/5 border border-border/30">
+                  <Users className="h-6 w-6 text-chart-5" />
                 </div>
-                <CardTitle>Build Your Personal Brand</CardTitle>
+                <CardTitle>Build Employer Confidence</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
-                  A professional portfolio establishes you as an authority in
-                  your field, opening doors to speaking opportunities,
-                  collaborations, and better job offers.
+                <p className="text-foreground/80">
+                  Employers question skills listed on resumes. A portfolio
+                  transparently validates your experience.
                 </p>
               </CardContent>
-              <CardFooter>
-                <div className="flex items-center text-xs text-muted-foreground gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>73% increase in networking opportunities</span>
-                </div>
-              </CardFooter>
             </Card>
+          </div>
+
+          <div className="mt-16 glass dark:glass-dark backdrop-blur-sm p-6 md:p-8 rounded-xl border border-border/40 max-w-3xl mx-auto animate-fade-in animation-delay-300 hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
+            {/* Animated gradient backgrounds */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent/10 rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
+
+            {/* Animated border effects */}
+            <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6 relative z-10">
+              <div className="size-14 rounded-full bg-gradient-to-br from-primary to-accent p-0.5 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                <div className="size-full rounded-full bg-background flex items-center justify-center text-primary-foreground">
+                  <Code2 className="size-6" />
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold group-hover:text-primary transition-colors duration-300">
+                  Scientific fact
+                </h3>
+                <div className="flex items-center gap-2">
+                  <p className="text-muted-foreground">
+                    An impressive portfolio results in
+                  </p>
+                  <div className="px-2 py-0.5 bg-gradient-to-r from-primary/20 to-accent/20 rounded-md text-foreground font-semibold">
+                    32% more callbacks
+                  </div>
+                  <p className="text-muted-foreground">on job applications</p>
+                </div>
+              </div>
+            </div>
+
+            <blockquote className="relative border-l-4 border-accent pl-4 py-2 italic text-foreground/90 group-hover:pl-6 transition-all duration-300">
+              <div className="absolute -left-2 top-1/2 -translate-y-1/2 size-4 bg-accent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              "In the talent acquisition battle, a strong developer portfolio is
+              the most effective tool above all else. Seeing candidates' code
+              and projects provides evidence of consistent growth and real-world
+              experience."
+              <div className="absolute right-0 bottom-0 size-20 bg-gradient-to-tl from-accent/10 to-transparent rounded-full blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
+            </blockquote>
+
+            <div className="mt-4 text-sm text-right text-muted-foreground flex items-center justify-end gap-2 relative z-10">
+              <div className="size-6 rounded-full bg-gradient-to-r from-primary/30 to-accent/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Trophy className="size-3 text-foreground" />
+              </div>
+              <span>Tech Recruitment Specialist</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Theme Preview Section */}
-      <section className="w-full py-16 md:py-24 bg-background dark:bg-background">
+      <section className="w-full py-20 bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-small-black/[0.03] dark:bg-grid-small-white/[0.03]"></div>
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full filter blur-3xl opacity-20"></div>
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-accent/20 rounded-full filter blur-3xl opacity-20"></div>
+
         <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 text-sm px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-primary/20">
-              Beautiful Themes
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <Badge className="mb-4 px-3 py-1 text-sm">
+              <Palette className="h-3.5 w-3.5 mr-1.5" />
+              Themes
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Choose Your Perfect Portfolio Theme
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Uniquely <span className="text-primary">styled</span>
+              <br />
+              portfolio themes
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
-              Explore our collection of professionally designed themes. Each
-              theme is crafted to showcase your skills and projects in the best
-              possible way.
+            <p className="text-lg text-foreground/80 mb-8">
+              Create a portfolio that looks as impressive as your code with
+              DevPlot's modern themes.
             </p>
-            <Link href="/themes" className="inline-flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-primary/30 hover:bg-primary/10 hover:text-primary hover:border-primary/60 transition-all w-full"
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {[
+              {
+                title: "Minimal",
+                description: "Clean and minimalist design",
+                badge: "Popular",
+                badgeColor: "bg-primary",
+                gradientFrom: "from-primary/30",
+                gradientTo: "to-primary/5",
+                image: "/themes/minimal-theme-thumbnail.jpg",
+                icon: <Code className="h-5 w-5" />,
+              },
+              {
+                title: "Modern",
+                description: "Code-focused & modern-style",
+                badge: "Professional",
+                badgeColor: "bg-accent",
+                gradientFrom: "from-accent/30",
+                gradientTo: "to-accent/5",
+                image: "/themes/modern-theme-thumbnail.jpg",
+                icon: <Code2 className="h-5 w-5" />,
+              },
+              {
+                title: "Creative",
+                description: "Bold and colorful layout",
+                badge: "New",
+                badgeColor: "bg-chart-5",
+                gradientFrom: "from-chart-5/30",
+                gradientTo: "to-chart-5/5",
+                image: "/themes/creative-theme-thumbnail.jpg",
+                icon: <PaintBucket className="h-5 w-5" />,
+              },
+            ].map((theme, i) => (
+              <div
+                key={i}
+                className="group relative rounded-xl border border-border/40 overflow-hidden animate-fade-in transition-all duration-300 hover:shadow-xl"
+                style={{ animationDelay: `${i * 0.1}s` }}
               >
-                Browse Themes <Eye className="h-4 w-4 ml-2" />
+                {/* Card background with gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-background/90 to-background/60 backdrop-blur-sm z-0"></div>
+
+                {/* Top gradient line */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                {/* Animated gradient background */}
+                <div
+                  className={`absolute -inset-1 bg-gradient-to-br ${theme.gradientFrom} ${theme.gradientTo} opacity-10 group-hover:opacity-20 blur-xl transition-opacity duration-500 group-hover:scale-105 z-0`}
+                ></div>
+
+                <div className="relative h-52 bg-gradient-to-br from-muted/80 to-muted/40 flex items-center justify-center px-6 z-10 overflow-hidden border-b border-border/20">
+                  {/* Animated particles */}
+                  {Array.from({ length: 8 }).map((_, idx) => (
+                    <div
+                      key={idx}
+                      className={`absolute size-2 rounded-full ${theme.badgeColor} opacity-20 animate-float-${idx % 3 === 0 ? "slow" : idx % 3 === 1 ? "medium" : "fast"}`}
+                      style={{
+                        top: `${Math.random() * 100}%`,
+                        left: `${Math.random() * 100}%`,
+                        animationDelay: `${Math.random() * 2}s`,
+                      }}
+                    ></div>
+                  ))}
+
+                  {theme.badge && (
+                    <div className="absolute top-2 right-2 z-20">
+                      <Badge
+                        variant="default"
+                        className={`${theme.badgeColor} text-primary-foreground px-2 py-0.5 text-xs rounded-md shadow-sm animate-pulse-glow`}
+                      >
+                        {theme.badge}
+                      </Badge>
+                    </div>
+                  )}
+
+                  <div className="w-full max-w-[280px] h-36 rounded-md backdrop-blur-lg shadow-lg relative overflow-hidden group-hover:scale-105 transition-transform duration-500 border border-border/30">
+                    <Image
+                      src={theme.image}
+                      alt={theme.title}
+                      width={280}
+                      height={144}
+                      className="w-full h-full object-cover object-top absolute inset-0"
+                    />
+
+                    {/* Theme icon overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-background/80 to-background/60 opacity-0 group-hover:opacity-90 flex items-center justify-center transition-opacity duration-300">
+                      <div
+                        className={`size-12 rounded-full ${theme.badgeColor} flex items-center justify-center text-white`}
+                      >
+                        {theme.icon}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="relative p-6 z-10 bg-gradient-to-b from-transparent to-background/5">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-bold text-xl group-hover:text-primary transition-colors">
+                      {theme.title}
+                    </h3>
+                    <div
+                      className={`size-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${theme.badgeColor} text-white`}
+                    >
+                      <Eye className="size-4" />
+                    </div>
+                  </div>
+                  <p className="text-sm text-foreground/70 mb-4 group-hover:text-foreground/90 transition-colors">
+                    {theme.description}
+                  </p>
+                  <Link
+                    href="/themes"
+                    className="block w-full group-hover:scale-105 transition-transform duration-300"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full group-hover:border-primary/50 transition-colors relative overflow-hidden"
+                    >
+                      <span className="relative z-10">Preview</span>
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-r ${theme.gradientFrom} ${theme.gradientTo} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
+                      ></div>
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-center mt-10">
+            <Link href="/themes">
+              <Button
+                size="lg"
+                variant="glass"
+                className="group animate-pulse-glow"
+                rounded="lg"
+              >
+                Explore All Themes
+                <ArrowRight className="ml-1 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Statistics Section */}
-      <section className="w-full py-16 md:py-20 bg-primary/5 dark:bg-primary/10 border-y border-border">
+      {/* How it Works Section */}
+      <section className="w-full py-20 relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <div className="absolute inset-0 bg-grid-small-black/[0.03] dark:bg-grid-small-white/[0.03]"></div>
+
         <div className="container px-4 md:px-6 mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-            <div className="flex flex-col items-center text-center space-y-2 group hover:-translate-y-1 transition-transform">
-              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                <Zap className="h-6 w-6 text-primary" />
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <Badge className="mb-4 px-3 py-1 text-sm">How It Works</Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Create an <span className="text-primary">impressive</span>{" "}
+              portfolio in three simple steps
+            </h2>
+            <p className="text-lg text-foreground/80 mb-8">
+              DevPlot simplifies the portfolio creation process. No complex
+              coding or design knowledge required.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16 relative">
+            {/* Connection Line */}
+            <div className="hidden md:block absolute top-8 -z-10 left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-primary via-accent to-chart-5"></div>
+
+            {[
+              {
+                step: 1,
+                title: "Create Your Account",
+                description: "Quick registration for platform access",
+                icon: <Users className="h-8 w-8 text-foreground" />,
+              },
+              {
+                step: 2,
+                title: "Build Your Portfolio",
+                description: "Add projects and choose a theme",
+                icon: <Code className="h-8 w-8 text-foreground" />,
+              },
+              {
+                step: 3,
+                title: "Publish and Share",
+                description:
+                  "Show your portfolio to everyone with a unique URL",
+                icon: <Rocket className="h-8 w-8 text-foreground" />,
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex flex-col items-center text-center animate-fade-in"
+                style={{ animationDelay: `${i * 0.2}s` }}
+              >
+                <div className="relative mb-6">
+                  <div className="size-16 rounded-full glass dark:glass-dark backdrop-blur-md flex items-center justify-center border border-border/50 shadow-lg z-10">
+                    {item.icon}
+                  </div>
+                  <div className="absolute size-16 rounded-full bg-primary/10 dark:bg-primary/5 -z-10 blur-md"></div>
+                  <div className="absolute -top-1 -left-1 -right-1 -bottom-1 rounded-full bg-gradient-to-br from-primary/20 via-accent/20 to-chart-5/20 -z-20 blur-sm animate-pulse-glow"></div>
+                  <div className="absolute -top-0.5 -left-0.5 size-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
+                    {item.step}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-foreground/70">{item.description}</p>
               </div>
-              <h3 className="text-3xl font-bold">15min</h3>
-              <p className="text-sm text-muted-foreground">
-                Average Setup Time
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center space-y-2 group hover:-translate-y-1 transition-transform">
-              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                <BarChart3 className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-3xl font-bold">78%</h3>
-              <p className="text-sm text-muted-foreground">
-                More Interview Calls
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center space-y-2 group hover:-translate-y-1 transition-transform">
-              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                <Star className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-3xl font-bold">4.9/5</h3>
-              <p className="text-sm text-muted-foreground">User Satisfaction</p>
-            </div>
-            <div className="flex flex-col items-center text-center space-y-2 group hover:-translate-y-1 transition-transform">
-              <div className="bg-primary/10 p-3 rounded-full group-hover:bg-primary/20 group-hover:scale-110 transition-all">
-                <LineChart className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-3xl font-bold">92%</h3>
-              <p className="text-sm text-muted-foreground">Growth in 2023</p>
-            </div>
+            ))}
+          </div>
+
+          <div className="flex justify-center mt-16">
+            <Link href="/sign-up">
+              <Button
+                variant="gradient"
+                size="lg"
+                className="shadow-lg"
+                rounded="lg"
+              >
+                Get Started Now
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Why Choose DevPlot Section */}
-      <section className="w-full py-16 md:py-24 bg-background dark:bg-background relative">
-        <div
-          className="absolute inset-0 bg-grid-small-black/[0.1] dark:bg-grid-small-white/[0.1]"
-          style={{
-            maskImage:
-              "radial-gradient(ellipse at center, black, transparent 70%)",
-          }}
-        />
+      {/* Pricing Section */}
+      <PricingSection />
 
-        <div className="container px-4 md:px-6 mx-auto relative z-10">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 text-sm px-3 py-1 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-primary/20">
-              Why DevPlot?
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Why DevPlot is Your Best Choice
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              DevPlot isn't just another portfolio builder. It's designed
-              specifically for developers, by developers.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="bg-card border-border/40 hover:shadow-lg hover:shadow-primary/5 transition-all hover:-translate-y-1 hover:border-primary/20 overflow-hidden group">
-              <div className="h-1 w-full bg-gradient-to-r from-primary to-primary/50"></div>
-              <CardHeader className="pb-2">
-                <Rocket className="h-6 w-6 mb-2 text-primary group-hover:scale-110 transition-transform" />
-                <CardTitle>Launch in Minutes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Don't waste weekends building from scratch. Our templates let
-                  you create a professional portfolio in minutes.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-border/40 hover:shadow-lg hover:shadow-primary/5 transition-all hover:-translate-y-1 hover:border-primary/20 overflow-hidden group">
-              <div className="h-1 w-full bg-gradient-to-r from-primary/60 to-primary"></div>
-              <CardHeader className="pb-2">
-                <Code className="h-6 w-6 mb-2 text-primary group-hover:scale-110 transition-transform" />
-                <CardTitle>Developer-Focused</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Built specifically for developers with code snippet
-                  highlighting, GitHub integration, and tech stack showcasing.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-border/40 hover:shadow-lg hover:shadow-primary/5 transition-all hover:-translate-y-1 hover:border-primary/20 overflow-hidden group">
-              <div className="h-1 w-full bg-gradient-to-r from-primary to-primary/40"></div>
-              <CardHeader className="pb-2">
-                <PaintBucket className="h-6 w-6 mb-2 text-primary group-hover:scale-110 transition-transform" />
-                <CardTitle>Fully Customizable</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Make it yours with custom themes, layouts, and branding that
-                  perfectly matches your personal style.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-border/40 hover:shadow-lg hover:shadow-primary/5 transition-all hover:-translate-y-1 hover:border-primary/20 overflow-hidden group">
-              <div className="h-1 w-full bg-gradient-to-r from-primary/30 to-primary"></div>
-              <CardHeader className="pb-2">
-                <Users className="h-6 w-6 mb-2 text-primary group-hover:scale-110 transition-transform" />
-                <CardTitle>Recruiter-Approved</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Designed with input from tech recruiters to highlight exactly
-                  what hiring managers are looking for.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      {/* FAQ Section */}
+      <section className="w-full py-20 bg-gradient-to-br from-accent/5 via-background to-primary/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-small-black/[0.03] dark:bg-grid-small-white/[0.03]"></div>
 
-      {/* Testimonial Section */}
-      <section className="w-full py-16 md:py-24 bg-secondary/5 dark:bg-secondary/10 border-y border-border">
         <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 text-sm px-3 py-1 rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 transition-colors border-secondary/20">
-              Testimonials
+          <div className="max-w-3xl mx-auto text-center mb-16">
+            <Badge className="mb-4 px-3 py-1 text-sm">
+              <HelpCircle className="h-3.5 w-3.5 mr-1.5" />
+              FAQ
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Success Stories
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Frequently Asked Questions
             </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Developers who leveled up their careers with DevPlot
+            <p className="text-lg text-foreground/80">
+              Answers to common questions about DevPlot
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="bg-card border-border/40 hover:shadow-lg hover:shadow-secondary/5 transition-all relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-24 h-24 bg-secondary/10 rounded-br-full -translate-x-8 -translate-y-8 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300"></div>
 
-              <CardHeader>
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="w-12 h-12 rounded-full bg-secondary/20 dark:bg-secondary/30 flex items-center justify-center">
-                    <span className="text-secondary font-bold">AY</span>
-                  </div>
-                  <div>
-                    <CardTitle className="text-base">Ahmet Yılmaz</CardTitle>
-                    <CardDescription>Frontend Developer</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 fill-secondary text-secondary"
-                    />
-                  ))}
-                </div>
-                <p className="text-muted-foreground">
-                  "After adding my DevPlot portfolio to my resume, I got
-                  interview calls from three companies I'd been trying to get
-                  into for months. I landed my dream job within weeks!"
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-border/40 hover:shadow-lg hover:shadow-secondary/5 transition-all relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-24 h-24 bg-secondary/10 rounded-br-full -translate-x-8 -translate-y-8 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300"></div>
+          <div className="max-w-3xl mx-auto glass dark:glass-dark backdrop-blur-sm rounded-xl border border-border/40 p-1">
+            <Accordion type="single" collapsible className="w-full">
+              {[
+                {
+                  question: "Do I need to know coding to use DevPlot?",
+                  answer:
+                    "No, DevPlot can be used with zero coding knowledge. Our interface works on a drag-and-drop basis and provides everything you need to create a professional portfolio. Of course, if you know coding, you can add custom CSS and HTML to further customize your portfolio.",
+                },
+                {
+                  question: "How can I customize my portfolio?",
+                  answer:
+                    "DevPlot offers various customization options including themes, colors, fonts, and layout arrangements. With the Pro package, you can make your own design with fully custom CSS or modify existing themes.",
+                },
+                {
+                  question: "Can I automatically import my GitHub projects?",
+                  answer:
+                    "Yes, DevPlot can connect to your GitHub account and import your repositories directly to your portfolio. The system automatically pulls repo descriptions and language statistics and displays them in your portfolio.",
+                },
+                {
+                  question: "Can I use my own domain name?",
+                  answer:
+                    "Yes, you can use a custom domain name with our Pro and Team packages. You can connect an existing domain or purchase a new one through DevPlot.",
+                },
+                {
+                  question: "Can I update my portfolio after creating it?",
+                  answer:
+                    "Absolutely! You can edit your portfolio at any time, add new projects, or update existing ones. Your changes are published instantly, keeping your portfolio always up-to-date.",
+                },
+                {
+                  question: "What happens if I want to cancel?",
+                  answer:
+                    "You can cancel your subscription at any time with no penalty. You'll continue to have access to all premium features until the end of your payment period. After cancellation, your account will automatically downgrade to the free plan where you can access limited features.",
+                },
+              ].map((faq, i) => (
+                <AccordionItem
+                  key={i}
+                  value={`item-${i}`}
+                  className="border-border/30"
+                >
+                  <AccordionTrigger className="text-lg font-medium py-4 px-4 hover:text-primary transition-colors">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pb-4 pt-1 text-foreground/80">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
 
-              <CardHeader>
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="w-12 h-12 rounded-full bg-secondary/20 dark:bg-secondary/30 flex items-center justify-center">
-                    <span className="text-secondary font-bold">ED</span>
-                  </div>
-                  <div>
-                    <CardTitle className="text-base">Elif Demir</CardTitle>
-                    <CardDescription>Fullstack Developer</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 fill-secondary text-secondary"
-                    />
-                  ))}
-                </div>
-                <p className="text-muted-foreground">
-                  "DevPlot helped me showcase my projects in a way that GitHub
-                  couldn't. A recruiter specifically mentioned how impressed
-                  they were with my portfolio during the interview."
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="bg-card border-border/40 hover:shadow-lg hover:shadow-secondary/5 transition-all relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-24 h-24 bg-secondary/10 rounded-br-full -translate-x-8 -translate-y-8 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300"></div>
-
-              <CardHeader>
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="w-12 h-12 rounded-full bg-secondary/20 dark:bg-secondary/30 flex items-center justify-center">
-                    <span className="text-secondary font-bold">MK</span>
-                  </div>
-                  <div>
-                    <CardTitle className="text-base">Mehmet Kaya</CardTitle>
-                    <CardDescription>Backend Developer</CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4 fill-secondary text-secondary"
-                    />
-                  ))}
-                </div>
-                <p className="text-muted-foreground">
-                  "As a backend developer, I struggled to show my work visually.
-                  DevPlot's architecture diagrams and API documentation features
-                  helped me demonstrate my skills effectively."
-                </p>
-              </CardContent>
-            </Card>
+          <div className="mt-16 text-center">
+            <p className="text-lg mb-8">Have more questions? Contact us:</p>
+            <Link href="/contact">
+              <Button variant="outline" size="lg">
+                <MessageSquare className="h-5 w-5 mr-2" />
+                Contact
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Call to Action */}
-      <section className="w-full py-16 md:py-24 bg-gradient-to-br from-primary to-primary/80 dark:from-primary/90 dark:to-primary/70 text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-20 mix-blend-overlay"></div>
+      <section className="w-full py-20 bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 relative overflow-hidden">
+        <div className="container px-4 md:px-6 mx-auto text-center z-30">
+          <Badge
+            variant="outline"
+            className="mb-6 px-4 py-1.5 text-lg border-primary/30 bg-background/50 backdrop-blur-sm"
+          >
+            <Sparkles className="h-5 w-5 mr-2 text-primary" />
+            Invest in Your Future
+          </Badge>
 
-        {/* Animated circles */}
-        <div className="absolute -top-20 -left-20 w-40 h-40 bg-white/10 rounded-full blur-2xl animate-float-slow opacity-60"></div>
-        <div className="absolute top-1/2 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl animate-float-medium opacity-40"></div>
-
-        <div className="container px-4 md:px-6 mx-auto text-center relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-            Start Building Your Future Today
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 max-w-4xl mx-auto">
+            Take the first step to landing
+            <br />
+            your <span className="text-primary">dream job</span>
           </h2>
-          <p className="text-lg text-primary-foreground/90 max-w-3xl mx-auto mb-8">
-            Join thousands of developers who are getting noticed, landing
-            interviews, and advancing their careers with DevPlot. Create your
-            portfolio in minutes, not weeks.
+
+          <p className="text-xl mb-12 max-w-2xl mx-auto text-foreground/80">
+            Create a professional portfolio in minutes and showcase your talents
+            to the world.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/sign-up" className="flex items-center gap-2">
+
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-10">
+            <Link href="/sign-up">
               <Button
+                variant="gradient"
                 size="lg"
-                variant="secondary"
-                className="bg-white text-primary hover:bg-white/90 shadow-lg shadow-black/10 border-none font-medium hover:scale-105 transition-transform w-full"
+                className="shadow-lg animate-pulse-glow px-8"
+                rounded="xl"
               >
-                Start Free Trial
-                <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <Zap className="h-5 w-5 mr-2" />
+                Start Building
               </Button>
             </Link>
-            <Link href="/themes" className="flex items-center gap-2">
+            <Link href="/themes">
               <Button
+                variant="glass"
                 size="lg"
-                variant="outline"
-                className="text-white border-white bg-white/10 hover:bg-white/20 hover:text-white w-full"
+                className="px-8 z-10"
+                rounded="xl"
               >
-                Browse Themes <Eye className="h-4 w-4 ml-2" />
+                View Themes
               </Button>
             </Link>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
-              <p className="text-xl font-bold">15 Minutes</p>
-              <p className="text-xs text-primary-foreground/80">Setup Time</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
-              <p className="text-xl font-bold">12+ Themes</p>
-              <p className="text-xs text-primary-foreground/80">
-                Professional Designs
-              </p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
-              <p className="text-xl font-bold">3x More</p>
-              <p className="text-xs text-primary-foreground/80">
-                Interview Calls
-              </p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-white/20 hover:bg-white/20 transition-colors hover:-translate-y-1 cursor-pointer">
-              <p className="text-xl font-bold">Free Trial</p>
-              <p className="text-xs text-primary-foreground/80">
-                No Credit Card
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="w-full py-16 md:py-24 bg-background dark:bg-background relative">
-        <div
-          className="absolute inset-0 bg-grid-small-black/[0.1] dark:bg-grid-small-white/[0.1]"
-          style={{
-            maskImage:
-              "radial-gradient(ellipse at center, black, transparent 70%)",
-          }}
-        />
-
-        <div className="container px-4 md:px-6 mx-auto relative z-10">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 text-sm px-3 py-1 rounded-full bg-secondary/10 text-secondary hover:bg-secondary/20 transition-colors border-secondary/20">
-              FAQ
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Everything you need to know about DevPlot
-            </p>
-          </div>
-
-          <div className="max-w-3xl mx-auto">
-            <Accordion type="single" collapsible className="w-full space-y-4">
-              <AccordionItem
-                value="item-1"
-                className="border rounded-lg border-primary/10 px-1 shadow-sm overflow-hidden bg-gradient-to-r from-card to-card/80 hover:from-primary/5 hover:to-card transition-all"
-              >
-                <AccordionTrigger className="text-left text-lg font-medium py-4 px-4 [&[data-state=open]>div>svg]:text-primary [&[data-state=open]]:text-primary">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <Code2 className="h-5 w-5 text-primary" />
-                    </div>
-                    How does DevPlot work?
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pt-1 pb-4 px-12">
-                  <div className="border-l-2 border-primary/20 pl-4 animate-fadeIn">
-                    DevPlot helps you create a professional portfolio in
-                    minutes. Choose from our templates, import your GitHub
-                    projects, customize your layout, and publish your portfolio
-                    with a custom domain.
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem
-                value="item-2"
-                className="border rounded-lg border-primary/10 px-1 shadow-sm overflow-hidden bg-gradient-to-r from-card to-card/80 hover:from-primary/5 hover:to-card transition-all"
-              >
-                <AccordionTrigger className="text-left text-lg font-medium py-4 px-4 [&[data-state=open]>div>svg]:text-primary [&[data-state=open]]:text-primary">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <HelpCircle className="h-5 w-5 text-primary" />
-                    </div>
-                    Do I need coding skills to use DevPlot?
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pt-1 pb-4 px-12">
-                  <div className="border-l-2 border-primary/20 pl-4 animate-fadeIn">
-                    Not at all! We've designed DevPlot to be accessible to
-                    developers of all skill levels. Our intuitive interface
-                    makes it easy to create a professional portfolio without
-                    writing a single line of additional code.
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem
-                value="item-3"
-                className="border rounded-lg border-primary/10 px-1 shadow-sm overflow-hidden bg-gradient-to-r from-card to-card/80 hover:from-primary/5 hover:to-card transition-all"
-              >
-                <AccordionTrigger className="text-left text-lg font-medium py-4 px-4 [&[data-state=open]>div>svg]:text-primary [&[data-state=open]]:text-primary">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <Globe className="h-5 w-5 text-primary" />
-                    </div>
-                    Can I use my own domain?
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pt-1 pb-4 px-12">
-                  <div className="border-l-2 border-primary/20 pl-4 animate-fadeIn">
-                    Yes! You can use our free subdomain
-                    (yourusername.devplot.io) or connect your own custom domain.
-                    We provide easy-to-follow instructions for setting up your
-                    domain with most popular registrars.
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem
-                value="item-4"
-                className="border rounded-lg border-primary/10 px-1 shadow-sm overflow-hidden bg-gradient-to-r from-card to-card/80 hover:from-primary/5 hover:to-card transition-all"
-              >
-                <AccordionTrigger className="text-left text-lg font-medium py-4 px-4 [&[data-state=open]>div>svg]:text-primary [&[data-state=open]]:text-primary">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <Shield className="h-5 w-5 text-primary" />
-                    </div>
-                    Is my data secure?
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pt-1 pb-4 px-12">
-                  <div className="border-l-2 border-primary/20 pl-4 animate-fadeIn">
-                    Absolutely. We take security very seriously. Your data is
-                    encrypted and stored securely. We never share your
-                    information with third parties, and we use industry-standard
-                    security practices to protect your account.
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem
-                value="item-5"
-                className="border rounded-lg border-primary/10 px-1 shadow-sm overflow-hidden bg-gradient-to-r from-card to-card/80 hover:from-primary/5 hover:to-card transition-all"
-              >
-                <AccordionTrigger className="text-left text-lg font-medium py-4 px-4 [&[data-state=open]>div>svg]:text-primary [&[data-state=open]]:text-primary">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <CreditCard className="h-5 w-5 text-primary" />
-                    </div>
-                    How much does DevPlot cost?
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pt-1 pb-4 px-12">
-                  <div className="border-l-2 border-primary/20 pl-4 animate-fadeIn">
-                    DevPlot offers both free and premium plans. The free plan
-                    includes all the essential features to get started, while
-                    premium plans offer advanced customization, analytics, and
-                    multiple portfolio options. Check our pricing page for
-                    details.
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem
-                value="item-6"
-                className="border rounded-lg border-primary/10 px-1 shadow-sm overflow-hidden bg-gradient-to-r from-card to-card/80 hover:from-primary/5 hover:to-card transition-all"
-              >
-                <AccordionTrigger className="text-left text-lg font-medium py-4 px-4 [&[data-state=open]>div>svg]:text-primary [&[data-state=open]]:text-primary">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full">
-                      <GitBranch className="h-5 w-5 text-primary" />
-                    </div>
-                    Can I integrate with GitHub and other platforms?
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pt-1 pb-4 px-12">
-                  <div className="border-l-2 border-primary/20 pl-4 animate-fadeIn">
-                    Yes! DevPlot seamlessly integrates with GitHub to import
-                    your projects. We also support integrations with LinkedIn,
-                    Stack Overflow, and other developer platforms to showcase
-                    your full technical profile.
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
+          <p className="text-sm text-foreground/60 animate-fade-in animation-delay-500">
+            Easy to cancel • 14-day money-back guarantee
+          </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="w-full py-6 bg-secondary/10 text-foreground">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="flex flex-wrap justify-center gap-6 mb-6">
-            <Link href="#" className="text-sm text-foreground">
-              About Us
-            </Link>
-            <Link href="#" className="text-sm text-foreground">
-              Pricing
-            </Link>
-            <Link href="#" className="text-sm text-foreground">
-              FAQ
-            </Link>
-            <Link href="#" className="text-sm text-foreground">
-              Contact
-            </Link>
-            <Link
-              href="#"
-              className="text-sm text-foreground flex items-center"
-            >
-              LinkedIn <ArrowRight className="h-3 w-3 ml-1" />
-            </Link>
-            <Link href="#" className="text-sm text-foreground">
-              Privacy Policy
-            </Link>
-          </div>
-          <div className="border-t pt-2 flex justify-between items-center">
-            <div className="flex items-center">
-              <Logo />
-              <span className="text-sm">DevPlot</span>
-            </div>
-            <p className="text-xs text-foreground/50">
-              © {new Date().getFullYear()} DevPlot. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

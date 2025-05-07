@@ -20,30 +20,51 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         gradient:
-          "bg-gradient-to-r from-primary to-purple-600 text-primary-foreground hover:shadow-md hover:shadow-primary/20 hover:brightness-110",
-        glow: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_15px_rgba(var(--primary-rgb)/40%)]",
+          "bg-gradient-to-r from-primary to-accent text-primary-foreground hover:shadow-md hover:shadow-primary/20 hover:brightness-110 btn-shine",
+        glow: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_15px_rgba(var(--primary-rgb)/40%)] animate-pulse-glow",
         soft: "bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-sm",
         glossy:
-          "bg-primary bg-gradient-to-b from-white/10 to-transparent text-primary-foreground backdrop-blur-sm backdrop-filter hover:bg-primary/90 hover:shadow-md",
+          "bg-primary bg-gradient-to-b from-white/20 to-transparent text-primary-foreground backdrop-blur-sm backdrop-filter hover:bg-primary/90 hover:shadow-md",
+        glass:
+          "glass text-primary-foreground hover:bg-primary/20 hover:shadow-md transition-all",
+        "glass-dark":
+          "glass-dark text-primary-foreground hover:bg-primary/20 hover:shadow-md transition-all",
+        neon: "bg-primary/90 text-primary-foreground hover:shadow-[0_0_20px_rgba(var(--primary-rgb)/70%)] border border-primary/20 hover:border-primary/40 hover:brightness-110",
+        "3d": "bg-primary text-primary-foreground border-b-4 border-primary-foreground/20 active:border-b-0 active:mt-1 active:mb-[-1px] hover:brightness-110",
+        social:
+          "bg-background text-foreground hover:bg-muted/80 border border-border hover:border-accent/40 hover:shadow-sm",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-4",
+        lg: "h-11 rounded-md px-6",
         xl: "h-12 rounded-md px-10 text-base",
+        "2xl": "h-14 rounded-md px-12 text-lg",
         icon: "size-10",
         iconSm: "size-8",
+        iconLg: "size-12",
       },
       rounded: {
         default: "rounded-md",
         full: "rounded-full",
         pill: "rounded-[999px]",
+        none: "rounded-none",
+        sm: "rounded-sm",
+        lg: "rounded-lg",
+        xl: "rounded-xl",
+      },
+      animation: {
+        none: "",
+        pulse: "animate-pulse",
+        bounce: "animate-bounce-subtle",
+        gradient: "animate-gradient",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
       rounded: "default",
+      animation: "none",
     },
   }
 );
@@ -62,6 +83,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant,
       size,
       rounded,
+      animation,
       asChild = false,
       leftIcon,
       rightIcon,
@@ -73,7 +95,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, rounded, className }))}
+        className={cn(
+          buttonVariants({ variant, size, rounded, animation, className })
+        )}
         ref={ref}
         {...props}
       >
