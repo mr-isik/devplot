@@ -43,7 +43,7 @@ import {
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import { createClient } from "@/utils/supabase/server";
-import { Hero } from "@/components/landing/EnhancedHero";
+import { Hero } from "@/components/landing/Hero";
 import { FeatureShowcase } from "@/components/landing/FeatureShowcase";
 import { PricingSection } from "@/components/landing/PricingSection";
 import { UsageStats } from "@/components/landing/UsageStats";

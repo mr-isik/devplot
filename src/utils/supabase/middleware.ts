@@ -62,7 +62,7 @@ export async function updateSession(request: NextRequest) {
 
   const host = request.headers.get("host") || "";
   console.log("🏠 Checking host:", host);
-  console.log("🌐 Expected domain:", process.env.NEXT_PUBLIC_DOMAIN);
+  console.log("🌐 Expected domain:", `www.${process.env.NEXT_PUBLIC_DOMAIN}`);
 
   if (
     host === `www.${process.env.NEXT_PUBLIC_DOMAIN}` ||

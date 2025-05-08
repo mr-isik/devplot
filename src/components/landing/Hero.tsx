@@ -29,7 +29,7 @@ export function Hero() {
 
       <div className="container px-4 md:px-6 mx-auto flex flex-col md:flex-row items-center gap-12 relative z-10">
         <div className="flex-1 text-center md:text-left max-w-3xl">
-          <Badge className="mb-6 text-sm px-4 py-1.5 rounded-full glass dark:glass-dark hover:bg-primary/10 transition-colors border-border animate-fade-in font-medium">
+          <Badge className="mb-6 text-sm px-4 py-1.5 rounded-full glass text-foreground dark:glass-dark hover:bg-primary/10 transition-colors border-border animate-fade-in font-medium">
             <Sparkles className="h-3.5 w-3.5 mr-1.5" />
             <span className="font-semibold">NEW</span>: No-Code Portfolio
             Builder
@@ -45,7 +45,7 @@ export function Hero() {
                 Your Portfolio, Your Style
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-foreground/90 dark:text-foreground/90 animate-fade-in-up animation-delay-100 leading-relaxed">
+            <p className="text-xl md:text-2xl text-foreground/80 dark:text-foreground/80 animate-fade-in-up animation-delay-100 leading-relaxed">
               Stop spending weeks building portfolios. With DevPlot, create
               <span className="font-semibold text-primary">
                 {" "}
@@ -67,7 +67,7 @@ export function Hero() {
                 variant="glow"
                 className="w-full text-base px-6 py-3 h-auto shadow-lg relative overflow-hidden group rounded-xl"
               >
-                <span className="relative z-10">Get Started</span>
+                <span className="relative z-10">Start Building</span>
                 <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform relative z-10" />
               </Button>
             </Link>
@@ -105,8 +105,8 @@ export function Hero() {
             <div className="relative w-full aspect-[3/2] rounded-lg overflow-hidden border border-border/20">
               <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-black/5 to-transparent"></div>
               <Image
-                src="/portfolio-preview.webp"
-                alt="Portfolio Preview"
+                src="/themes/theme-preview.png"
+                alt="Theme Preview"
                 fill
                 className="object-cover"
               />
