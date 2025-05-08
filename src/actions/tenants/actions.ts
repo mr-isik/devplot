@@ -78,29 +78,17 @@ export const deleteTenant = async (tenant_id: number) => {
 export async function checkDomain(host: string) {
   const supabase = await createClient();
 
-  const { data: foundTenantWithDomain, error: foundTenantWithDomainError } =
-    await supabase.from("tenants").select("*").eq("domain", host).single();
+  const { data: foundTenantWithDomain } = await supabase
+    .from("tenants")
+    .select("id")
+    .eq("domain", host)
+    .single();
 
-  const {
-    data: foundTenantWithSubDomain,
-    error: foundTenantWithSubdomainError,
-  } = await supabase.from("tenants").select("*").eq("subdomain", host).single();
-
-  if (foundTenantWithSubdomainError) {
-    console.error("Tenant retrieval error:", foundTenantWithSubdomainError);
-    return {
-      error: "Tenant retrieval error",
-      data: null,
-    };
-  }
-
-  if (foundTenantWithDomainError) {
-    console.error("Tenant retrieval error:", foundTenantWithDomainError);
-    return {
-      error: "Tenant retrieval error",
-      data: null,
-    };
-  }
+  const { data: foundTenantWithSubDomain } = await supabase
+    .from("tenants")
+    .select("id")
+    .eq("subdomain", host)
+    .single();
 
   if (foundTenantWithDomain) {
     return { error: null, data: foundTenantWithDomain };
