@@ -281,7 +281,7 @@ export default function PublishStep({
       domainSchema.shape.customDomain.parse(value);
       setCustomDomainError(null);
       const { data: isDomainExist } = await checkDomain(value);
-      console.log(isDomainExist.id, tenantId);
+      console.log(isDomainExist?.id, tenantId);
       if (isDomainExist && isDomainExist.id !== tenantId) {
         setCustomDomainError("This domain is already taken");
         return false;
