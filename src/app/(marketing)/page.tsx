@@ -55,6 +55,12 @@ export async function generateMetadata() {
     title: "DevPlot - Developer Portfolio Builder",
     description:
       "Stand out in the tech industry with a professional portfolio that showcases your skills and projects - built in minutes",
+
+    openGraph: {
+      title: "DevPlot - Developer Portfolio Builder",
+      description:
+        "Stand out in the tech industry with a professional portfolio that showcases your skills and projects - built in minutes",
+    },
   };
 }
 
