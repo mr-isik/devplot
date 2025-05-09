@@ -15,6 +15,7 @@ import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { planRedirect } from "@/actions/plans/actions";
 
 export function PricingSection({ plans }: { plans: Plan[] }) {
   const [isYearly, setIsYearly] = useState(false);
@@ -23,6 +24,11 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
     const isYearlyPlan = plan.recurrence.toLowerCase().includes("year");
     return isYearly ? isYearlyPlan : !isYearlyPlan;
   });
+
+  const handlePlanClick = async (product_id: string) => {
+    const checkout = await planRedirect(product_id);
+    window.location.href = checkout.url;
+  };
 
   return (
     <section className="w-full py-20 bg-muted/30 relative overflow-hidden">
@@ -155,16 +161,15 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
               </div>
 
               <CardFooter className="relative z-10">
-                <Link href="/" className="w-full">
-                  <Button
-                    variant={plan.featured ? "default" : "outline"}
-                    size="lg"
-                    className="w-full group-hover:shadow-md transition-shadow duration-300"
-                    rounded={plan.featured ? "lg" : "default"}
-                  >
-                    {plan.button_text}
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() => handlePlanClick(plan.product_id)}
+                  variant={plan.featured ? "default" : "outline"}
+                  size="lg"
+                  className="w-full group-hover:shadow-md transition-shadow duration-300"
+                  rounded={plan.featured ? "lg" : "default"}
+                >
+                  {plan.button_text}
+                </Button>
               </CardFooter>
             </Card>
           ))}
