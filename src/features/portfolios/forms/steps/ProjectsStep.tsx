@@ -33,6 +33,7 @@ import {
   updateProject,
 } from "@/actions/projects/actions";
 import Image from "next/image";
+import Loader from "@/components/globals/Loader";
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
 
@@ -526,11 +527,7 @@ export default function ProjectsStep({ portfolioId }: ProjectsStepProps) {
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting
-                  ? "Saving..."
-                  : editingIndex !== null
-                    ? "Update"
-                    : "Save"}
+                <Loader state={isSubmitting}>Save</Loader>
               </Button>
             </DialogFooter>
           </form>
