@@ -12,8 +12,6 @@ import Link from "next/link";
 const FAQSection = () => {
   return (
     <section className="w-full py-20 bg-gradient-to-br from-accent/5 via-background to-primary/5 relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid-small-black/[0.03] dark:bg-grid-small-white/[0.03]"></div>
-
       <div className="container px-4 md:px-6 mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <Badge className="mb-4 px-3 py-1 text-sm">
