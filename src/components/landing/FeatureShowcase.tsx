@@ -12,6 +12,14 @@ import Link from "next/link";
 
 const features = [
   {
+    icon: <Code className="size-6 text-primary" />,
+    title: "Code Integration",
+    description:
+      "Connect your GitHub profile and automatically import your code and projects to your portfolio",
+    color: "from-primary/10 to-primary/5",
+    gradient: "from-primary/80 to-primary/40",
+  },
+  {
     icon: <PaintBucket className="size-6 text-accent" />,
     title: "Customizable Themes",
     description:
@@ -20,27 +28,35 @@ const features = [
     gradient: "from-accent/80 to-accent/40",
   },
   {
-    icon: <Rocket className="size-6 text-accent" />,
+    icon: <Zap className="size-6 text-chart-5" />,
+    title: "AI-Powered Content",
+    description:
+      "Create professional content and project descriptions with artificial intelligence",
+    color: "from-chart-5/10 to-chart-5/5",
+    gradient: "from-chart-5/80 to-chart-5/40",
+  },
+  {
+    icon: <Rocket className="size-6 text-chart-3" />,
     title: "Rapid Deployment",
     description:
       "Publish your portfolio with a single click and gain a professional look with a custom domain",
-    color: "from-accent/10 to-accent/5",
-    gradient: "from-accent/80 to-accent/40",
+    color: "from-chart-3/10 to-chart-3/5",
+    gradient: "from-chart-3/80 to-chart-3/40",
   },
   {
-    icon: <Globe className="size-6 text-accent" />,
+    icon: <Globe className="size-6 text-chart-2" />,
     title: "SEO Optimization",
     description: "Be more easily discoverable by employers and recruiters",
-    color: "from-accent/10 to-accent/5",
-    gradient: "from-accent/80 to-accent/40",
+    color: "from-chart-2/10 to-chart-2/5",
+    gradient: "from-chart-2/80 to-chart-2/40",
   },
   {
-    icon: <Shield className="size-6 text-accent" />,
+    icon: <Shield className="size-6 text-chart-4" />,
     title: "Security and Privacy",
     description:
       "Your data is secure, with full control over what is displayed",
-    color: "from-accent/10 to-accent/5",
-    gradient: "from-accent/80 to-accent/40",
+    color: "from-chart-4/10 to-chart-4/5",
+    gradient: "from-chart-4/80 to-chart-4/40",
   },
 ];
 
@@ -68,7 +84,7 @@ export function FeatureShowcase() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
@@ -93,7 +109,7 @@ export function FeatureShowcase() {
                   <div
                     className={`group-hover:scale-110 transition-transform duration-300 size-14 flex items-center justify-center rounded-lg bg-gradient-to-br ${feature.color} border border-border/30 shadow-sm`}
                   >
-                    <div className="size-12 rounded-lg dark:glass-dark flex items-center justify-center">
+                    <div className="size-12 rounded-lg glass dark:glass-dark flex items-center justify-center">
                       {feature.icon}
                     </div>
                   </div>

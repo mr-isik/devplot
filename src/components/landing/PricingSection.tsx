@@ -1,5 +1,3 @@
-"use client";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,29 +8,85 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Plan } from "@/features/plans/types";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ZapIcon, Sparkles, Star } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { planRedirect } from "@/actions/plans/actions";
 
-export function PricingSection({ plans }: { plans: Plan[] }) {
-  const [isYearly, setIsYearly] = useState(false);
+const tiers = [
+  {
+    name: "Free",
+    description:
+      "Perfect for getting started, access to basic portfolio features",
+    price: "$0",
+    priceText: "free forever",
+    features: [
+      "1 portfolio creation",
+      "5 projects",
+      "Basic themes",
+      "DevPlot branding",
+      "Community support",
+    ],
+    buttonText: "Start Free",
+    buttonVariant: "outline" as const,
+    href: "/sign-up",
+    gradient: "from-muted-foreground/10 via-muted-foreground/5 to-transparent",
+    icon: <Star className="size-4 text-muted-foreground" />,
+  },
+  {
+    name: "Pro",
+    description: "Most popular option for professional developers",
+    price: "$19",
+    priceText: "per month",
+    badge: "Popular",
+    features: [
+      "5 portfolio creations",
+      "Unlimited projects",
+      "All premium themes",
+      "Custom domain",
+      "AI content generation",
+      "GitHub integration",
+      "SEO optimization",
+      "Priority support",
+    ],
+    buttonText: "Upgrade to Pro",
+    buttonVariant: "glow" as const,
+    href: "/sign-up?plan=pro",
+    featured: true,
+    gradient: "from-primary/30 via-accent/20 to-transparent",
+    icon: <ZapIcon className="size-4 text-primary" />,
+  },
+  {
+    name: "Team",
+    description: "Top-tier features for large teams and companies",
+    price: "$39",
+    priceText: "per month",
+    features: [
+      "10 team members",
+      "Unlimited portfolios",
+      "Unlimited projects",
+      "All premium themes",
+      "Multiple custom domains",
+      "AI content generation",
+      "Team management panel",
+      "Advanced analytics",
+      "24/7 priority support",
+    ],
+    buttonText: "View Team Plan",
+    buttonVariant: "default" as const,
+    href: "/contact",
+    gradient: "from-chart-5/20 via-chart-5/10 to-transparent",
+    icon: <Sparkles className="size-4 text-chart-5" />,
+  },
+];
 
-  const filteredPlans = plans.filter((plan) => {
-    const isYearlyPlan = plan.recurrence.toLowerCase().includes("year");
-    return isYearly ? isYearlyPlan : !isYearlyPlan;
-  });
-
-  const handlePlanClick = async (product_id: string) => {
-    const checkout = await planRedirect(product_id);
-    window.location.href = checkout.url;
-  };
-
+export function PricingSection() {
   return (
     <section className="w-full py-20 bg-muted/30 relative overflow-hidden">
-      <div className="container max-w-4xl px-4 md:px-6 mx-auto relative z-10">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-grid-small-black/[0.05] dark:bg-grid-small-white/[0.05]"></div>
+      <div className="absolute top-0 right-0 w-1/4 h-1/4 bg-gradient-to-br from-primary/20 to-primary/0 blur-3xl opacity-50 rounded-full"></div>
+      <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-gradient-to-br from-accent/20 to-accent/0 blur-3xl opacity-50 rounded-full"></div>
+
+      <div className="container px-4 md:px-6 mx-auto relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="outline" className="mb-4 px-3 py-1 text-sm">
             Pricing
@@ -44,50 +98,14 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
             Choose a plan that fits your needs - a good portfolio always pays
             for itself.
           </p>
-
-          <div className="flex items-center justify-center mb-8">
-            <div className="relative flex items-center p-1 rounded-full bg-muted/50 backdrop-blur-sm border border-border/50">
-              <div
-                className={cn(
-                  "absolute h-[calc(100%-8px)] w-[calc(50%-4px)] rounded-full bg-background shadow-sm transition-all duration-300 ease-in-out",
-                  isYearly ? "translate-x-[calc(100%-2px)]" : "translate-x-1"
-                )}
-              />
-              <button
-                onClick={() => setIsYearly(false)}
-                className={cn(
-                  "relative px-6 py-2 text-sm font-medium rounded-full transition-colors duration-200 z-10",
-                  !isYearly
-                    ? "text-primary"
-                    : "text-foreground/60 hover:text-foreground"
-                )}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setIsYearly(true)}
-                className={cn(
-                  "relative px-6 py-2 text-sm font-medium rounded-full transition-colors duration-200 z-10",
-                  isYearly
-                    ? "text-primary"
-                    : "text-foreground/60 hover:text-foreground"
-                )}
-              >
-                Yearly
-                <span className="absolute -top-5 -right-8 text-[10px] font-medium bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
-                  2 Months Free
-                </span>
-              </button>
-            </div>
-          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredPlans.map((plan, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {tiers.map((tier, index) => (
             <Card
               key={index}
-              className={`relative overflow-hidden animate-fade-in group transition-all duration-300 justify-between flex flex-col ${
-                plan.featured
+              className={`relative overflow-hidden animate-fade-in group transition-all duration-300 ${
+                tier.featured
                   ? "border-primary/30 shadow-lg hover:shadow-xl"
                   : "border-border/80 hover:shadow-md"
               }`}
@@ -95,81 +113,77 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
             >
               {/* Card background effects */}
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${
-                  plan.featured
-                    ? "from-primary/5 via-accent/5 to-chart-5/5"
-                    : "from-background to-muted"
-                } opacity-30 group-hover:opacity-50 transition-opacity duration-500`}
+                className={`absolute inset-0 bg-gradient-to-br ${tier.gradient} opacity-30 group-hover:opacity-50 transition-opacity duration-500`}
               ></div>
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
               {/* Animated background orbs */}
               <div className="absolute -bottom-16 -right-16 size-32 rounded-full bg-gradient-to-br from-primary/20 to-transparent blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
               <div className="absolute -top-16 -left-16 size-32 rounded-full bg-gradient-to-br from-accent/20 to-transparent blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
-              <div>
-                <CardHeader className="relative z-10">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                      {plan.name}
-                    </CardTitle>
 
-                    {plan.featured && (
-                      <Badge
-                        variant="default"
-                        className="text-sm absolute top-2 right-2"
-                      >
-                        Most Popular
-                      </Badge>
-                    )}
+              {tier.badge && (
+                <div className="absolute top-0 right-0 z-10">
+                  <Badge
+                    variant="default"
+                    className="rounded-tl-none rounded-br-none m-0 px-3 py-1 bg-primary/90 animate-pulse-glow shadow-sm"
+                  >
+                    {tier.badge}
+                  </Badge>
+                </div>
+              )}
 
-                    <div className="size-8 rounded-full glass dark:glass-dark backdrop-blur-md flex items-center justify-center border border-border/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="size-5 rounded-full bg-gradient-to-br from-primary to-accent opacity-80"></div>
+              <CardHeader className="relative z-10">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-2xl font-bold flex items-center gap-2">
+                    {tier.name}
+                    <div className="size-6 rounded-full flex items-center justify-center bg-gradient-to-br from-background to-muted p-1 group-hover:scale-110 transition-transform">
+                      {tier.icon}
                     </div>
-                  </div>
-                </CardHeader>
+                  </CardTitle>
 
-                <CardContent className="space-y-6 relative z-10">
-                  <div className="flex items-center text-foreground relative">
-                    <span className="text-4xl font-bold group-hover:text-primary transition-colors">
-                      ${isYearly ? (plan.price / 12).toFixed(1) : plan.price}
-                    </span>
-
-                    <div className="flex flex-col">
-                      {plan.original_price && (
-                        <span className="ml-2 text-foreground/70 line-through text-xl">
-                          ${plan.original_price / 12}
-                        </span>
-                      )}
-                      <span className="ml-2 text-sm text-foreground/70">
-                        / Month
-                      </span>
-                    </div>
+                  <div className="size-8 rounded-full glass dark:glass-dark backdrop-blur-md flex items-center justify-center border border-border/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="size-5 rounded-full bg-gradient-to-br from-primary to-accent opacity-80"></div>
                   </div>
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center text-foreground group-hover:translate-x-1 transition-transform duration-300 opacity-80 hover:opacity-100"
-                        style={{ transitionDelay: `${idx * 50}ms` }}
-                      >
-                        <CheckCircle2 className="h-5 w-5 mr-3 flex-shrink-0 text-chart-5" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </div>
+                </div>
+                <CardDescription className="text-foreground/70 group-hover:text-foreground/90 transition-colors">
+                  {tier.description}
+                </CardDescription>
+              </CardHeader>
+
+              <CardContent className="space-y-6 relative z-10">
+                <div className="flex items-baseline text-foreground">
+                  <span className="text-4xl font-bold group-hover:text-primary transition-colors">
+                    {tier.price}
+                  </span>
+                  <span className="ml-2 text-sm text-foreground/70">
+                    / {tier.priceText}
+                  </span>
+                </div>
+                <ul className="space-y-3">
+                  {tier.features.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="flex items-center text-foreground group-hover:translate-x-1 transition-transform duration-300 opacity-80 hover:opacity-100"
+                      style={{ transitionDelay: `${idx * 50}ms` }}
+                    >
+                      <CheckCircle2 className="h-5 w-5 mr-3 flex-shrink-0 text-chart-5" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
 
               <CardFooter className="relative z-10">
-                <Button
-                  onClick={() => handlePlanClick(plan.product_id)}
-                  variant={plan.featured ? "default" : "outline"}
-                  size="lg"
-                  className="w-full group-hover:shadow-md transition-shadow duration-300"
-                  rounded={plan.featured ? "lg" : "default"}
-                >
-                  {plan.button_text}
-                </Button>
+                <Link href={tier.href} className="w-full">
+                  <Button
+                    variant={tier.buttonVariant}
+                    size="lg"
+                    className="w-full group-hover:shadow-md transition-shadow duration-300"
+                    rounded={tier.featured ? "lg" : "default"}
+                  >
+                    {tier.buttonText}
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}

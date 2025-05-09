@@ -22,6 +22,8 @@ import { FaGithub } from "react-icons/fa";
 let baseElegantThemeStyles = `
   .elegant-theme {
     /* Base Color Variables - Will be adjusted based on user customization */
+    --elegant-gold: #b38600;
+    --elegant-gold-light: #d9b036;
     --elegant-cream: #fdf8e9;
     --elegant-cream-dark: #f5edd6;
     --elegant-brown: #2a1d05;
@@ -36,14 +38,15 @@ let baseElegantThemeStyles = `
     --elegant-section-bg: #fdf8e9;
     --elegant-gradient: linear-gradient(to right, var(--elegant-accent), var(--elegant-accent-light));
     --elegant-overlay: rgba(253, 248, 233, 0.8);
+    --elegant-shadow: 0 10px 30px rgba(179, 134, 0, 0.1);
+    --elegant-accent-rgb: 179, 134, 0;
     
-    /* Enhanced premium variables - Now using accent RGB values */
-    --elegant-shadow: 0 10px 30px rgba(var(--elegant-accent-rgb), 0.1);
-    --elegant-shadow-intense: 0 20px 50px rgba(var(--elegant-accent-rgb), 0.18);
-    --elegant-glow: 0 0 25px rgba(var(--elegant-accent-rgb), 0.2);
-    --elegant-glow-intense: 0 0 35px rgba(var(--elegant-accent-rgb), 0.35);
+    /* Enhanced premium variables */
+    --elegant-shadow-intense: 0 20px 50px rgba(179, 134, 0, 0.18);
+    --elegant-glow: 0 0 25px rgba(179, 134, 0, 0.2);
+    --elegant-glow-intense: 0 0 35px rgba(179, 134, 0, 0.35);
     --elegant-gradient-shimmer: linear-gradient(90deg, var(--elegant-accent), var(--elegant-accent-light), var(--elegant-accent));
-    --elegant-gradient-conic: conic-gradient(from 0deg at 50% 50%, var(--elegant-accent), var(--elegant-accent-light), var(--elegant-cream-dark), var(--elegant-accent));
+    --elegant-gradient-conic: conic-gradient(from 0deg at 50% 50%, var(--elegant-gold), var(--elegant-gold-light), var(--elegant-cream-dark), var(--elegant-gold));
     --elegant-glass: rgba(255, 255, 255, 0.08);
     --elegant-glass-dark: rgba(0, 0, 0, 0.05);
     --elegant-backdrop-blur: blur(12px);
@@ -386,19 +389,7 @@ let baseElegantThemeStyles = `
   }
   
   .elegant-theme .accent-text {
-    background: linear-gradient(to right, var(--elegant-accent), var(--elegant-accent-light), var(--elegant-accent));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    display: inline-block;
-    position: relative;
-    text-shadow: 0 2px 10px rgba(var(--elegant-accent-rgb), 0.1);
-    transition: all 0.3s ease;
-  }
-  
-  .elegant-theme .accent-text:hover {
-    background-position: right center;
-    text-shadow: 0 0 15px rgba(var(--elegant-accent-rgb), 0.3);
+    color: var(--elegant-accent);
   }
   
   .elegant-theme .gold-text {
@@ -634,7 +625,7 @@ let baseElegantThemeStyles = `
     position: relative;
     width: 100%;
     height: 1px;
-    background: linear-gradient(to right, transparent, var(--elegant-accent), transparent);
+    background: linear-gradient(to right, transparent, var(--elegant-gold), transparent);
     margin: 2rem 0;
     opacity: 0.7;
     overflow: hidden;
@@ -667,7 +658,7 @@ let baseElegantThemeStyles = `
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 1rem;
-    color: var(--elegant-accent);
+    color: var(--elegant-gold);
     background: var(--elegant-bg);
     padding: 0 1rem;
   }
@@ -710,7 +701,7 @@ let baseElegantThemeStyles = `
   .elegant-theme .decorative-corners:hover .corner-bottom-left {
     width: 30px;
     height: 30px;
-    border-color: var(--elegant-accent-light);
+    border-color: var(--elegant-gold-light);
     box-shadow: var(--elegant-glow);
   }
 
@@ -887,7 +878,7 @@ let baseElegantThemeStyles = `
   /* New animated background elements */
   .elegant-theme .animated-bg-particle {
     position: absolute;
-    background: var(--elegant-accent);
+    background: var(--elegant-gold);
     border-radius: 50%;
     opacity: 0.2;
     pointer-events: none;
@@ -1148,13 +1139,13 @@ let baseElegantThemeStyles = `
   }
   
   .elegant-theme::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, var(--elegant-accent), var(--elegant-accent-light));
+    background: linear-gradient(to bottom, var(--elegant-gold), var(--elegant-gold-light));
     border-radius: 6px;
     border: 3px solid var(--elegant-bg);
   }
   
   .elegant-theme::-webkit-scrollbar-thumb:hover {
-    background: var(--elegant-accent);
+    background: var(--elegant-gold);
   }
   
   /* Enhanced links styling */
@@ -1227,7 +1218,7 @@ let baseElegantThemeStyles = `
     right: -2px;
     bottom: -2px;
     z-index: -1;
-    background: linear-gradient(215deg, var(--elegant-accent), var(--elegant-accent-light), var(--elegant-accent));
+    background: linear-gradient(215deg, var(--elegant-gold), var(--elegant-gold-light), var(--elegant-gold));
     background-size: 200% 200%;
     animation: elegant-shimmer 6s linear infinite;
     opacity: 0;
@@ -1302,7 +1293,7 @@ let baseElegantThemeStyles = `
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, var(--elegant-accent), transparent 70%);
+    background: linear-gradient(45deg, var(--elegant-gold), transparent 70%);
     opacity: 0;
     transition: opacity 0.5s ease;
     z-index: 1;
@@ -1614,9 +1605,8 @@ const ElegantTheme = ({
     // CSS değişkenleri için özel stil eklemesi
     const customStyles = `
       .elegant-theme {
-        --elegant-accent: ${accentColor};
-        --elegant-accent-light: ${accentLight};
-        --elegant-accent-rgb: ${accentRgb};
+        --elegant-gold: ${accentColor};
+        --elegant-gold-light: ${accentLight};
         --elegant-cream: ${bgSecondaryColor};
         --elegant-cream-dark: ${borderColor};
         --elegant-brown: ${textColor};
@@ -1624,20 +1614,17 @@ const ElegantTheme = ({
         --elegant-bg: ${bgColor};
         --elegant-text-primary: ${textColor};
         --elegant-text-secondary: ${textSecondaryColor};
+        --elegant-accent: ${accentColor};
+        --elegant-accent-light: ${accentLight};
+        --elegant-accent-rgb: ${accentRgb};
         --elegant-border: ${borderColor};
         --elegant-card-bg: ${bgColor};
         --elegant-section-bg: ${bgSecondaryColor};
         --elegant-gradient: linear-gradient(to right, ${accentColor}, ${accentLight});
         --elegant-overlay: ${bgSecondaryColor}cc;
         --elegant-shadow: 0 10px 30px rgba(${accentRgb}, 0.1);
-        --elegant-shadow-intense: 0 20px 50px rgba(${accentRgb}, 0.18);
-        --elegant-glow: 0 0 25px rgba(${accentRgb}, 0.2);
-        --elegant-glow-intense: 0 0 35px rgba(${accentRgb}, 0.35);
-        --elegant-gradient-shimmer: linear-gradient(90deg, ${accentColor}, ${accentLight}, ${accentColor});
-        --elegant-gradient-conic: conic-gradient(from 0deg at 50% 50%, ${accentColor}, ${accentLight}, ${bgSecondaryColor}, ${accentColor});
-        --elegant-glass: rgba(255, 255, 255, 0.08);
-        --elegant-glass-dark: rgba(0, 0, 0, 0.05);
-        --elegant-backdrop-blur: blur(12px);
+        --elegant-glow: 0 0 15px rgba(${accentRgb}, 0.3);
+        --elegant-border-rgb: ${hexToRgb(borderColor)};
       }
       
       .elegant-theme.dark {
@@ -1906,7 +1893,7 @@ const ElegantTheme = ({
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="section-title accent-text text-3xl font-bold">
+                <h2 className="section-title golden-text text-3xl font-bold">
                   About Me
                 </h2>
                 <p>Get to know me better</p>
@@ -1942,7 +1929,7 @@ const ElegantTheme = ({
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="section-title accent-text text-3xl font-bold">
+                <h2 className="section-title golden-text text-3xl font-bold">
                   Skills
                 </h2>
                 <p>Technologies and tools I work with</p>
@@ -2005,7 +1992,7 @@ const ElegantTheme = ({
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="section-title accent-text text-3xl font-bold">
+                <h2 className="section-title golden-text text-3xl font-bold">
                   Education
                 </h2>
                 <p>My academic background and qualifications</p>
@@ -2061,7 +2048,7 @@ const ElegantTheme = ({
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="section-title accent-text text-3xl font-bold">
+                <h2 className="section-title golden-text text-3xl font-bold">
                   Experience
                 </h2>
                 <p>My professional journey and accomplishments</p>
@@ -2150,7 +2137,7 @@ const ElegantTheme = ({
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="section-title accent-text text-3xl font-bold">
+                <h2 className="section-title golden-text text-3xl font-bold">
                   Projects
                 </h2>
                 <p>Showcase of my work and achievements</p>

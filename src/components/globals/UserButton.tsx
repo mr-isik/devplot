@@ -8,11 +8,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CreditCard, LifeBuoy, LogOut, Settings, User } from "lucide-react";
+import { User } from "@supabase/supabase-js";
+import {
+  CreditCard,
+  LifeBuoy,
+  LogOut,
+  Settings,
+  UserCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export function UserButton({ user }: any) {
+type UserButtonProps = {
+  user: User;
+};
+
+export function UserButton({ user }: UserButtonProps) {
   const router = useRouter();
   const handleSignout = async () => {
     await signout();
@@ -22,8 +33,8 @@ export function UserButton({ user }: any) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary" size="icon" className="mr-2 rounded-full">
-          <User size={24} />
+        <Button variant="ghost" size="icon" className="mr-2 rounded-full">
+          <UserCircle size={24} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-52 p-2" align="end" sideOffset={8}>
