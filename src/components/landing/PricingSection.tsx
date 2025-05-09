@@ -2,33 +2,19 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Plan } from "@/features/plans/types";
-import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { planRedirect } from "@/actions/plans/actions";
+import { PricingCard } from "./PricingCard";
 
 export function PricingSection({ plans }: { plans: Plan[] }) {
-  const [isYearly, setIsYearly] = useState(false);
+  const [isYearly, setIsYearly] = useState(true);
 
   const filteredPlans = plans.filter((plan) => {
     const isYearlyPlan = plan.recurrence.toLowerCase().includes("year");
     return isYearly ? isYearlyPlan : !isYearlyPlan;
   });
-
-  const handlePlanClick = async (product_id: string) => {
-    const checkout = await planRedirect(product_id);
-    window.location.href = checkout.url;
-  };
 
   return (
     <section className="w-full py-20 bg-muted/30 relative overflow-hidden">
@@ -84,94 +70,12 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredPlans.map((plan, index) => (
-            <Card
+            <PricingCard
               key={index}
-              className={`relative overflow-hidden animate-fade-in group transition-all duration-300 justify-between flex flex-col ${
-                plan.featured
-                  ? "border-primary/30 shadow-lg hover:shadow-xl"
-                  : "border-border/80 hover:shadow-md"
-              }`}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {/* Card background effects */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${
-                  plan.featured
-                    ? "from-primary/5 via-accent/5 to-chart-5/5"
-                    : "from-background to-muted"
-                } opacity-30 group-hover:opacity-50 transition-opacity duration-500`}
-              ></div>
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-              {/* Animated background orbs */}
-              <div className="absolute -bottom-16 -right-16 size-32 rounded-full bg-gradient-to-br from-primary/20 to-transparent blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
-              <div className="absolute -top-16 -left-16 size-32 rounded-full bg-gradient-to-br from-accent/20 to-transparent blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
-              <div>
-                <CardHeader className="relative z-10">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                      {plan.name}
-                    </CardTitle>
-
-                    {plan.featured && (
-                      <Badge
-                        variant="default"
-                        className="text-sm absolute top-2 right-2"
-                      >
-                        Most Popular
-                      </Badge>
-                    )}
-
-                    <div className="size-8 rounded-full glass dark:glass-dark backdrop-blur-md flex items-center justify-center border border-border/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="size-5 rounded-full bg-gradient-to-br from-primary to-accent opacity-80"></div>
-                    </div>
-                  </div>
-                </CardHeader>
-
-                <CardContent className="space-y-6 relative z-10">
-                  <div className="flex items-center text-foreground relative">
-                    <span className="text-4xl font-bold group-hover:text-primary transition-colors">
-                      ${isYearly ? (plan.price / 12).toFixed(1) : plan.price}
-                    </span>
-
-                    <div className="flex flex-col">
-                      {plan.original_price && (
-                        <span className="ml-2 text-foreground/70 line-through text-xl">
-                          ${plan.original_price / 12}
-                        </span>
-                      )}
-                      <span className="ml-2 text-sm text-foreground/70">
-                        / Month
-                      </span>
-                    </div>
-                  </div>
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-center text-foreground group-hover:translate-x-1 transition-transform duration-300 opacity-80 hover:opacity-100"
-                        style={{ transitionDelay: `${idx * 50}ms` }}
-                      >
-                        <CheckCircle2 className="h-5 w-5 mr-3 flex-shrink-0 text-chart-5" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </div>
-
-              <CardFooter className="relative z-10">
-                <Button
-                  onClick={() => handlePlanClick(plan.product_id)}
-                  variant={plan.featured ? "default" : "outline"}
-                  size="lg"
-                  className="w-full group-hover:shadow-md transition-shadow duration-300"
-                  rounded={plan.featured ? "lg" : "default"}
-                >
-                  {plan.button_text}
-                </Button>
-              </CardFooter>
-            </Card>
+              plan={plan}
+              isYearly={isYearly}
+              index={index}
+            />
           ))}
         </div>
 
