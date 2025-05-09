@@ -285,33 +285,45 @@ export default function EditPortfolioForm({
               </div>
 
               {/* Desktop Sidebar - Hidden on mobile */}
-              <div className="hidden sm:block sm:min-w-[200px] sm:max-w-[250px] sm:pr-6 sticky top-2">
-                <TabsList className="grid h-auto w-full grid-cols-1 sm:justify-start">
-                  {STEPS.map((step) => (
-                    <TabsTrigger
-                      key={step.id}
-                      value={step.id}
-                      className="h-auto px-4 py-3 data-[state=active]:bg-muted sm:w-full sm:justify-start"
-                    >
-                      <div className="flex items-center">
-                        {step.icon}
-                        <span className="ml-2">{step.title}</span>
-                      </div>
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-
-                <div className="space-y-2 p-4">
-                  {activeTab !== STEPS[STEPS.length - 1].id ? (
-                    <>
-                      <Button
-                        variant="default"
-                        className="w-full"
-                        onClick={() => handleStepNavigation("next")}
+              <div className="hidden sm:block sm:min-w-[200px] sm:max-w-[250px] sm:pr-6">
+                <div className="flex flex-col sticky top-2">
+                  <TabsList className="grid h-auto w-full grid-cols-1 sm:justify-start">
+                    {STEPS.map((step) => (
+                      <TabsTrigger
+                        key={step.id}
+                        value={step.id}
+                        className="h-auto px-4 py-3 data-[state=active]:bg-muted sm:w-full sm:justify-start"
                       >
-                        Continue
-                      </Button>
-                      {!isFirstStep && (
+                        <div className="flex items-center">
+                          {step.icon}
+                          <span className="ml-2">{step.title}</span>
+                        </div>
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+
+                  <div className="space-y-2 p-4">
+                    {activeTab !== STEPS[STEPS.length - 1].id ? (
+                      <>
+                        <Button
+                          variant="default"
+                          className="w-full"
+                          onClick={() => handleStepNavigation("next")}
+                        >
+                          Continue
+                        </Button>
+                        {!isFirstStep && (
+                          <Button
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => handleStepNavigation("prev")}
+                          >
+                            Back
+                          </Button>
+                        )}
+                      </>
+                    ) : (
+                      <>
                         <Button
                           variant="outline"
                           className="w-full"
@@ -319,53 +331,43 @@ export default function EditPortfolioForm({
                         >
                           Back
                         </Button>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={() => handleStepNavigation("prev")}
-                      >
-                        Back
-                      </Button>
-                    </>
-                  )}
-                  <AlertDialog
-                    open={showDeleteConfirm}
-                    onOpenChange={setShowDeleteConfirm}
-                  >
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="gap-1.5 mt-2 w-full text-destructive"
-                      >
-                        <TrashIcon className="size-4" />
-                        Delete Portfolio
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete your portfolio and all associated data.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={handleDeletePortfolio}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      </>
+                    )}
+                    <AlertDialog
+                      open={showDeleteConfirm}
+                      onOpenChange={setShowDeleteConfirm}
+                    >
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="gap-1.5 mt-2 w-full text-destructive"
                         >
-                          <Loader state={isSubmitting}>Delete</Loader>
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                          <TrashIcon className="size-4" />
+                          Delete Portfolio
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your portfolio and all associated data.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleDeletePortfolio}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            <Loader state={isSubmitting}>Delete</Loader>
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
                 </div>
               </div>
 
