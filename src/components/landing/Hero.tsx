@@ -73,7 +73,7 @@ export function Hero() {
             </Link>
             <Link href="/themes" className="flex items-center gap-2">
               <Button
-                variant="glass"
+                variant="secondary"
                 size="lg"
                 className="w-full text-base px-6 py-3 h-auto rounded-xl"
               >
