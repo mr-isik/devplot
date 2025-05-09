@@ -26,7 +26,7 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
 
   return (
     <section className="w-full py-20 bg-muted/30 relative overflow-hidden">
-      <div className="container max-w-6xl px-4 md:px-6 mx-auto relative z-10">
+      <div className="container max-w-4xl px-4 md:px-6 mx-auto relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="outline" className="mb-4 px-3 py-1 text-sm">
             Pricing
@@ -68,7 +68,7 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
                 )}
               >
                 Yearly
-                <span className="absolute -top-4 -right-4 text-[10px] font-medium bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
+                <span className="absolute -top-5 -right-8 text-[10px] font-medium bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
                   2 Months Free
                 </span>
               </button>
@@ -112,7 +112,7 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
                         variant="default"
                         className="text-sm absolute top-2 right-2"
                       >
-                        Featured
+                        Most Popular
                       </Badge>
                     )}
 

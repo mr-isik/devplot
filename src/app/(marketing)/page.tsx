@@ -18,6 +18,7 @@ import {
 import Link from "next/link";
 import { Hero } from "@/components/landing/Hero";
 import { FeatureShowcase } from "@/components/landing/FeatureShowcase";
+import { PortfolioContent } from "@/components/landing/PortfolioContent";
 import Image from "next/image";
 import FAQSection from "@/components/landing/FAQSection";
 
@@ -106,6 +107,9 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* Portfolio Content Section */}
+      <PortfolioContent />
 
       {/* Theme Preview Section */}
       <section className="w-full py-20 bg-muted/30">
