@@ -23,7 +23,7 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
 
   return (
     <section className="w-full py-20 bg-muted/30 relative overflow-hidden">
-      <div className="container max-w-6xl px-4 md:px-6 mx-auto relative z-10">
+      <div className="container max-w-4xl px-4 md:px-6 mx-auto relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="outline" className="mb-4 px-3 py-1 text-sm">
             Pricing
