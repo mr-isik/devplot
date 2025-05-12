@@ -2,6 +2,7 @@ import { Checkout } from "@/components/landing/Checkout";
 import { getUser } from "@/actions/users/actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlanSummary } from "@/components/checkout/PlanSummary";
+import { redirect } from "next/navigation";
 
 const CheckoutPage = async () => {
   const { userData } = await getUser();
@@ -14,17 +15,7 @@ const CheckoutPage = async () => {
       : undefined;
 
   if (!userData?.[0]) {
-    return (
-      <div className="container max-w-7xl mx-auto px-4 py-8">
-        <Card>
-          <CardContent className="py-8">
-            <p className="text-center text-muted-foreground">
-              Please sign in to continue with checkout
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return redirect("/sign-in");
   }
 
   return (
