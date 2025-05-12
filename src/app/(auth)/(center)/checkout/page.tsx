@@ -19,24 +19,17 @@ const CheckoutPage = async () => {
   }
 
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left Column - Plan Details */}
-        <PlanSummary country={country} />
+    <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-2">
+      {/* Left Column - Plan Details */}
+      <PlanSummary country={country} />
 
-        {/* Right Column - Checkout Component */}
-        <div className="lg:sticky lg:top-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold">
-                Complete Payment
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="checkout-container">
-              <Checkout user={userData[0]} />
-            </CardContent>
-          </Card>
-        </div>
+      {/* Right Column - Checkout Component */}
+      <div className="lg:sticky lg:top-8 h-full w-full flex justify-center items-center">
+        <Card className="bg-transparent border-none w-full">
+          <CardContent className="checkout-container">
+            <Checkout user={userData[0]} />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
