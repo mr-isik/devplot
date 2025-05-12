@@ -8,7 +8,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
   return (
     <>
       {/* @ts-ignore */}
-      <Navbar user={userData} />
+      <Navbar user={userData?.[0]} />
       {props.children}
       <Footer />
     </>

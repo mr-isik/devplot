@@ -39,7 +39,7 @@ export function PricingCard({ plan, isYearly, index }: PricingCardProps) {
     return isYearly ? isYearlyPrice : !isYearlyPrice;
   });
 
-  const handlePlanClick = async (priceId: string, planId: string) => {
+  const handlePlanClick = async (priceId: string, planId: number) => {
     try {
       setIsLoading(true);
       const checkoutLink = `/checkout?priceId=${priceId}&planId=${planId}`;
@@ -133,9 +133,8 @@ export function PricingCard({ plan, isYearly, index }: PricingCardProps) {
           onClick={() => handlePlanClick(currentPrice.price_id, plan.id)}
           variant={plan.featured ? "default" : "outline"}
           size="lg"
-          className="w-full group-hover:shadow-md transition-shadow duration-300"
-          rounded={plan.featured ? "lg" : "default"}
           disabled={isLoading}
+          className="w-full"
         >
           <Loader state={isLoading}>{plan.button_text}</Loader>
         </Button>

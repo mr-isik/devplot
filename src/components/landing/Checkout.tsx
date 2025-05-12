@@ -4,7 +4,6 @@ import { initializePaddle, Paddle } from "@paddle/paddle-js";
 import { User } from "@supabase/supabase-js";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Loader from "../globals/Loader";
 import { useTheme } from "next-themes";
 export interface CheckoutProps {
   user?: User;

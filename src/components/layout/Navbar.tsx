@@ -140,16 +140,27 @@ const Navbar = ({ user }: NavbarProps) => {
                   Blog
                 </Link>
               </div>
-              <div className="grid gap-2 mt-6">
-                <Link href="/sign-in" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full">
-                    Log In
-                  </Button>
-                </Link>
-                <Link href="/sign-up" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full">Get Started</Button>
-                </Link>
-              </div>
+              {user ? (
+                <div className="grid gap-2 mt-6">
+                  <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <UserButton user={user} />
+                </div>
+              ) : (
+                <div className="grid gap-2 mt-6">
+                  <Link href="/sign-in" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full">
+                      Log In
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up" onClick={() => setIsOpen(false)}>
+                    <Button className="w-full">Get Started</Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </SheetContent>
         </Sheet>

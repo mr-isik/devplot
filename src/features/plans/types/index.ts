@@ -9,5 +9,6 @@ export type Plan = {
     currency: string;
     billing_cycle: string;
     price_amount: number;
+    price_id: string;
   }[];
 };

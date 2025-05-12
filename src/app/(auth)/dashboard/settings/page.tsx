@@ -88,7 +88,7 @@ function UserPreferences() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-accent/50">
+        <div className="flex items-center justify-between rounded-lg border p-4 transition-colors">
           <div className="space-y-0.5">
             <h3 className="font-medium">Theme</h3>
             <p className="text-sm text-muted-foreground">
