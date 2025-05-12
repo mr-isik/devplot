@@ -15,6 +15,7 @@ const Logo = ({ className, size = 32 }: Props) => {
         alt="DevPlot Logo"
         width={size}
         height={size}
+        className="rounded-full"
       />
     </div>
   );

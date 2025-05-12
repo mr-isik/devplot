@@ -5,16 +5,13 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Plan } from "@/features/plans/types";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { planRedirect } from "@/actions/plans/actions";
 import Loader from "../globals/Loader";
 
 interface PricingCardProps {
@@ -23,20 +20,40 @@ interface PricingCardProps {
   index: number;
 }
 
+const currencies = [
+  {
+    code: "USD",
+    symbol: "$",
+  },
+  {
+    code: "TRY",
+    symbol: "₺",
+  },
+];
+
 export function PricingCard({ plan, isYearly, index }: PricingCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handlePlanClick = async (product_id: string) => {
+  const currentPrice = plan.prices.find((price) => {
+    const isYearlyPrice = price.billing_cycle.toLowerCase().includes("year");
+    return isYearly ? isYearlyPrice : !isYearlyPrice;
+  });
+
+  const handlePlanClick = async (priceId: string, planId: string) => {
     try {
       setIsLoading(true);
-      const checkout = await planRedirect(product_id);
-      window.location.href = checkout.url;
+      const checkoutLink = `/checkout?priceId=${priceId}&planId=${planId}`;
+      if (checkoutLink) {
+        window.location.href = checkoutLink;
+      }
     } catch (error) {
       console.error("Error redirecting to checkout:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (!currentPrice) return null;
 
   return (
     <Card
@@ -85,18 +102,17 @@ export function PricingCard({ plan, isYearly, index }: PricingCardProps) {
         <CardContent className="space-y-6 relative z-10">
           <div className="flex items-center text-foreground relative">
             <span className="text-4xl font-bold group-hover:text-primary transition-colors">
-              ${isYearly ? (plan.price / 12).toFixed(1) : plan.price}
+              {currencies.find((c) => c.code === currentPrice.currency)?.symbol}
+              {currentPrice.price_amount}
             </span>
 
             <div className="flex flex-col">
-              {plan.original_price && (
-                <span className="ml-2 text-foreground/70 line-through text-xl">
-                  ${plan.original_price / 12}
-                </span>
-              )}
-              <span className="ml-2 text-sm text-foreground/70">/ Month</span>
+              <span className="ml-2 text-sm text-foreground/70">
+                / {currentPrice.billing_cycle}
+              </span>
             </div>
           </div>
+
           <ul className="space-y-3">
             {plan.features.map((feature, idx) => (
               <li
@@ -114,7 +130,7 @@ export function PricingCard({ plan, isYearly, index }: PricingCardProps) {
 
       <CardFooter className="relative z-10">
         <Button
-          onClick={() => handlePlanClick(plan.product_id)}
+          onClick={() => handlePlanClick(currentPrice.price_id, plan.id)}
           variant={plan.featured ? "default" : "outline"}
           size="lg"
           className="w-full group-hover:shadow-md transition-shadow duration-300"

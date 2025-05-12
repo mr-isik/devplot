@@ -12,13 +12,18 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
   const [isYearly, setIsYearly] = useState(true);
 
   const filteredPlans = plans.filter((plan) => {
-    const isYearlyPlan = plan.recurrence.toLowerCase().includes("year");
-    return isYearly ? isYearlyPlan : !isYearlyPlan;
+    return plan.prices.some((price) => {
+      const isYearlyPrice = price.billing_cycle.toLowerCase().includes("year");
+      return isYearly ? isYearlyPrice : !isYearlyPrice;
+    });
   });
+
+  const featuredPlan = filteredPlans.find((plan) => plan.featured);
+  const regularPlans = filteredPlans.filter((plan) => !plan.featured);
 
   return (
     <section className="w-full py-20 bg-muted/30 relative overflow-hidden">
-      <div className="container max-w-4xl px-4 md:px-6 mx-auto relative z-10">
+      <div className="container max-w-6xl px-4 md:px-6 mx-auto relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <Badge variant="outline" className="mb-4 px-3 py-1 text-sm">
             Pricing
@@ -68,15 +73,25 @@ export function PricingSection({ plans }: { plans: Plan[] }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredPlans.map((plan, index) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {regularPlans.map((plan, index) => (
             <PricingCard
-              key={index}
+              key={plan.id}
               plan={plan}
               isYearly={isYearly}
               index={index}
             />
           ))}
+          {featuredPlan && (
+            <div>
+              <PricingCard
+                key={featuredPlan.id}
+                plan={featuredPlan}
+                isYearly={isYearly}
+                index={regularPlans.length}
+              />
+            </div>
+          )}
         </div>
 
         <div className="mt-16 text-center glass dark:glass-dark p-6 md:p-8 rounded-xl border border-border/40 max-w-3xl mx-auto backdrop-blur-md hover:shadow-xl transition-shadow duration-300">
