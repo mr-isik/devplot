@@ -118,7 +118,7 @@ export function PlanSummary({ country }: { country?: string }) {
           </div>
 
           <div className="pt-6">
-            <div className="flex items-center justify-between font-semibold text-2xl pt-4 border-t border-border/50 bg-primary/5 p-6 rounded-xl">
+            <div className="flex items-center justify-between font-semibold text-2xl py-4 px-6 border-t border-border/50 bg-primary/5 rounded-xl">
               <span>Total</span>
               <span className="text-primary text-3xl">
                 {
