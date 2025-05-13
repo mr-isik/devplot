@@ -21,7 +21,7 @@ export default async function CreatePortfolioPage() {
     redirect("/sign-in");
   }
 
-  const { data: tenants, error: tenantError } = await getTenant(userData[0].id);
+  const { data: tenants, error: tenantError } = await getTenant(userData.id);
 
   if (tenantError) {
     console.error("Tenant retrieval error:", tenantError);
@@ -32,7 +32,7 @@ export default async function CreatePortfolioPage() {
 
   if (tenants.length === 0) {
     const { data: tenantData, error: tenantError } = await createTenant(
-      userData[0].id
+      userData.id
     );
 
     if (tenantError) {

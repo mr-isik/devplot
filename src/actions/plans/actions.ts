@@ -58,3 +58,15 @@ export const getPlanById = async (
     .single();
   return { data, error };
 };
+
+export const getPlanByName = async (name: string) => {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("plans")
+    .select("*")
+    .eq("name", name)
+    .single();
+
+  return { data, error };
+};

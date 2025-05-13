@@ -30,7 +30,7 @@ import { deleteUserAccount } from "@/actions/users/actions";
 export default async function SettingsPage() {
   const { userData, error } = await getUser();
 
-  if (error || !userData || userData.length === 0) {
+  if (error || !userData) {
     return redirect("/");
   }
 

@@ -1,13 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Shield, CreditCard, Sparkles } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle2, Sparkles } from "lucide-react";
 import { Plan } from "@/features/plans/types";
-import { getPlanById } from "@/actions/plans/actions";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { useState } from "react";
 import { motion } from "framer-motion";
 
 const currencies = [
@@ -21,42 +16,12 @@ const currencies = [
   },
 ];
 
-export function PlanSummary({ country }: { country?: string }) {
-  const searchParams = useSearchParams();
-  const [plan, setPlan] = useState<Plan | null>(null);
-  const [error, setError] = useState<Error | null>(null);
-  const planId = searchParams.get("planId");
-  const priceId = searchParams.get("priceId");
+interface PlanSummaryProps {
+  plan: Plan;
+  country?: string;
+}
 
-  useEffect(() => {
-    async function fetchPlan() {
-      try {
-        const { data, error } = await getPlanById(planId!, priceId!, country);
-        setPlan(data);
-        setError(error);
-      } catch (error) {
-        setError(error as Error);
-      }
-    }
-    fetchPlan();
-  }, [error]);
-
-  if (error) {
-    return (
-      <div className="p-4 text-red-500 bg-red-50 rounded-lg">
-        Error: {error.message}
-      </div>
-    );
-  }
-
-  if (!plan) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
+export function PlanSummary({ plan, country }: PlanSummaryProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

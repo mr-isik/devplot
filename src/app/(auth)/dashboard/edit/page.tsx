@@ -19,11 +19,11 @@ export async function generateMetadata() {
 export default async function EditPortfolioPage() {
   const { userData } = await getUser();
 
-  if (!userData || userData.length === 0) {
+  if (!userData) {
     redirect("/sign-in");
   }
 
-  const { data: tenants, error: tenantError } = await getTenant(userData[0].id);
+  const { data: tenants, error: tenantError } = await getTenant(userData.id);
 
   if (tenantError) {
     console.error("Tenant retrieval error:", tenantError);

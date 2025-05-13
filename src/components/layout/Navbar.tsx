@@ -4,14 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X } from "lucide-react";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { Menu } from "lucide-react";
 import Logo from "../globals/logo";
 import { User } from "@supabase/supabase-js";
 import { UserButton } from "../globals/UserButton";
@@ -33,31 +26,34 @@ const Navbar = ({ user }: NavbarProps) => {
           </Link>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <Link href="/themes" passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Themes
-                  </NavigationMenuLink>
+          <nav className="hidden md:block">
+            <ul className="flex items-center gap-6">
+              <li>
+                <Link
+                  href="/themes"
+                  className="text-sm font-medium transition-colors hover:text-primary"
+                >
+                  Themes
                 </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/pricing" passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Pricing
-                  </NavigationMenuLink>
+              </li>
+              <li>
+                <Link
+                  href="/pricing"
+                  className="text-sm font-medium transition-colors hover:text-primary"
+                >
+                  Pricing
                 </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/blog" passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Blog
-                  </NavigationMenuLink>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-sm font-medium transition-colors hover:text-primary"
+                >
+                  Blog
                 </Link>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+              </li>
+            </ul>
+          </nav>
         </div>
 
         {/* Desktop Auth Buttons */}

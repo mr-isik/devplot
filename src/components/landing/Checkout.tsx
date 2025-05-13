@@ -5,17 +5,20 @@ import { User } from "@supabase/supabase-js";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { Plan } from "@/features/plans/types";
+
 export interface CheckoutProps {
   user?: User;
+  plan: Plan;
 }
 
-export function Checkout({ user }: CheckoutProps) {
+export function Checkout({ user, plan }: CheckoutProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const resolvedTheme = useTheme();
 
   const [paddle, setPaddle] = useState<Paddle>();
-  let priceId = searchParams.get("priceId");
+  const priceId = plan.prices[0].price_id;
 
   useEffect(() => {
     // Don't worry about initializing it multiple times between navigations.
@@ -58,8 +61,6 @@ export function Checkout({ user }: CheckoutProps) {
     }
 
     // Pass the priceId as a search parameter to the checkout page.
-    let priceId = searchParams.get("priceId");
-
     if (priceId) {
       paddle?.Checkout.open({
         settings: {
@@ -81,6 +82,7 @@ export function Checkout({ user }: CheckoutProps) {
         // You can pass additional data to the subscription
         customData: {
           userId: user?.id,
+          planId: plan.id,
         },
       });
       return;

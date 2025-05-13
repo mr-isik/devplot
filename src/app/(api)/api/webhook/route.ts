@@ -1,3 +1,4 @@
+import { createSubscription } from "@/actions/subscriptions/actions";
 import { Paddle, Environment, EventName } from "@paddle/paddle-node-sdk";
 import { NextResponse } from "next/server";
 
@@ -23,14 +24,30 @@ export const POST = async (req: Request) => {
       );
       /* database operations */
       switch (eventData.eventType) {
+        case EventName.CustomerCreated:
+          console.log(`Customer ${eventData.data.email} was created`);
+          break;
         case EventName.SubscriptionActivated:
-          console.log(`Subscription ${eventData.data.id} was activated`);
+          console.log(
+            `Subscription ${eventData.data.customerId} was activated`
+          );
           break;
         case EventName.SubscriptionCanceled:
-          console.log(`Subscription ${eventData.data.id} was canceled`);
+          console.log(`Subscription ${eventData.data.customerId} was canceled`);
           break;
         case EventName.TransactionPaid:
-          console.log(`Transaction ${eventData.data.id} was paid`);
+          /* Create subscription for this customer */
+          const { error } = await createSubscription(
+            /* @ts-ignore */
+            eventData.data.customData?.userId!,
+            eventData.data.customerId!,
+            /* @ts-ignore */
+            eventData.data.customData?.planId!
+          );
+
+          if (error) {
+            console.error("Subscription creation error:", error);
+          }
           break;
         default:
           console.log(eventData.eventType);

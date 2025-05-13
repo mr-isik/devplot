@@ -27,15 +27,13 @@ export default async function Dashboard() {
   // Get current authenticated user
   const { userData } = await getUser();
 
-  if (!userData || userData.length === 0) {
+  if (!userData) {
     redirect("/sign-in");
   }
 
   /* get tenant */
 
-  const { data: tenantData, error: tenantError } = await getTenant(
-    userData[0].id
-  );
+  const { data: tenantData, error: tenantError } = await getTenant(userData.id);
 
   if (tenantError) {
     redirect("/sign-in");
