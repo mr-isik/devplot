@@ -42,13 +42,13 @@ const Navbar = ({ user }: NavbarProps) => {
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
-              <NavigationMenuItem>
+              {/* <NavigationMenuItem>
                 <Link href="/pricing" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Pricing
                   </NavigationMenuLink>
                 </Link>
-              </NavigationMenuItem>
+              </NavigationMenuItem> */}
               <NavigationMenuItem>
                 <Link href="/blog" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
