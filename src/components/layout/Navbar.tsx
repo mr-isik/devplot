@@ -36,22 +36,6 @@ const Navbar = ({ user }: NavbarProps) => {
                   Themes
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/pricing"
-                  className="text-sm font-medium transition-colors hover:text-primary"
-                >
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="text-sm font-medium transition-colors hover:text-primary"
-                >
-                  Blog
-                </Link>
-              </li>
             </ul>
           </nav>
         </div>
