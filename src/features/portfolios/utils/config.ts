@@ -1,0 +1,26 @@
+const planLimits = {
+  basic: {
+    themes: "basic",
+    portfolios: 1,
+    projects: 3,
+    skills: 5,
+    experiences: 2,
+    educations: 1,
+    socials: 3,
+    favicon: false,
+    branding: true,
+    customDomain: false,
+  },
+  pro: {
+    themes: "premium",
+    portfolios: 3,
+    projects: -1,
+    skills: -1,
+    experiences: -1,
+    educations: -1,
+    socials: -1,
+    favicon: true,
+    branding: false,
+    customDomain: true,
+  },
+};

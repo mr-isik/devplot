@@ -17,9 +17,9 @@ export async function AppNavigation() {
   const user = data.user;
 
   return (
-    <nav className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-full border">
-      <Link href="/dashboard" className="inline-flex items-center">
-        <Logo size={52} />
+    <nav className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 rounded-full border p-2">
+      <Link href="/dashboard" className="inline-flex items-center gap-2">
+        <Logo size={36} />
         <h1 className="font-bold">DevPlot</h1>
       </Link>
 

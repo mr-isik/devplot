@@ -4,14 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X } from "lucide-react";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { Menu } from "lucide-react";
 import Logo from "../globals/logo";
 import { User } from "@supabase/supabase-js";
 import { UserButton } from "../globals/UserButton";
@@ -24,40 +17,27 @@ const Navbar = ({ user }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center">
-            <Logo size={64} />
+          <Link href="/" className="flex items-center gap-2">
+            <Logo size={32} />
             <span className="text-xl font-bold tracking-tight">DevPlot</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <Link href="/themes" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Themes
-                  </NavigationMenuLink>
+          <nav className="hidden md:block">
+            <ul className="flex items-center gap-6">
+              <li>
+                <Link
+                  href="/themes"
+                  className="text-sm font-medium transition-colors hover:text-primary"
+                >
+                  Themes
                 </Link>
-              </NavigationMenuItem>
-              {/* <NavigationMenuItem>
-                <Link href="/pricing" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Pricing
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem> */}
-              <NavigationMenuItem>
-                <Link href="/blog" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Blog
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+              </li>
+            </ul>
+          </nav>
         </div>
 
         {/* Desktop Auth Buttons */}
@@ -140,16 +120,27 @@ const Navbar = ({ user }: NavbarProps) => {
                   Blog
                 </Link>
               </div>
-              <div className="grid gap-2 mt-6">
-                <Link href="/sign-in" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full">
-                    Log In
-                  </Button>
-                </Link>
-                <Link href="/sign-up" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full">Get Started</Button>
-                </Link>
-              </div>
+              {user ? (
+                <div className="grid gap-2 mt-6">
+                  <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <UserButton user={user} />
+                </div>
+              ) : (
+                <div className="grid gap-2 mt-6">
+                  <Link href="/sign-in" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full">
+                      Log In
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up" onClick={() => setIsOpen(false)}>
+                    <Button className="w-full">Get Started</Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </SheetContent>
         </Sheet>

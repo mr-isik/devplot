@@ -57,8 +57,13 @@ export const getUser = async () => {
 
   const { data: userData, error } = await supabase
     .from("users")
-    .select("*")
-    .eq("auth_id", user?.id);
+    .select(
+      "*, plan:subscriptions(status, customer_id, plan_id, planDetails:plans(name))"
+    )
+    .eq("auth_id", user?.id)
+    .single();
+
+  console.log("UserData: ", userData);
 
   return { userData, error };
 };

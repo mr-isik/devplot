@@ -139,10 +139,10 @@ const SignUpForm = () => {
             <div
               className={`flex size-8 items-center justify-center rounded-full ${
                 currentStep > FormStep.ACCOUNT_INFO
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-primary-foreground"
                   : currentStep === FormStep.ACCOUNT_INFO
-                    ? "bg-primary text-white"
-                    : "bg-secondary text-gray-400"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-secondary-foreground"
               }`}
             >
               {currentStep > FormStep.ACCOUNT_INFO ? (
@@ -165,10 +165,10 @@ const SignUpForm = () => {
             <div
               className={`flex size-8 items-center justify-center rounded-full ${
                 currentStep > FormStep.PASSWORD
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-primary-foreground"
                   : currentStep === FormStep.PASSWORD
-                    ? "bg-primary text-white"
-                    : "bg-secondary text-gray-400"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-secondary-foreground"
               }`}
             >
               {currentStep > FormStep.PASSWORD ? (
@@ -189,8 +189,8 @@ const SignUpForm = () => {
             <div
               className={`flex size-8 items-center justify-center rounded-full ${
                 currentStep === FormStep.CONFIRMATION
-                  ? "bg-primary text-white"
-                  : "bg-secondary text-gray-400"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground"
               }`}
             >
               3

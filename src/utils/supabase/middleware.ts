@@ -52,6 +52,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(dashboardUrl);
   }
 
+  return NextResponse.next();
+
   const host = request.headers.get("host") || "";
 
   if (

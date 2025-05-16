@@ -12,8 +12,6 @@ export const createContent = async (
 ) => {
   const supabase = await createClient();
 
-  console.log("content", content);
-
   if (content.favicon && content.favicon.length > 0) {
     const favicon_path = new Date().getTime().toString();
 

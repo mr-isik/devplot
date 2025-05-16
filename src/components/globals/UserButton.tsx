@@ -22,7 +22,7 @@ export function UserButton({ user }: any) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="secondary" size="icon" className="mr-2 rounded-full">
+        <Button variant="secondary" size="icon" className="rounded-full">
           <User size={24} />
         </Button>
       </PopoverTrigger>
