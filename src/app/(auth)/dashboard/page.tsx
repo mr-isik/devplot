@@ -144,7 +144,10 @@ export default async function Dashboard() {
                       </Link>
                       <DeletePortfolioDialog portfolioId={portfolio.id} />
                     </div>
-                    <Link href={`/${userData?.[0]?.id}`} target="_blank">
+                    <Link
+                      href={`https://${tenantData[0].subdomain}`}
+                      target="_blank"
+                    >
                       <Button size="sm" variant="soft" className="gap-1">
                         View
                         <ArrowUpRight />
