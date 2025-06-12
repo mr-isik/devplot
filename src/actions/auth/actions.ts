@@ -53,12 +53,36 @@ export const signin = async (
   }
 };
 
+export const signInWithGoogle = async (): Promise<AuthResponse> => {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_DOMAIN}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data, error: null };
+  } catch (error: any) {
+    return { data: null, error: { message: error.message } };
+  }
+};
+
 export const signInWithGithub = async (): Promise<AuthResponse> => {
   try {
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "github",
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_DOMAIN}/auth/callback`,
+      },
     });
 
     if (error) {
