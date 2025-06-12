@@ -76,6 +76,10 @@ const SignInForm = () => {
         });
         return;
       }
+
+      if (response?.data.url) {
+        router.push(response.data.url);
+      }
     } catch (error) {
       toast.error("An unexpected error occurred", {
         description: "Please try again later",
