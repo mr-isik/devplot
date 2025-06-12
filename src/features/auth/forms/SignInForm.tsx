@@ -122,6 +122,7 @@ const SignInForm = () => {
               </Button>
               <Button
                 variant="outline"
+                type="button"
                 onClick={() => handleOauthSignIn("github")}
                 className="w-full"
               >
