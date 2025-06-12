@@ -1,6 +1,10 @@
 "use client";
 
-import { signin } from "@/actions/auth/actions";
+import {
+  signin,
+  signInWithGithub,
+  signInWithGoogle,
+} from "@/actions/auth/actions";
 import DynamicFormField, {
   FormFieldType,
 } from "@/components/globals/DynamicFormField";
@@ -54,6 +58,38 @@ const SignInForm = () => {
     }
   };
 
+  const handleOauthSignIn = async (provider: "google" | "github") => {
+    setIsLoading(true);
+
+    try {
+      let response = null;
+      if (provider === "google") {
+        response = await signInWithGoogle();
+      } else if (provider === "github") {
+        response = await signInWithGithub();
+      }
+
+      if (response?.error) {
+        toast.error(response.error.message, {
+          description: "Please try again",
+          duration: 5000,
+        });
+        return;
+      }
+
+      if (response?.data.url) {
+        router.push(response.data.url);
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred", {
+        description: "Please try again later",
+      });
+      console.error("OAuth sign in error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
       <div className="space-y-2 text-center">
@@ -65,7 +101,13 @@ const SignInForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <Button variant="outline" className="w-full">
+              {/* Google OAUTH */}
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => handleOauthSignIn("google")}
+                className="w-full"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   x="0px"
@@ -78,7 +120,11 @@ const SignInForm = () => {
                   <path d="M 25.996094 48 C 13.3125 48 2.992188 37.683594 2.992188 25 C 2.992188 12.316406 13.3125 2 25.996094 2 C 31.742188 2 37.242188 4.128906 41.488281 7.996094 L 42.261719 8.703125 L 34.675781 16.289063 L 33.972656 15.6875 C 31.746094 13.78125 28.914063 12.730469 25.996094 12.730469 C 19.230469 12.730469 13.722656 18.234375 13.722656 25 C 13.722656 31.765625 19.230469 37.269531 25.996094 37.269531 C 30.875 37.269531 34.730469 34.777344 36.546875 30.53125 L 24.996094 30.53125 L 24.996094 20.175781 L 47.546875 20.207031 L 47.714844 21 C 48.890625 26.582031 47.949219 34.792969 43.183594 40.667969 C 39.238281 45.53125 33.457031 48 25.996094 48 Z"></path>
                 </svg>
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                onClick={() => handleOauthSignIn("github")}
+                className="w-full"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   x="0px"
